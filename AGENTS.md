@@ -1,11 +1,11 @@
-# Agent guide — crwbar voice
+# Agent guide — Quacky
 
 Orientation for coding agents working in this repository. Read this before
 changing code; it records the parts that are easy to get wrong.
 
 ## What this project is
 
-`crwbar voice` is a personal fork of [Handy](https://github.com/cjpais/Handy)
+`Quacky` is a personal fork of [Handy](https://github.com/cjpais/Handy)
 (MIT). Tauri v2 shell, Rust backend (`src-tauri/`), React + TypeScript frontend
 (`src/`). Speech-to-text runs locally; nothing leaves the machine unless the
 user explicitly enables AI post-processing.
@@ -13,7 +13,7 @@ user explicitly enables AI post-processing.
 **Branding constraint (not optional):** upstream's README states the _Handy_
 name, logo, icon and brand assets are **not** open source and that forks must
 use their own branding. Keep every user-visible string, asset and identifier on
-`crwbar voice` / `bar.crw.voice`. Never reintroduce "Handy" into UI copy,
+`Quacky` / `com.jamieandrew.quacky`. Never reintroduce "Handy" into UI copy,
 product name, or bundle identity. Internal legacy identifiers that exist only
 for data migration are the one exception (see _History source_).
 
@@ -90,9 +90,9 @@ src/
 | File transcription that stays in the app                    | `TranscribeSettings.tsx`, `transcribe_file(.., deliver: false)`                                                   |
 | History distinguishes microphone vs file                    | `managers/history.rs::source_from_file_name`                                                                      |
 | Custom accent color                                         | `settings.accent_color`, `src/lib/utils/theme.ts`, `AccentColorPicker.tsx`                                        |
-| RGB accent cycling ("Emil mode")                            | `settings.rgb_mode`, `theme.ts::startRgbMode`, `RgbModeToggle.tsx`                                                |
 | Voice actions (API / Codex CLI / Claude CLI)                | `actions.rs`, `post-processing/VoiceActionSettings.tsx`                                                           |
 | Audio ducking instead of hard mute, at a configurable speed | `managers/audio.rs`, `settings.rs::DuckingSpeed`                                                                  |
+| Double tap latches hands-free recording                     | `transcription_coordinator.rs::classify_ptt_event`, `settings.double_tap_latch` / `double_tap_window_ms`          |
 
 `transcribe_file` is deliberately **not** gated on `drag_drop_enabled`: the drop
 sites check the setting themselves, and clicking the picker is consent enough.
@@ -115,7 +115,7 @@ durations are **no longer constants in `audio.rs`** — they come from
 spawning `AUDIO_FADE_STEPS` `osascript` processes. On macOS the duck starts in
 parallel with the start sound (`actions.rs`); do not reintroduce a wait there, it
 delayed the fade by roughly 680 ms and made "fast" feel like "normal". A change
-here needs a real recompile — verify a `Compiling crwbar-voice` line appears,
+here needs a real recompile — verify a `Compiling quacky` line appears,
 because a no-op `tauri dev` restart can reuse the previous binary.
 
 **The model catalog is baked into the binary.** `src-tauri/src/catalog/catalog.json`
@@ -126,7 +126,7 @@ catalog. New models require regenerating the catalog with `scripts/gen_catalog.p
 empty — the script is run by hand; there is no CI job doing it.
 
 **Single instance.** The app uses `tauri-plugin-single-instance`. A dev build and
-an installed `/Applications` build share the identifier `bar.crw.voice`, so
+an installed `/Applications` build share the identifier `com.jamieandrew.quacky`, so
 launching one while the other runs just focuses the running instance. Quit the
 installed app before testing a dev build, otherwise you will be looking at the
 old version and conclude a change "did not work".
@@ -306,7 +306,7 @@ cd src-tauri && cargo run -- --transcribe-file /path/to/recording.m4a
 ## Distribution notes
 
 Local bundles are ad-hoc signed and not notarized. Release bundles go to
-`src-tauri/target/release/bundle/macos/crwbar voice.app`. Automatic updates are
+`src-tauri/target/release/bundle/macos/Quacky.app`. Automatic updates are
 intentionally disabled until the project has its own signed release channel;
 build with `createUpdaterArtifacts: false` unless a signing key is configured.
 

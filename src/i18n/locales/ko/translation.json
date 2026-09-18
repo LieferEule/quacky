@@ -100,7 +100,7 @@
     },
     "permissions": {
       "title": "권한 필요",
-      "description": "crwbar voice가 제대로 작동하려면 몇 가지 권한이 필요합니다.",
+      "description": "Quacky가 제대로 작동하려면 몇 가지 권한이 필요합니다.",
       "microphone": {
         "title": "마이크 접근",
         "description": "음성 인식을 위해 마이크 접근 권한이 필요합니다."
@@ -168,7 +168,7 @@
       },
       "title": "일반",
       "shortcut": {
-        "title": "crwbar voice 단축키",
+        "title": "Quacky 단축키",
         "description": "음성-텍스트 녹음을 시작하는 키보드 단축키를 설정하세요",
         "loading": "단축키 로딩 중...",
         "none": "설정된 단축키 없음",
@@ -218,6 +218,10 @@
       "pushToTalk": {
         "label": "녹음 중 단축키 홀딩",
         "description": "누르고 있으면 녹음, 놓으면 정지"
+      },
+      "doubleTapLatch": {
+        "label": "Double Tap to Keep Recording",
+        "description": "Tap the shortcut twice to keep recording hands-free until you tap it again. Holding the key still works as usual."
       }
     },
     "sound": {
@@ -268,7 +272,7 @@
       "searchPlaceholder": "이름으로 모델 검색…",
       "rescan": {
         "label": "다시 스캔",
-        "tooltip": "crwbar voice 외부에서 모델 폴더 또는 Hugging Face 캐시에 추가된 모델을 다시 스캔합니다"
+        "tooltip": "Quacky 외부에서 모델 폴더 또는 Hugging Face 캐시에 추가된 모델을 다시 스캔합니다"
       }
     },
     "advanced": {
@@ -306,11 +310,11 @@
       },
       "autostart": {
         "label": "시작 시 실행",
-        "description": "컴퓨터 로그인 시 crwbar voice를 자동으로 시작합니다."
+        "description": "컴퓨터 로그인 시 Quacky를 자동으로 시작합니다."
       },
       "showTrayIcon": {
         "label": "트레이 아이콘 표시",
-        "description": "시스템 트레이에 crwbar voice 아이콘을 표시합니다."
+        "description": "시스템 트레이에 Quacky 아이콘을 표시합니다."
       },
       "overlay": {
         "style": {
@@ -530,7 +534,7 @@
       },
       "updateChecks": {
         "label": "업데이트 확인",
-        "description": "crwbar voice의 새 버전을 자동으로 확인합니다"
+        "description": "Quacky의 새 버전을 자동으로 확인합니다"
       },
       "soundTheme": {
         "label": "사운드 테마",
@@ -588,6 +592,10 @@
         "title": "붙여넣기 지연 (이후)",
         "description": "붙여넣기 키 입력을 보낸 후 이전 클립보드를 복원하기 전의 지연 시간(밀리초). 전사된 텍스트 대신 이전 클립보드 내용이 붙여넣어지면 늘리세요."
       },
+      "doubleTapWindow": {
+        "title": "Double-Tap Window",
+        "description": "How long after a tap a second tap still counts as a double tap. A single tap waits this long before it starts transcribing, so shorter feels faster but is harder to double-tap."
+      },
       "recordingBuffer": {
         "title": "추가 녹음 버퍼",
         "description": "키를 놓은 후 추가로 녹음을 계속하는 시간(밀리초). 후행 오디오를 캡처하기 위함. 0 = 추가 버퍼 없음."
@@ -611,31 +619,26 @@
         "title": "강조 색상",
         "description": "버튼, 녹음 바, 강조 표시에 사용할 강조 색상을 직접 선택합니다. '초기화'하면 기본 주황색으로 돌아갑니다.",
         "reset": "초기화"
-      },
-      "rgbMode": {
-        "label": "Emil Mode",
-        "description": "강조 색상이 무지개처럼 계속 변합니다. 켜져 있는 동안에는 강조 색상보다 우선합니다.",
-        "boosted": "2배 속도 사용 중"
       }
     },
     "about": {
       "title": "정보",
       "version": {
         "title": "버전",
-        "description": "crwbar voice의 현재 버전"
+        "description": "Quacky의 현재 버전"
       },
       "appDataDirectory": {
         "title": "앱 데이터 디렉토리",
-        "description": "crwbar voice가 데이터를 저장하는 위치"
+        "description": "Quacky가 데이터를 저장하는 위치"
       },
       "sourceCode": {
         "title": "Handy",
-        "description": "crwbar voice is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
+        "description": "Quacky is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
         "button": "Open Handy on GitHub"
       },
       "supportDevelopment": {
         "title": "개발 지원",
-        "description": "crwbar voice 개발을 계속할 수 있도록 도와주세요",
+        "description": "Quacky 개발을 계속할 수 있도록 도와주세요",
         "button": "후원하기"
       },
       "acknowledgments": {
@@ -643,12 +646,12 @@
         "ggml": {
           "title": "ggml",
           "description": "OpenAI의 Whisper 자동 음성 인식 모델의 고성능 추론",
-          "details": "crwbar voice는 빠르고 로컬 음성-텍스트 처리를 위해 ggml를 사용합니다. Georgi Gerganov와 기여자들의 놀라운 작업에 감사드립니다."
+          "details": "Quacky는 빠르고 로컬 음성-텍스트 처리를 위해 ggml를 사용합니다. Georgi Gerganov와 기여자들의 놀라운 작업에 감사드립니다."
         }
       },
       "whatsNewUpdates": {
         "label": "새 소식 표시",
-        "description": "crwbar voice 업데이트 후 릴리스 노트를 표시합니다"
+        "description": "Quacky 업데이트 후 릴리스 노트를 표시합니다"
       }
     }
   },
@@ -675,7 +678,7 @@
     "noOptionsFound": "옵션을 찾을 수 없습니다"
   },
   "accessibility": {
-    "permissionsDescription": "crwbar voice는 녹음된 텍스트를 입력하기 위해 접근성 권한이 필요합니다.",
+    "permissionsDescription": "Quacky는 녹음된 텍스트를 입력하기 위해 접근성 권한이 필요합니다.",
     "openSettings": "시스템 설정 열기"
   },
   "errors": {
@@ -698,11 +701,11 @@
   },
   "appLanguage": {
     "title": "애플리케이션 언어",
-    "description": "crwbar voice 인터페이스의 언어를 변경하세요"
+    "description": "Quacky 인터페이스의 언어를 변경하세요"
   },
   "theme": {
     "title": "앱 테마",
-    "description": "crwbar voice가 시스템 테마를 따를지, 밝게 또는 어둡게 유지할지 선택하세요",
+    "description": "Quacky가 시스템 테마를 따를지, 밝게 또는 어둡게 유지할지 선택하세요",
     "options": {
       "system": "시스템",
       "light": "밝게",
@@ -715,6 +718,7 @@
     "copyAgain": "다시 복사",
     "dropFile": "파일 놓기",
     "dropHint": "받아쓸 오디오 파일을 여기에 놓으세요",
+    "handsFree": "Hands-free recording",
     "transcribing": "텍스트로 변환 중...",
     "processing": "처리 중...",
     "voiceTranscribing": "요청을 받아쓰는 중...",
@@ -722,7 +726,7 @@
     "voiceDone": "AI 응답을 붙여넣었습니다"
   },
   "whatsNew": {
-    "title": "crwbar voice v{{version}}의 새 소식"
+    "title": "Quacky v{{version}}의 새 소식"
   },
   "transcribe": {
     "title": "Transcribe a file",

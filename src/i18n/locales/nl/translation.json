@@ -14,7 +14,7 @@
     "postProcessing": "Naverwerking",
     "history": "Geschiedenis",
     "debug": "Probleemoplossing",
-    "about": "Over crwbar voice",
+    "about": "Over Quacky",
     "transcribe": "Transcribe"
   },
   "onboarding": {
@@ -100,7 +100,7 @@
     },
     "permissions": {
       "title": "Machtigingen vereist",
-      "description": "crwbar voice heeft een aantal machtigingen nodig om goed te kunnen werken.",
+      "description": "Quacky heeft een aantal machtigingen nodig om goed te kunnen werken.",
       "microphone": {
         "title": "Microfoontoegang",
         "description": "Vereist om je stem op te nemen voor transcriptie."
@@ -218,6 +218,10 @@
       "pushToTalk": {
         "label": "Push-to-talk",
         "description": "Ingedrukt houden om op te nemen, loslaten om te stoppen"
+      },
+      "doubleTapLatch": {
+        "label": "Double Tap to Keep Recording",
+        "description": "Tap the shortcut twice to keep recording hands-free until you tap it again. Holding the key still works as usual."
       }
     },
     "models": {
@@ -234,7 +238,7 @@
       },
       "rescan": {
         "label": "Opnieuw scannen",
-        "tooltip": "Scannen naar modellen die buiten crwbar voice om zijn toegevoegd aan de modellenmap of Hugging Face-cache"
+        "tooltip": "Scannen naar modellen die buiten Quacky om zijn toegevoegd aan de modellenmap of Hugging Face-cache"
       },
       "noModelsMatch": "Geen modellen voldoen aan dit filter."
     },
@@ -306,11 +310,11 @@
       },
       "autostart": {
         "label": "Starten bij opstarten",
-        "description": "crwbar voice automatisch starten zodra je inlogt op je computer."
+        "description": "Quacky automatisch starten zodra je inlogt op je computer."
       },
       "showTrayIcon": {
         "label": "Pictogram in systeemvak tonen",
-        "description": "Toon het crwbar voice-pictogram in het systeemvak."
+        "description": "Toon het Quacky-pictogram in het systeemvak."
       },
       "overlay": {
         "style": {
@@ -530,7 +534,7 @@
       },
       "updateChecks": {
         "label": "Controleren op updates",
-        "description": "Automatisch controleren op nieuwe versies van crwbar voice"
+        "description": "Automatisch controleren op nieuwe versies van Quacky"
       },
       "whatsNewPreview": {
         "title": "Voorbeeld van release-notes",
@@ -600,6 +604,10 @@
         "title": "Plakvertraging (na)",
         "description": "Vertraging (in milliseconden) na de plak-toetsaanslag, voordat je vorige klembord wordt hersteld. Verhoog dit als de oude klembordinhoud wordt geplakt in plaats van de transcriptie."
       },
+      "doubleTapWindow": {
+        "title": "Double-Tap Window",
+        "description": "How long after a tap a second tap still counts as a double tap. A single tap waits this long before it starts transcribing, so shorter feels faster but is harder to double-tap."
+      },
       "recordingBuffer": {
         "title": "Extra opnamebuffer",
         "description": "Extra tijd (in milliseconden) om te blijven opnemen nadat je de toets loslaat, om naloopaudio op te vangen. 0 = geen extra buffer."
@@ -611,35 +619,30 @@
         "title": "Accentkleur",
         "description": "Kies een eigen accentkleur voor knoppen, de opnamebalk en accenten. 'Herstellen' zet het standaard oranje terug.",
         "reset": "Herstellen"
-      },
-      "rgbMode": {
-        "label": "Emil Mode",
-        "description": "Laat de accentkleur doorlopend door de regenboog lopen. Overschrijft de accentkleur zolang dit aanstaat.",
-        "boosted": "Dubbele snelheid actief"
       }
     },
     "about": {
-      "title": "Over crwbar voice",
+      "title": "Over Quacky",
       "version": {
         "title": "Versie",
-        "description": "Huidige versie van crwbar voice"
+        "description": "Huidige versie van Quacky"
       },
       "whatsNewUpdates": {
         "label": "Toon 'Wat is er nieuw'",
-        "description": "Release-notes tonen nadat crwbar voice is bijgewerkt"
+        "description": "Release-notes tonen nadat Quacky is bijgewerkt"
       },
       "appDataDirectory": {
         "title": "App-datamap",
-        "description": "Locatie waar crwbar voice de gegevens opslaat"
+        "description": "Locatie waar Quacky de gegevens opslaat"
       },
       "sourceCode": {
         "title": "Handy",
-        "description": "crwbar voice is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
+        "description": "Quacky is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
         "button": "Open Handy on GitHub"
       },
       "supportDevelopment": {
         "title": "Ontwikkeling ondersteunen",
-        "description": "Help ons om te blijven bouwen aan crwbar voice",
+        "description": "Help ons om te blijven bouwen aan Quacky",
         "button": "Doneren"
       },
       "acknowledgments": {
@@ -647,7 +650,7 @@
         "ggml": {
           "title": "ggml",
           "description": "Krachtige tensorbibliotheek voor lokale AI-verwerking",
-          "details": "crwbar voice's lokale spraak-naar-tekst is gebouwd op transcribe.cpp en ggml. Met dank aan het geweldige werk van Georgi Gerganov en alle bijdragers."
+          "details": "Quacky's lokale spraak-naar-tekst is gebouwd op transcribe.cpp en ggml. Met dank aan het geweldige werk van Georgi Gerganov en alle bijdragers."
         }
       }
     }
@@ -666,7 +669,7 @@
     "portableUpdateButton": "GitHub Releases openen"
   },
   "whatsNew": {
-    "title": "Nieuw in crwbar voice v{{version}}"
+    "title": "Nieuw in Quacky v{{version}}"
   },
   "common": {
     "loading": "Laden...",
@@ -678,7 +681,7 @@
     "noOptionsFound": "Geen opties gevonden"
   },
   "accessibility": {
-    "permissionsDescription": "crwbar voice heeft toegankelijkheidsmachtigingen nodig om getranscribeerde tekst te kunnen typen.",
+    "permissionsDescription": "Quacky heeft toegankelijkheidsmachtigingen nodig om getranscribeerde tekst te kunnen typen.",
     "openSettings": "Systeeminstellingen openen"
   },
   "errors": {
@@ -701,11 +704,11 @@
   },
   "appLanguage": {
     "title": "Interfacetaal",
-    "description": "Wijzig de taal van de crwbar voice-interface"
+    "description": "Wijzig de taal van de Quacky-interface"
   },
   "theme": {
     "title": "App-thema",
-    "description": "Kies of crwbar voice het systeemthema volgt of licht of donker blijft",
+    "description": "Kies of Quacky het systeemthema volgt of licht of donker blijft",
     "options": {
       "system": "Systeem",
       "light": "Licht",
@@ -718,6 +721,7 @@
     "copyAgain": "Opnieuw kopiëren",
     "dropFile": "Bestand neerzetten",
     "dropHint": "Zet hier een audiobestand neer om het te transcriberen",
+    "handsFree": "Hands-free recording",
     "transcribing": "Transcriberen...",
     "processing": "Verwerken...",
     "voiceTranscribing": "Opdracht transcriberen...",

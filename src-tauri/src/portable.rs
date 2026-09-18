@@ -1,4 +1,4 @@
-//! Portable mode support and legacy data import for crwbar voice.
+//! Portable mode support and legacy data import for Quacky.
 //!
 //! When a file named `portable` exists next to the executable, all user data
 //! (settings, models, recordings, database, logs) is stored in a `Data/`
@@ -11,8 +11,8 @@ use tauri::Manager;
 static PORTABLE_DATA_DIR: OnceLock<Option<PathBuf>> = OnceLock::new();
 
 const LEGACY_APP_IDENTIFIER: &str = "com.pais.handy";
-const LEGACY_MIGRATION_MARKER: &str = ".crwbar-voice-import-v1";
-const PORTABLE_MAGIC: &str = "crwbar voice Portable Mode";
+const LEGACY_MIGRATION_MARKER: &str = ".quacky-import-v1";
+const PORTABLE_MAGIC: &str = "Quacky Portable Mode";
 const LEGACY_PORTABLE_MAGIC: &str = "Handy Portable Mode";
 
 /// Detect portable mode by looking for a `portable` marker file next to the exe.
@@ -73,7 +73,7 @@ pub fn app_data_dir(app: &tauri::AppHandle) -> Result<PathBuf, tauri::Error> {
 /// Import data from the former Handy bundle identifier once, without changing
 /// or deleting the source installation. Model files are hard-linked where the
 /// filesystem allows it (and copied otherwise), avoiding a second multi-GB
-/// model download while still giving crwbar voice its own independent folder.
+/// model download while still giving Quacky its own independent folder.
 pub fn import_legacy_app_data(app: &tauri::AppHandle) -> Result<(), String> {
     if is_portable() {
         return Ok(());
@@ -82,7 +82,7 @@ pub fn import_legacy_app_data(app: &tauri::AppHandle) -> Result<(), String> {
     let target = app
         .path()
         .app_data_dir()
-        .map_err(|error| format!("resolve crwbar voice data directory: {error}"))?;
+        .map_err(|error| format!("resolve Quacky data directory: {error}"))?;
     let marker = target.join(LEGACY_MIGRATION_MARKER);
     if marker.exists() {
         return Ok(());
@@ -126,7 +126,7 @@ pub fn import_legacy_app_data(app: &tauri::AppHandle) -> Result<(), String> {
     .map_err(|error| format!("write migration marker {}: {error}", marker.display()))?;
 
     eprintln!(
-        "[crwbar voice] imported {imported_files} legacy data files from {}",
+        "[Quacky] imported {imported_files} legacy data files from {}",
         source.display()
     );
     Ok(())
@@ -213,7 +213,7 @@ mod tests {
         std::fs::create_dir_all(&dir).unwrap();
         let marker = dir.join("portable");
         let mut f = std::fs::File::create(&marker).unwrap();
-        write!(f, "crwbar voice Portable Mode").unwrap();
+        write!(f, "Quacky Portable Mode").unwrap();
         assert!(is_valid_portable_marker(&marker));
         std::fs::remove_dir_all(dir).unwrap();
     }
@@ -262,14 +262,14 @@ mod tests {
         std::fs::create_dir_all(&dir).unwrap();
         let marker = dir.join("portable");
         let mut f = std::fs::File::create(&marker).unwrap();
-        write!(f, "  crwbar voice Portable Mode\n").unwrap();
+        write!(f, "  Quacky Portable Mode\n").unwrap();
         assert!(is_valid_portable_marker(&marker));
         std::fs::remove_dir_all(dir).unwrap();
     }
 
     #[test]
     fn test_legacy_handy_magic_string_still_enables_portable() {
-        let dir = std::env::temp_dir().join("crwbar_voice_test_legacy_magic");
+        let dir = std::env::temp_dir().join("quacky_test_legacy_magic");
         std::fs::create_dir_all(&dir).unwrap();
         let marker = dir.join("portable");
         let mut f = std::fs::File::create(&marker).unwrap();

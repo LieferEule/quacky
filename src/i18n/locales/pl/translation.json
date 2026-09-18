@@ -100,7 +100,7 @@
     },
     "permissions": {
       "title": "Wymagane uprawnienia",
-      "description": "crwbar voice potrzebuje kilku uprawnień, aby działać poprawnie.",
+      "description": "Quacky potrzebuje kilku uprawnień, aby działać poprawnie.",
       "microphone": {
         "title": "Dostęp do mikrofonu",
         "description": "Wymagany do słyszenia Twojego głosu w celu transkrypcji."
@@ -172,7 +172,7 @@
       "searchPlaceholder": "Szukaj modeli według nazwy…",
       "rescan": {
         "label": "Skanuj ponownie",
-        "tooltip": "Skanuj ponownie w poszukiwaniu modeli dodanych do folderu modeli lub pamięci podręcznej Hugging Face poza crwbar voice"
+        "tooltip": "Skanuj ponownie w poszukiwaniu modeli dodanych do folderu modeli lub pamięci podręcznej Hugging Face poza Quacky"
       }
     },
     "general": {
@@ -186,7 +186,7 @@
       },
       "title": "Ogólne",
       "shortcut": {
-        "title": "Skróty crwbar voice",
+        "title": "Skróty Quacky",
         "description": "Skonfiguruj skróty klawiaturowe do uruchamiania nagrywania mowy",
         "loading": "Wczytywanie skrótów...",
         "none": "Brak skonfigurowanych skrótów",
@@ -236,6 +236,10 @@
       "pushToTalk": {
         "label": "Push To Talk",
         "description": "Przytrzymaj, aby nagrywać, puść, aby zatrzymać"
+      },
+      "doubleTapLatch": {
+        "label": "Double Tap to Keep Recording",
+        "description": "Tap the shortcut twice to keep recording hands-free until you tap it again. Holding the key still works as usual."
       }
     },
     "sound": {
@@ -306,11 +310,11 @@
       },
       "autostart": {
         "label": "Uruchamiaj przy starcie",
-        "description": "Automatycznie uruchamiaj crwbar voice po zalogowaniu."
+        "description": "Automatycznie uruchamiaj Quacky po zalogowaniu."
       },
       "showTrayIcon": {
         "label": "Pokaż ikonę w zasobniku",
-        "description": "Wyświetlaj ikonę crwbar voice w zasobniku systemowym."
+        "description": "Wyświetlaj ikonę Quacky w zasobniku systemowym."
       },
       "overlay": {
         "style": {
@@ -530,7 +534,7 @@
       },
       "updateChecks": {
         "label": "Sprawdzaj aktualizacje",
-        "description": "Automatycznie sprawdzaj nowe wersje crwbar voice"
+        "description": "Automatycznie sprawdzaj nowe wersje Quacky"
       },
       "soundTheme": {
         "label": "Motyw dźwiękowy",
@@ -593,6 +597,10 @@
         "title": "Opóźnienie wklejania (po)",
         "description": "Opóźnienie (w milisekundach) po klawiszu wklejania, przed przywróceniem poprzedniego schowka. Zwiększ, jeśli zamiast transkrypcji wklejana jest stara zawartość schowka."
       },
+      "doubleTapWindow": {
+        "title": "Double-Tap Window",
+        "description": "How long after a tap a second tap still counts as a double tap. A single tap waits this long before it starts transcribing, so shorter feels faster but is harder to double-tap."
+      },
       "recordingBuffer": {
         "title": "Dodatkowy bufor nagrywania",
         "description": "Dodatkowy czas (w milisekundach) na kontynuowanie nagrywania po zwolnieniu klawisza, aby przechwycić końcowy dźwięk. 0 = brak dodatkowego bufora."
@@ -611,31 +619,26 @@
         "title": "Kolor akcentu",
         "description": "Wybierz własny kolor akcentu dla przycisków, paska nagrywania i wyróżnień. „Resetuj” przywraca domyślny pomarańczowy.",
         "reset": "Resetuj"
-      },
-      "rgbMode": {
-        "label": "Emil Mode",
-        "description": "Płynnie przewija kolor akcentu przez tęczę. Zastępuje kolor akcentu, gdy jest włączony.",
-        "boosted": "Podwójna prędkość aktywna"
       }
     },
     "about": {
       "title": "O programie",
       "version": {
         "title": "Wersja",
-        "description": "Aktualna wersja crwbar voice"
+        "description": "Aktualna wersja Quacky"
       },
       "appDataDirectory": {
         "title": "Katalog danych aplikacji",
-        "description": "Miejsce, gdzie crwbar voice przechowuje swoje dane"
+        "description": "Miejsce, gdzie Quacky przechowuje swoje dane"
       },
       "sourceCode": {
         "title": "Handy",
-        "description": "crwbar voice is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
+        "description": "Quacky is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
         "button": "Open Handy on GitHub"
       },
       "supportDevelopment": {
         "title": "Wspieraj rozwój",
-        "description": "Pomóż nam dalej rozwijać crwbar voice",
+        "description": "Pomóż nam dalej rozwijać Quacky",
         "button": "Wesprzyj"
       },
       "acknowledgments": {
@@ -643,12 +646,12 @@
         "ggml": {
           "title": "ggml",
           "description": "Wydajne wykonywanie modelu rozpoznawania mowy Whisper od OpenAI",
-          "details": "crwbar voice używa ggml do szybkiego, lokalnego przetwarzania mowy na tekst. Dzięki niesamowitej pracy Georgi Gerganova i współtwórców."
+          "details": "Quacky używa ggml do szybkiego, lokalnego przetwarzania mowy na tekst. Dzięki niesamowitej pracy Georgi Gerganova i współtwórców."
         }
       },
       "whatsNewUpdates": {
         "label": "Pokaż nowości",
-        "description": "Pokazuj informacje o wydaniu po aktualizacjach crwbar voice"
+        "description": "Pokazuj informacje o wydaniu po aktualizacjach Quacky"
       }
     }
   },
@@ -675,7 +678,7 @@
     "noOptionsFound": "Nie znaleziono opcji"
   },
   "accessibility": {
-    "permissionsDescription": "crwbar voice potrzebuje uprawnień dostępności, aby wpisywać transkrybowany tekst.",
+    "permissionsDescription": "Quacky potrzebuje uprawnień dostępności, aby wpisywać transkrybowany tekst.",
     "openSettings": "Otwórz ustawienia systemowe"
   },
   "errors": {
@@ -698,11 +701,11 @@
   },
   "appLanguage": {
     "title": "Język aplikacji",
-    "description": "Zmień język interfejsu crwbar voice"
+    "description": "Zmień język interfejsu Quacky"
   },
   "theme": {
     "title": "Motyw aplikacji",
-    "description": "Wybierz, czy crwbar voice ma podążać za motywem systemu, czy pozostać jasny lub ciemny",
+    "description": "Wybierz, czy Quacky ma podążać za motywem systemu, czy pozostać jasny lub ciemny",
     "options": {
       "system": "System",
       "light": "Jasny",
@@ -715,6 +718,7 @@
     "copyAgain": "Kopiuj ponownie",
     "dropFile": "Upuść plik",
     "dropHint": "Upuść tutaj plik audio, aby go przepisać",
+    "handsFree": "Hands-free recording",
     "transcribing": "Transkrypcja...",
     "processing": "Przetwarzanie...",
     "voiceTranscribing": "Transkrypcja polecenia...",
@@ -722,7 +726,7 @@
     "voiceDone": "Wklejono odpowiedź AI"
   },
   "whatsNew": {
-    "title": "Nowości w crwbar voice v{{version}}"
+    "title": "Nowości w Quacky v{{version}}"
   },
   "transcribe": {
     "title": "Transcribe a file",

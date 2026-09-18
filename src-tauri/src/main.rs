@@ -2,7 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
 use clap::Parser;
-use crwbar_voice_lib::CliArgs;
+use quacky_lib::CliArgs;
 
 fn main() {
     let cli_args = parse_cli_args();
@@ -14,7 +14,7 @@ fn main() {
         std::env::set_var("WEBKIT_DISABLE_DMABUF_RENDERER", "1");
     }
 
-    crwbar_voice_lib::run(cli_args)
+    quacky_lib::run(cli_args)
 }
 
 /// Parse CLI arguments without ever aborting the launch.

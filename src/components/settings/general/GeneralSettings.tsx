@@ -6,6 +6,7 @@ import { ShortcutInput } from "../ShortcutInput";
 import { SettingsGroup } from "../../ui/SettingsGroup";
 import { OutputDeviceSelector } from "../OutputDeviceSelector";
 import { PushToTalk } from "../PushToTalk";
+import { DoubleTapLatch } from "../DoubleTapLatch";
 import { DragDropToggle } from "../DragDropToggle";
 import { AutoCopyClipboard } from "../AutoCopyClipboard";
 import { AudioFeedback } from "../AudioFeedback";
@@ -15,13 +16,13 @@ import { AudioDucking } from "../AudioDucking";
 import { AudioDuckingSpeed } from "../AudioDuckingSpeed";
 import { SoundPicker } from "../SoundPicker";
 import { AccentColorPicker } from "../AccentColorPicker";
-import { RgbModeToggle } from "../RgbModeToggle";
 import { ModelSettingsCard } from "./ModelSettingsCard";
 
 export const GeneralSettings: React.FC = () => {
   const { t } = useTranslation();
   const { audioFeedbackEnabled, getSetting } = useSettings();
   const pushToTalk = getSetting("push_to_talk");
+  const doubleTapLatch = getSetting("double_tap_latch") ?? true;
   const duckingEnabled = getSetting("mute_while_recording") ?? false;
   const isLinux = type() === "linux";
   return (
@@ -29,8 +30,19 @@ export const GeneralSettings: React.FC = () => {
       <SettingsGroup title={t("settings.general.title")}>
         <ShortcutInput shortcutId="transcribe" grouped={true} />
         <PushToTalk descriptionMode="tooltip" grouped={true} />
-        {/* Cancel shortcut is hidden with push-to-talk (release key cancels) and on Linux (dynamic shortcut instability) */}
-        {!isLinux && !pushToTalk && (
+        {/* Hands-free only exists as a distinct gesture while push-to-talk is
+            on — in toggle mode a single press already keeps recording. */}
+        <DoubleTapLatch
+          descriptionMode="tooltip"
+          grouped={true}
+          disabled={!pushToTalk}
+        />
+        {/* In plain push-to-talk the release key already ends the recording, so
+            the cancel shortcut is redundant. A latched hands-free recording has
+            no such escape — a tap transcribes it — so cancel is the only way to
+            discard one and stays visible. Hidden on Linux either way (dynamic
+            shortcut instability). */}
+        {!isLinux && (!pushToTalk || doubleTapLatch) && (
           <ShortcutInput shortcutId="cancel" grouped={true} />
         )}
         <AutoCopyClipboard descriptionMode="tooltip" grouped={true} />
@@ -65,7 +77,6 @@ export const GeneralSettings: React.FC = () => {
 
       <SettingsGroup title={t("settings.appearance.title")}>
         <AccentColorPicker descriptionMode="tooltip" grouped={true} />
-        <RgbModeToggle descriptionMode="tooltip" grouped={true} />
       </SettingsGroup>
     </div>
   );

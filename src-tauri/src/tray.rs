@@ -160,9 +160,9 @@ pub fn tray_tooltip() -> String {
 
 fn version_label() -> String {
     if cfg!(debug_assertions) {
-        format!("crwbar voice v{} (Dev)", env!("CARGO_PKG_VERSION"))
+        format!("Quacky v{} (Dev)", env!("CARGO_PKG_VERSION"))
     } else {
-        format!("crwbar voice v{}", env!("CARGO_PKG_VERSION"))
+        format!("Quacky v{}", env!("CARGO_PKG_VERSION"))
     }
 }
 

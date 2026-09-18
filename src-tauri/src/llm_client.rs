@@ -1,6 +1,6 @@
 use crate::settings::PostProcessProvider;
 use log::debug;
-use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE, REFERER, USER_AGENT};
+use reqwest::header::{HeaderMap, HeaderValue, AUTHORIZATION, CONTENT_TYPE, USER_AGENT};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
@@ -65,12 +65,11 @@ fn build_headers(provider: &PostProcessProvider, api_key: &str) -> Result<Header
 
     // Common headers
     headers.insert(CONTENT_TYPE, HeaderValue::from_static("application/json"));
-    headers.insert(REFERER, HeaderValue::from_static("https://crw.bar"));
-    headers.insert(
-        USER_AGENT,
-        HeaderValue::from_static("crwbar-voice/0.1 (+https://crw.bar)"),
-    );
-    headers.insert("X-Title", HeaderValue::from_static("crwbar voice"));
+    // Attribution headers some providers (OpenRouter) show in their dashboard.
+    // `REFERER` is optional and deliberately unset: Quacky has no site to point
+    // at, and a made-up URL would be worse than none.
+    headers.insert(USER_AGENT, HeaderValue::from_static("quacky"));
+    headers.insert("X-Title", HeaderValue::from_static("Quacky"));
 
     // Provider-specific auth headers
     if !api_key.is_empty() {

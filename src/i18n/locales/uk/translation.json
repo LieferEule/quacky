@@ -100,7 +100,7 @@
     },
     "permissions": {
       "title": "Потрібні дозволи",
-      "description": "crwbar voice потребує деяких дозволів для коректної роботи.",
+      "description": "Quacky потребує деяких дозволів для коректної роботи.",
       "microphone": {
         "title": "Доступ до мікрофона",
         "description": "Потрібен для прослуховування вашого голосу для транскрипції."
@@ -218,6 +218,10 @@
       "pushToTalk": {
         "label": "Утримувати для запису (Push To Talk)",
         "description": "Утримуйте для запису, відпустіть для зупинки"
+      },
+      "doubleTapLatch": {
+        "label": "Double Tap to Keep Recording",
+        "description": "Tap the shortcut twice to keep recording hands-free until you tap it again. Holding the key still works as usual."
       }
     },
     "models": {
@@ -235,7 +239,7 @@
       "searchPlaceholder": "Пошук моделей за назвою…",
       "rescan": {
         "label": "Пересканувати",
-        "tooltip": "Пересканувати моделі, додані до папки моделей або кешу Hugging Face поза межами crwbar voice"
+        "tooltip": "Пересканувати моделі, додані до папки моделей або кешу Hugging Face поза межами Quacky"
       }
     },
     "sound": {
@@ -306,11 +310,11 @@
       },
       "autostart": {
         "label": "Запуск при старті системи",
-        "description": "Автоматично запускати crwbar voice при вході в систему"
+        "description": "Автоматично запускати Quacky при вході в систему"
       },
       "showTrayIcon": {
         "label": "Показати значок у треї",
-        "description": "Відображати значок crwbar voice у системному треї."
+        "description": "Відображати значок Quacky у системному треї."
       },
       "overlay": {
         "style": {
@@ -530,7 +534,7 @@
       },
       "updateChecks": {
         "label": "Перевірка оновлень",
-        "description": "Автоматично перевіряти наявність нових версій crwbar voice"
+        "description": "Автоматично перевіряти наявність нових версій Quacky"
       },
       "soundTheme": {
         "label": "Звукова тема",
@@ -593,6 +597,10 @@
         "title": "Затримка вставки (після)",
         "description": "Затримка (у мілісекундах) після натискання клавіші вставки, перед відновленням попереднього буфера обміну. Збільшіть, якщо замість транскрипції вставляється старий вміст буфера обміну."
       },
+      "doubleTapWindow": {
+        "title": "Double-Tap Window",
+        "description": "How long after a tap a second tap still counts as a double tap. A single tap waits this long before it starts transcribing, so shorter feels faster but is harder to double-tap."
+      },
       "recordingBuffer": {
         "title": "Додатковий буфер запису",
         "description": "Додатковий час (у мілісекундах) для продовження запису після відпускання клавіші, щоб захопити завершальний звук. 0 = без додаткового буфера."
@@ -611,31 +619,26 @@
         "title": "Акцентний колір",
         "description": "Виберіть власний акцентний колір для кнопок, панелі запису та виділень. «Скинути» повертає помаранчевий за умовчанням.",
         "reset": "Скинути"
-      },
-      "rgbMode": {
-        "label": "Emil Mode",
-        "description": "Плавно проводить акцентний колір крізь веселку. Поки увімкнено, замінює акцентний колір.",
-        "boosted": "Подвійна швидкість увімкнена"
       }
     },
     "about": {
       "title": "Інфо",
       "version": {
         "title": "Версія",
-        "description": "Поточна версія crwbar voice"
+        "description": "Поточна версія Quacky"
       },
       "appDataDirectory": {
         "title": "Папка даних програми",
-        "description": "Розташування даних crwbar voice"
+        "description": "Розташування даних Quacky"
       },
       "sourceCode": {
         "title": "Handy",
-        "description": "crwbar voice is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
+        "description": "Quacky is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
         "button": "Open Handy on GitHub"
       },
       "supportDevelopment": {
         "title": "Підтримати розробку",
-        "description": "Допоможіть нам продовжувати розвивати crwbar voice",
+        "description": "Допоможіть нам продовжувати розвивати Quacky",
         "button": "Підтримати"
       },
       "acknowledgments": {
@@ -643,12 +646,12 @@
         "ggml": {
           "title": "ggml",
           "description": "Високопродуктивний інференс моделі автоматичного розпізнавання мовлення Whisper від OpenAI",
-          "details": "crwbar voice використовує ggml для швидкої локальної обробки мовлення в текст. Дякуємо за чудову роботу Георгію Герганову та контриб'юторам."
+          "details": "Quacky використовує ggml для швидкої локальної обробки мовлення в текст. Дякуємо за чудову роботу Георгію Герганову та контриб'юторам."
         }
       },
       "whatsNewUpdates": {
         "label": "Показувати новини",
-        "description": "Показувати примітки до випуску після оновлень crwbar voice"
+        "description": "Показувати примітки до випуску після оновлень Quacky"
       }
     }
   },
@@ -675,7 +678,7 @@
     "noOptionsFound": "Опцій не знайдено"
   },
   "accessibility": {
-    "permissionsDescription": "crwbar voice потребує дозволи доступності для введення транскрибованого тексту.",
+    "permissionsDescription": "Quacky потребує дозволи доступності для введення транскрибованого тексту.",
     "openSettings": "Відкрити Системні налаштування"
   },
   "errors": {
@@ -698,11 +701,11 @@
   },
   "appLanguage": {
     "title": "Мова інтерфейсу",
-    "description": "Змінити мову інтерфейсу crwbar voice"
+    "description": "Змінити мову інтерфейсу Quacky"
   },
   "theme": {
     "title": "Тема застосунку",
-    "description": "Виберіть, чи має crwbar voice слідувати темі системи, чи залишатися світлою або темною",
+    "description": "Виберіть, чи має Quacky слідувати темі системи, чи залишатися світлою або темною",
     "options": {
       "system": "Системна",
       "light": "Світла",
@@ -715,6 +718,7 @@
     "copyAgain": "Скопіювати ще раз",
     "dropFile": "Перетягніть файл",
     "dropHint": "Перетягніть сюди аудіофайл для транскрибування",
+    "handsFree": "Hands-free recording",
     "transcribing": "Обробка...",
     "processing": "Постобробка...",
     "voiceTranscribing": "Транскрибую запит...",
@@ -722,7 +726,7 @@
     "voiceDone": "Відповідь ШІ вставлено"
   },
   "whatsNew": {
-    "title": "Нове в crwbar voice v{{version}}"
+    "title": "Нове в Quacky v{{version}}"
   },
   "transcribe": {
     "title": "Transcribe a file",

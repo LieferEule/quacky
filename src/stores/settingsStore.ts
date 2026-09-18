@@ -93,6 +93,10 @@ const settingUpdaters: {
   whats_new_last_seen_version: (value) =>
     commands.changeWhatsNewLastSeenVersionSetting(value as string),
   push_to_talk: (value) => commands.changePttSetting(value as boolean),
+  double_tap_latch: (value) =>
+    commands.changeDoubleTapLatchSetting(value as boolean),
+  double_tap_window_ms: (value) =>
+    commands.changeDoubleTapWindowSetting(value as number),
   selected_microphone: (value) =>
     commands.setSelectedMicrophone(
       (value as string) === "Default" || value === null
@@ -160,7 +164,6 @@ const settingUpdaters: {
     commands.changeAccentColorSetting(value as string | null),
   file_transcription_model: (value) =>
     commands.changeFileTranscriptionModelSetting(value as string | null),
-  rgb_mode: (value) => commands.changeRgbModeSetting(value as boolean),
   experimental_enabled: (value) =>
     commands.changeExperimentalEnabledSetting(value as boolean),
   lazy_stream_close: (value) =>

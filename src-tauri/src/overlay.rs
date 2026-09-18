@@ -532,6 +532,13 @@ pub fn hide_recording_overlay(app_handle: &AppHandle) {
     }
 }
 
+/// Tells the overlay whether the running recording has been latched hands-free
+/// by a double tap. The pill shows a small lock while it is, which is the only
+/// on-screen difference between holding the key and having latched it.
+pub fn set_overlay_hands_free(app_handle: &AppHandle, hands_free: bool) {
+    let _ = app_handle.emit_to("recording_overlay", "hands-free", hands_free);
+}
+
 // Cached "overlay is enabled" flag, kept in sync with overlay_style. Avoids
 // reading the Tauri store on every audio callback (~24 Hz during recording).
 // Defaults to false so the audio path doesn't emit until lib.rs::setup

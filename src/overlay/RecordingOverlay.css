@@ -386,6 +386,15 @@
   opacity: 1;
 }
 
+/* Hands-free lock — shown only while a double tap has latched the recording,
+   so the pill looks unchanged in ordinary push-to-talk. */
+.shands-free-icon {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  color: var(--color-logo-primary, currentColor);
+}
+
 /* Waveform — simple reactive bars, themed; heights set inline from mic levels. */
 .swave {
   display: flex;

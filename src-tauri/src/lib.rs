@@ -547,12 +547,13 @@ pub fn run(cli_args: CliArgs) {
             shortcut::reset_binding,
             shortcut::change_ptt_setting,
             shortcut::change_audio_feedback_setting,
+            shortcut::change_double_tap_latch_setting,
+            shortcut::change_double_tap_window_setting,
             shortcut::change_audio_feedback_volume_setting,
             shortcut::change_sound_theme_setting,
             shortcut::change_theme_setting,
             shortcut::change_accent_color_setting,
             shortcut::change_file_transcription_model_setting,
-            shortcut::change_rgb_mode_setting,
             shortcut::change_start_hidden_setting,
             shortcut::change_autostart_setting,
             shortcut::change_translate_to_english_setting,
@@ -713,11 +714,11 @@ pub fn run(cli_args: CliArgs) {
                     Target::new(if let Some(data_dir) = portable::data_dir() {
                         TargetKind::Folder {
                             path: data_dir.join("logs"),
-                            file_name: Some("crwbar-voice".into()),
+                            file_name: Some("quacky".into()),
                         }
                     } else {
                         TargetKind::LogDir {
-                            file_name: Some("crwbar-voice".into()),
+                            file_name: Some("quacky".into()),
                         }
                     })
                     .filter(|metadata| {
@@ -828,7 +829,7 @@ pub fn run(cli_args: CliArgs) {
             // for portable mode (redirects WebView2 cache to portable Data dir)
             let mut win_builder =
                 tauri::WebviewWindowBuilder::new(app, "main", tauri::WebviewUrl::App("/".into()))
-                    .title("crwbar voice")
+                    .title("Quacky")
                     .inner_size(680.0, 570.0)
                     .min_inner_size(680.0, 570.0)
                     .resizable(true)

@@ -1,19 +1,19 @@
-/* Crowbar (crw.bar) Colors */
+/* Quacky colors */
 
 :root {
-  /* crw.bar brand palette — mirrors crw.bar/web/app/globals.css. A dark,
+  /* Quacky brand palette, inherited from the fork this grew out of. A dark,
      near-black canvas with a single dominant orange accent; orange-hi is the
      brighter hover/accent, green is the "live" status hue (reference only). */
-  --crw-orange: #ff6600; /* primary brand */
-  --crw-orange-hi: #ff8533; /* hover / brighter accent */
-  --crw-ink: #ece7dd; /* warm off-white text */
-  --crw-bg: #0c0e0d; /* near-black canvas */
-  --crw-green: #5fd38a; /* "live" accent (reference) */
+  --quacky-orange: #ff6600; /* primary brand */
+  --quacky-orange-hi: #ff8533; /* hover / brighter accent */
+  --quacky-ink: #ece7dd; /* warm off-white text */
+  --quacky-bg: #0c0e0d; /* near-black canvas */
+  --quacky-green: #5fd38a; /* "live" accent (reference) */
 
   /* Palette source of truth. Each themed color is defined once as a
      light/dark pair; the active tokens below and the `data-theme` overrides
      in App.css reference these, so a hex value lives in exactly one place.
-     crw.bar is dark-first; the light pair is a warm daylight variant of the
+     Quacky is dark-first; the light pair is a warm daylight variant of the
      same identity so OS light mode still looks on-brand. */
   --light-color-text: #1a1512;
   --light-color-background: #faf8f4;

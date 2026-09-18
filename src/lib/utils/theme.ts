@@ -65,7 +65,7 @@ export const syncThemeFromSettings = async (): Promise<void> => {
 /* ----------------------------------------------------------------------------
  * Accent color.
  *
- * The brand accent (crw.bar orange) lives in CSS as `--color-logo-primary` and
+ * The brand accent (Quacky orange) lives in CSS as `--color-logo-primary` and
  * `--color-background-ui`; every accent surface (buttons, focus rings, the
  * recording overlay's dot/waveform, links) reads those tokens. A user-picked
  * accent overrides both via an inline style on the document root (inline styles
@@ -73,7 +73,7 @@ export const syncThemeFromSettings = async (): Promise<void> => {
  * `null` removes the override and falls back to the built-in orange.
  * ------------------------------------------------------------------------- */
 
-export const ACCENT_STORAGE_KEY = "crwbar.accent";
+export const ACCENT_STORAGE_KEY = "quacky.accent";
 export const DEFAULT_ACCENT = "#ff6600";
 const ACCENT_VARS = ["--color-logo-primary", "--color-background-ui"];
 const HEX_RE = /^#[0-9a-fA-F]{6}$/;
@@ -118,85 +118,12 @@ export const getStoredAccentColor = (): string | null => {
   return null;
 };
 
-/* ----------------------------------------------------------------------------
- * RGB mode — the accent hue cycles continuously. Purely cosmetic, and it
- * overrides the picked accent while enabled.
- *
- * Driven by requestAnimationFrame rather than a CSS animation because the accent
- * is a CSS variable consumed by many rules; rAF also pauses automatically while
- * the window is hidden, which matters for the always-loaded overlay window.
- * Frames only write CSS variables — never localStorage or settings.
- * ------------------------------------------------------------------------- */
-
-/** Time for one full trip around the hue wheel at normal speed. */
-const RGB_CYCLE_MS = 6000;
-
-/** Speed multiplier, shared with the overlay window through localStorage. */
-export const RGB_SPEED_STORAGE_KEY = "crwbar.emilSpeed";
-
-let rgbFrame: number | null = null;
-
-export const isRgbModeRunning = (): boolean => rgbFrame !== null;
-
-/** Current speed multiplier (1 = normal). Read fresh so changes apply live. */
-export const getRgbSpeed = (): number => {
-  try {
-    const stored = Number(localStorage.getItem(RGB_SPEED_STORAGE_KEY));
-    if (Number.isFinite(stored) && stored > 0) return stored;
-  } catch {
-    // ignore
-  }
-  return 1;
-};
-
-/** Set the speed multiplier; takes effect on the next animation frame. */
-export const setRgbSpeed = (multiplier: number): void => {
-  try {
-    localStorage.setItem(RGB_SPEED_STORAGE_KEY, String(multiplier));
-  } catch {
-    // ignore
-  }
-};
-
-/** Start cycling the accent hue. Safe to call when already running. */
-export const startRgbMode = (): void => {
-  if (rgbFrame !== null) return;
-  // Advance the hue per elapsed frame rather than from a fixed start time, so a
-  // speed change mid-animation continues smoothly instead of jumping.
-  let hue = 0;
-  let last = performance.now();
-  const tick = (now: number) => {
-    const elapsed = now - last;
-    last = now;
-    hue = (hue + (elapsed / RGB_CYCLE_MS) * 360 * getRgbSpeed()) % 360;
-    setAccentVars(`hsl(${hue.toFixed(1)} 95% 50%)`);
-    rgbFrame = requestAnimationFrame(tick);
-  };
-  rgbFrame = requestAnimationFrame(tick);
-};
-
-/** Stop cycling and restore `accent` (or the built-in accent when null). */
-export const stopRgbMode = (accent: string | null): void => {
-  if (rgbFrame !== null) {
-    cancelAnimationFrame(rgbFrame);
-    rgbFrame = null;
-  }
-  applyAccentColor(accent);
-};
-
-/** Start or stop the animation to match a settings state. */
-export const applyRgbMode = (enabled: boolean, accent: string | null): void => {
-  if (enabled) startRgbMode();
-  else stopRgbMode(accent);
-};
-
-/** Apply the persisted accent (and RGB mode) from AppSettings. */
+/** Apply the persisted accent from AppSettings. */
 export const syncAccentFromSettings = async (): Promise<void> => {
   try {
     const result = await commands.getAppSettings();
     if (result.status === "ok") {
-      const accent = result.data.accent_color ?? null;
-      applyRgbMode(result.data.rgb_mode ?? false, accent);
+      applyAccentColor(result.data.accent_color ?? null);
     }
   } catch (e) {
     console.warn("Failed to sync accent from settings:", e);

@@ -100,7 +100,7 @@
     },
     "permissions": {
       "title": "需要權限",
-      "description": "crwbar voice 需要一些權限才能正常運作",
+      "description": "Quacky 需要一些權限才能正常運作",
       "microphone": {
         "title": "麥克風存取",
         "description": "需要聽取您的語音進行轉錄"
@@ -168,7 +168,7 @@
       },
       "title": "一般",
       "shortcut": {
-        "title": "crwbar voice 快捷鍵",
+        "title": "Quacky 快捷鍵",
         "description": "設定啟動語音轉文字錄製的鍵盤快捷鍵",
         "loading": "載入快捷鍵中...",
         "none": "未設定快捷鍵",
@@ -218,6 +218,10 @@
       "pushToTalk": {
         "label": "按住說話",
         "description": "按住錄製，放開停止"
+      },
+      "doubleTapLatch": {
+        "label": "Double Tap to Keep Recording",
+        "description": "Tap the shortcut twice to keep recording hands-free until you tap it again. Holding the key still works as usual."
       }
     },
     "models": {
@@ -235,7 +239,7 @@
       "searchPlaceholder": "依名稱搜尋模型…",
       "rescan": {
         "label": "重新掃描",
-        "tooltip": "重新掃描在 crwbar voice 之外新增到模型資料夾或 Hugging Face 快取中的模型"
+        "tooltip": "重新掃描在 Quacky 之外新增到模型資料夾或 Hugging Face 快取中的模型"
       }
     },
     "sound": {
@@ -306,11 +310,11 @@
       },
       "autostart": {
         "label": "開機啟動",
-        "description": "登入電腦時自動啟動 crwbar voice"
+        "description": "登入電腦時自動啟動 Quacky"
       },
       "showTrayIcon": {
         "label": "顯示系統匣圖示",
-        "description": "在系統匣中顯示 crwbar voice 圖示"
+        "description": "在系統匣中顯示 Quacky 圖示"
       },
       "overlay": {
         "style": {
@@ -530,7 +534,7 @@
       },
       "updateChecks": {
         "label": "檢查更新",
-        "description": "自動檢查 crwbar voice 的新版本"
+        "description": "自動檢查 Quacky 的新版本"
       },
       "soundTheme": {
         "label": "聲音主題",
@@ -593,6 +597,10 @@
         "title": "貼上延遲（後）",
         "description": "發送貼上按鍵後、還原先前剪貼簿前的延遲（毫秒）。如果貼上的是舊的剪貼簿內容而非轉錄文字，請增加此值。"
       },
+      "doubleTapWindow": {
+        "title": "Double-Tap Window",
+        "description": "How long after a tap a second tap still counts as a double tap. A single tap waits this long before it starts transcribing, so shorter feels faster but is harder to double-tap."
+      },
       "recordingBuffer": {
         "title": "額外錄音緩衝",
         "description": "放開按鍵後繼續錄音的額外時間（毫秒），以捕捉尾音。0 = 無額外緩衝。"
@@ -611,31 +619,26 @@
         "title": "強調色",
         "description": "為按鈕、錄音列和標示選擇自訂強調色。「重設」會回復預設的橘色。",
         "reset": "重設"
-      },
-      "rgbMode": {
-        "label": "Emil Mode",
-        "description": "讓強調色持續循環變換彩虹色。開啟時會覆蓋所選強調色。",
-        "boosted": "雙倍速度已啟用"
       }
     },
     "about": {
       "title": "關於",
       "version": {
         "title": "版本",
-        "description": "crwbar voice 的目前版本"
+        "description": "Quacky 的目前版本"
       },
       "appDataDirectory": {
         "title": "應用程式資料目錄",
-        "description": "crwbar voice 儲存資料的位置"
+        "description": "Quacky 儲存資料的位置"
       },
       "sourceCode": {
         "title": "Handy",
-        "description": "crwbar voice is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
+        "description": "Quacky is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
         "button": "Open Handy on GitHub"
       },
       "supportDevelopment": {
         "title": "支持開發",
-        "description": "幫助我們繼續開發 crwbar voice",
+        "description": "幫助我們繼續開發 Quacky",
         "button": "捐贈"
       },
       "acknowledgments": {
@@ -643,12 +646,12 @@
         "ggml": {
           "title": "ggml",
           "description": "針對 OpenAI Whisper 自動語音識別模型的高效能推理引擎",
-          "details": "crwbar voice 使用 ggml 進行快速的本機語音轉文字處理。感謝 Georgi Gerganov 和貢獻者們的傑出工作"
+          "details": "Quacky 使用 ggml 進行快速的本機語音轉文字處理。感謝 Georgi Gerganov 和貢獻者們的傑出工作"
         }
       },
       "whatsNewUpdates": {
         "label": "顯示新功能",
-        "description": "crwbar voice 更新後顯示版本資訊"
+        "description": "Quacky 更新後顯示版本資訊"
       }
     }
   },
@@ -675,7 +678,7 @@
     "noOptionsFound": "未找到選項"
   },
   "accessibility": {
-    "permissionsDescription": "crwbar voice 需要輔助使用權限才能輸入轉錄的文字",
+    "permissionsDescription": "Quacky 需要輔助使用權限才能輸入轉錄的文字",
     "openSettings": "開啟系統設定"
   },
   "errors": {
@@ -698,11 +701,11 @@
   },
   "appLanguage": {
     "title": "應用程式語言",
-    "description": "變更 crwbar voice 介面的語言"
+    "description": "變更 Quacky 介面的語言"
   },
   "theme": {
     "title": "應用程式主題",
-    "description": "選擇 crwbar voice 跟隨系統主題，或維持淺色或深色",
+    "description": "選擇 Quacky 跟隨系統主題，或維持淺色或深色",
     "options": {
       "system": "跟隨系統",
       "light": "淺色",
@@ -715,6 +718,7 @@
     "copyAgain": "再次複製",
     "dropFile": "放下檔案",
     "dropHint": "將音訊檔案放到這裡進行轉錄",
+    "handsFree": "Hands-free recording",
     "transcribing": "正在轉錄...",
     "processing": "處理中...",
     "voiceTranscribing": "正在轉錄指令...",
@@ -722,7 +726,7 @@
     "voiceDone": "已貼上 AI 回覆"
   },
   "whatsNew": {
-    "title": "crwbar voice v{{version}} 新功能"
+    "title": "Quacky v{{version}} 新功能"
   },
   "transcribe": {
     "title": "Transcribe a file",

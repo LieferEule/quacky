@@ -100,7 +100,7 @@
     },
     "permissions": {
       "title": "נדרשות הרשאות",
-      "description": "crwbar voice צריך כמה הרשאות כדי לעבוד כמו שצריך.",
+      "description": "Quacky צריך כמה הרשאות כדי לעבוד כמו שצריך.",
       "microphone": {
         "title": "גישה למיקרופון",
         "description": "נדרש כדי לשמוע את הקול שלך לצורך תמלול."
@@ -168,7 +168,7 @@
       },
       "title": "כללי",
       "shortcut": {
-        "title": "קיצורי מקשים של crwbar voice",
+        "title": "קיצורי מקשים של Quacky",
         "description": "הגדר קיצורי מקשים כדי להפעיל הקלטה ותמלול דיבור",
         "loading": "טוען קיצורי מקשים...",
         "none": "לא הוגדרו קיצורי מקשים",
@@ -218,6 +218,10 @@
       "pushToTalk": {
         "label": "לחץ כדי לדבר",
         "description": "החזק כדי להקליט, שחרר כדי לעצור"
+      },
+      "doubleTapLatch": {
+        "label": "Double Tap to Keep Recording",
+        "description": "Tap the shortcut twice to keep recording hands-free until you tap it again. Holding the key still works as usual."
       }
     },
     "models": {
@@ -235,7 +239,7 @@
       "searchPlaceholder": "חיפוש מודלים לפי שם…",
       "rescan": {
         "label": "סריקה מחדש",
-        "tooltip": "סריקה מחדש לאיתור מודלים שנוספו לתיקיית המודלים או למטמון של Hugging Face מחוץ ל-crwbar voice"
+        "tooltip": "סריקה מחדש לאיתור מודלים שנוספו לתיקיית המודלים או למטמון של Hugging Face מחוץ ל-Quacky"
       }
     },
     "sound": {
@@ -306,11 +310,11 @@
       },
       "autostart": {
         "label": "הפעל עם עליית המערכת",
-        "description": "הפעל את crwbar voice אוטומטית כשאתה מתחבר למחשב."
+        "description": "הפעל את Quacky אוטומטית כשאתה מתחבר למחשב."
       },
       "showTrayIcon": {
         "label": "הצג אייקון במגש",
-        "description": "הצג את האייקון של crwbar voice במגש המערכת."
+        "description": "הצג את האייקון של Quacky במגש המערכת."
       },
       "overlay": {
         "style": {
@@ -530,7 +534,7 @@
       },
       "updateChecks": {
         "label": "בדוק עדכונים",
-        "description": "בדוק אוטומטית אם קיימות גרסאות חדשות של crwbar voice"
+        "description": "בדוק אוטומטית אם קיימות גרסאות חדשות של Quacky"
       },
       "soundTheme": {
         "label": "ערכת צלילים",
@@ -593,6 +597,10 @@
         "title": "השהיית הדבקה (אחרי)",
         "description": "השהיה (במילישניות) לאחר צירוף ההדבקה, לפני שחזור הלוח הקודם. הגדל אם התוכן הישן של הלוח מודבק במקום התמלול."
       },
+      "doubleTapWindow": {
+        "title": "Double-Tap Window",
+        "description": "How long after a tap a second tap still counts as a double tap. A single tap waits this long before it starts transcribing, so shorter feels faster but is harder to double-tap."
+      },
       "recordingBuffer": {
         "title": "באפר הקלטה נוסף",
         "description": "זמן נוסף (במילישניות) להמשך הקלטה אחרי שחרור המקש, כדי ללכוד סוף דיבור. 0 = בלי באפר נוסף."
@@ -611,31 +619,26 @@
         "title": "צבע הדגשה",
         "description": "בחר צבע הדגשה משלך עבור הכפתורים, סרגל ההקלטה וההדגשות. \"איפוס\" מחזיר לכתום ברירת המחדל.",
         "reset": "איפוס"
-      },
-      "rgbMode": {
-        "label": "Emil Mode",
-        "description": "מחליף את צבע ההדגשה לאורך הקשת ברציפות. עוקף את צבע ההדגשה כל עוד הוא פעיל.",
-        "boosted": "מהירות כפולה פעילה"
       }
     },
     "about": {
       "title": "אודות",
       "version": {
         "title": "גרסה",
-        "description": "הגרסה הנוכחית של crwbar voice"
+        "description": "הגרסה הנוכחית של Quacky"
       },
       "appDataDirectory": {
         "title": "תיקיית נתוני אפליקציה",
-        "description": "המיקום שבו crwbar voice שומר את הנתונים שלו"
+        "description": "המיקום שבו Quacky שומר את הנתונים שלו"
       },
       "sourceCode": {
         "title": "Handy",
-        "description": "crwbar voice is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
+        "description": "Quacky is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
         "button": "Open Handy on GitHub"
       },
       "supportDevelopment": {
         "title": "תמיכה בפיתוח",
-        "description": "עזור לנו להמשיך לבנות את crwbar voice",
+        "description": "עזור לנו להמשיך לבנות את Quacky",
         "button": "תרומה"
       },
       "acknowledgments": {
@@ -643,12 +646,12 @@
         "ggml": {
           "title": "ggml",
           "description": "הסקה מהירה לביצועים גבוהים עבור מודל זיהוי הדיבור Whisper של OpenAI",
-          "details": "crwbar voice משתמש ב-ggml לתמלול מהיר ומקומי. תודה לעבודה המדהימה של Georgi Gerganov וכל התורמים."
+          "details": "Quacky משתמש ב-ggml לתמלול מהיר ומקומי. תודה לעבודה המדהימה של Georgi Gerganov וכל התורמים."
         }
       },
       "whatsNewUpdates": {
         "label": "הצג מה חדש",
-        "description": "הצג הערות גרסה לאחר עדכוני crwbar voice"
+        "description": "הצג הערות גרסה לאחר עדכוני Quacky"
       }
     }
   },
@@ -675,7 +678,7 @@
     "noOptionsFound": "לא נמצאו אפשרויות"
   },
   "accessibility": {
-    "permissionsDescription": "crwbar voice צריך הרשאות נגישות כדי להקליד את הטקסט המתומלל.",
+    "permissionsDescription": "Quacky צריך הרשאות נגישות כדי להקליד את הטקסט המתומלל.",
     "openSettings": "פתח את הגדרות המערכת"
   },
   "errors": {
@@ -698,11 +701,11 @@
   },
   "appLanguage": {
     "title": "שפת האפליקציה",
-    "description": "שנה את שפת הממשק של crwbar voice"
+    "description": "שנה את שפת הממשק של Quacky"
   },
   "theme": {
     "title": "ערכת נושא של האפליקציה",
-    "description": "בחר אם crwbar voice יעקוב אחר ערכת הנושא של המערכת או יישאר בהיר או כהה",
+    "description": "בחר אם Quacky יעקוב אחר ערכת הנושא של המערכת או יישאר בהיר או כהה",
     "options": {
       "system": "מערכת",
       "light": "בהיר",
@@ -715,6 +718,7 @@
     "copyAgain": "העתק שוב",
     "dropFile": "שחרר קובץ",
     "dropHint": "שחרר כאן קובץ שמע כדי לתמלל אותו",
+    "handsFree": "Hands-free recording",
     "transcribing": "מתמלל...",
     "processing": "מעבד...",
     "voiceTranscribing": "מתמלל את הבקשה...",
@@ -722,7 +726,7 @@
     "voiceDone": "תגובת ה-AI הודבקה"
   },
   "whatsNew": {
-    "title": "חדש ב-crwbar voice v{{version}}"
+    "title": "חדש ב-Quacky v{{version}}"
   },
   "transcribe": {
     "title": "Transcribe a file",

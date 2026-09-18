@@ -1,6 +1,6 @@
 import { listen } from "@tauri-apps/api/event";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
-import { Sparkles } from "lucide-react";
+import { Lock, Sparkles } from "lucide-react";
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import "./RecordingOverlay.css";
@@ -14,7 +14,7 @@ import type {
 import BuiltStateIcon from "@/components/icons/BuiltStateIcon";
 import i18n, { syncLanguageFromSettings } from "@/i18n";
 import { getLanguageDirection } from "@/lib/utils/rtl";
-import { applyRgbMode } from "@/lib/utils/theme";
+import { applyAccentColor } from "@/lib/utils/theme";
 
 type OverlayState =
   | "recording"
@@ -66,6 +66,9 @@ const RecordingOverlay: React.FC = () => {
   // The completion pill distinguishes a completed paste from an automatic or
   // explicit clipboard copy, so disabling Auto Copy never shows a false claim.
   const [doneCopied, setDoneCopied] = useState(false);
+  // True while a double tap has latched the recording, so it keeps running
+  // without the key held. The only on-screen sign that the latch caught.
+  const [handsFree, setHandsFree] = useState(false);
 
   const smoothedLevelsRef = useRef<number[]>(Array(16).fill(0));
   // Live-text scroll-back: the text region "sticks" to the newest line while the
@@ -100,10 +103,7 @@ const RecordingOverlay: React.FC = () => {
             );
             dragDropEnabledRef.current =
               settings.data.drag_drop_enabled ?? false;
-            applyRgbMode(
-              settings.data.rgb_mode ?? false,
-              settings.data.accent_color ?? null,
-            );
+            applyAccentColor(settings.data.accent_color ?? null);
             if (overlayState === "done") {
               setDoneCopied(
                 settings.data.clipboard_handling === "copy_to_clipboard",
@@ -117,6 +117,9 @@ const RecordingOverlay: React.FC = () => {
         setState(overlayState);
         if (overlayState === "recording" || overlayState === "streaming") {
           setStreamText({ committed: "", tentative: "" });
+          // A fresh recording is never latched yet; the backend says so
+          // separately once a double tap lands.
+          setHandsFree(false);
         }
         if (overlayState === "streaming") {
           setPhase("listening");
@@ -129,6 +132,11 @@ const RecordingOverlay: React.FC = () => {
 
       const unlistenHide = await listen("hide-overlay", () => {
         setIsVisible(false);
+        setHandsFree(false);
+      });
+
+      const unlistenHandsFree = await listen<boolean>("hands-free", (event) => {
+        setHandsFree(event.payload === true);
       });
 
       const unlistenLevel = await listen<number[]>("mic-level", (event) => {
@@ -157,6 +165,7 @@ const RecordingOverlay: React.FC = () => {
       return () => {
         unlistenShow();
         unlistenHide();
+        unlistenHandsFree();
         unlistenLevel();
         unlistenStream();
         unlistenPhase();
@@ -289,6 +298,12 @@ const RecordingOverlay: React.FC = () => {
       </div>
       {waveform}
       <div className="sbase-r">
+        {handsFree && (
+          <Lock
+            className="shands-free-icon"
+            aria-label={t("overlay.handsFree")}
+          />
+        )}
         {showTimer && <span className="stimer">{fmtTime(elapsed)}</span>}
         {showCancel && cancelBtn}
       </div>

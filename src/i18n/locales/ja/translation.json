@@ -100,7 +100,7 @@
     },
     "permissions": {
       "title": "権限が必要です",
-      "description": "crwbar voice が正常に動作するにはいくつかの権限が必要です。",
+      "description": "Quacky が正常に動作するにはいくつかの権限が必要です。",
       "microphone": {
         "title": "マイクへのアクセス",
         "description": "文字起こしのためにあなたの声を聞くために必要です。"
@@ -172,7 +172,7 @@
       "searchPlaceholder": "モデルを名前で検索…",
       "rescan": {
         "label": "再スキャン",
-        "tooltip": "crwbar voice を使わずに models フォルダーまたは Hugging Face キャッシュに追加されたモデルを再スキャンします"
+        "tooltip": "Quacky を使わずに models フォルダーまたは Hugging Face キャッシュに追加されたモデルを再スキャンします"
       }
     },
     "general": {
@@ -186,7 +186,7 @@
       },
       "title": "一般",
       "shortcut": {
-        "title": "crwbar voice ショートカット",
+        "title": "Quacky ショートカット",
         "description": "音声録音を開始するキーボードショートカットを設定",
         "loading": "ショートカットを読み込み中…",
         "none": "ショートカットが設定されていません",
@@ -236,6 +236,10 @@
       "pushToTalk": {
         "label": "プッシュツートーク",
         "description": "押し続けて録音、離して停止"
+      },
+      "doubleTapLatch": {
+        "label": "Double Tap to Keep Recording",
+        "description": "Tap the shortcut twice to keep recording hands-free until you tap it again. Holding the key still works as usual."
       }
     },
     "sound": {
@@ -306,11 +310,11 @@
       },
       "autostart": {
         "label": "起動時に実行",
-        "description": "コンピューターにログインしたときに crwbar voice を自動的に起動。"
+        "description": "コンピューターにログインしたときに Quacky を自動的に起動。"
       },
       "showTrayIcon": {
         "label": "トレイアイコンを表示",
-        "description": "システムトレイに crwbar voice のアイコンを表示します。"
+        "description": "システムトレイに Quacky のアイコンを表示します。"
       },
       "overlay": {
         "style": {
@@ -530,7 +534,7 @@
       },
       "updateChecks": {
         "label": "アップデートを確認",
-        "description": "crwbar voice の新しいバージョンを自動的にチェック"
+        "description": "Quacky の新しいバージョンを自動的にチェック"
       },
       "soundTheme": {
         "label": "サウンドテーマ",
@@ -593,6 +597,10 @@
         "title": "貼り付け遅延(後)",
         "description": "貼り付けキーを送信した後、以前のクリップボードを復元する前の遅延(ミリ秒)。文字起こしではなく古いクリップボードの内容が貼り付けられる場合は増やしてください。"
       },
+      "doubleTapWindow": {
+        "title": "Double-Tap Window",
+        "description": "How long after a tap a second tap still counts as a double tap. A single tap waits this long before it starts transcribing, so shorter feels faster but is harder to double-tap."
+      },
       "recordingBuffer": {
         "title": "追加録音バッファ",
         "description": "キーを離した後に録音を続ける追加時間(ミリ秒)。末尾の音声を捕捉するため。0 = 追加バッファなし。"
@@ -611,31 +619,26 @@
         "title": "アクセントカラー",
         "description": "ボタン、録音バー、ハイライトのアクセントカラーを自由に設定できます。「リセット」で既定のオレンジに戻ります。",
         "reset": "リセット"
-      },
-      "rgbMode": {
-        "label": "Emil Mode",
-        "description": "アクセントカラーを虹色に循環させます。有効な間はアクセントカラーより優先されます。",
-        "boosted": "2 倍速が有効"
       }
     },
     "about": {
       "title": "概要",
       "version": {
         "title": "バージョン",
-        "description": "crwbar voice の現在のバージョン"
+        "description": "Quacky の現在のバージョン"
       },
       "appDataDirectory": {
         "title": "アプリデータディレクトリ",
-        "description": "crwbar voice がデータを保存する場所"
+        "description": "Quacky がデータを保存する場所"
       },
       "sourceCode": {
         "title": "Handy",
-        "description": "crwbar voice is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
+        "description": "Quacky is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
         "button": "Open Handy on GitHub"
       },
       "supportDevelopment": {
         "title": "開発を支援",
-        "description": "crwbar voice の開発を支援してください",
+        "description": "Quacky の開発を支援してください",
         "button": "寄付する"
       },
       "acknowledgments": {
@@ -643,12 +646,12 @@
         "ggml": {
           "title": "ggml",
           "description": "オンデバイス機械学習推論のための高性能テンソルライブラリ",
-          "details": "crwbar voice のローカルの音声からテキストへの文字起こしは transcribe.cpp と ggml を基盤としています。Georgi Gerganov 氏と貢献者の皆様の素晴らしい仕事に感謝します。"
+          "details": "Quacky のローカルの音声からテキストへの文字起こしは transcribe.cpp と ggml を基盤としています。Georgi Gerganov 氏と貢献者の皆様の素晴らしい仕事に感謝します。"
         }
       },
       "whatsNewUpdates": {
         "label": "新機能を表示",
-        "description": "crwbar voice のアップデート後にリリースノートを表示"
+        "description": "Quacky のアップデート後にリリースノートを表示"
       }
     }
   },
@@ -675,7 +678,7 @@
     "noOptionsFound": "オプションが見つかりません"
   },
   "accessibility": {
-    "permissionsDescription": "crwbar voice が文字起こしテキストを入力するには、アクセシビリティ権限が必要です。",
+    "permissionsDescription": "Quacky が文字起こしテキストを入力するには、アクセシビリティ権限が必要です。",
     "openSettings": "システム設定を開く"
   },
   "errors": {
@@ -698,11 +701,11 @@
   },
   "appLanguage": {
     "title": "アプリの言語",
-    "description": "crwbar voice インターフェースの言語を変更"
+    "description": "Quacky インターフェースの言語を変更"
   },
   "theme": {
     "title": "アプリのテーマ",
-    "description": "crwbar voice をシステムのテーマに合わせるか、ライトまたはダークで固定するかを選択します",
+    "description": "Quacky をシステムのテーマに合わせるか、ライトまたはダークで固定するかを選択します",
     "options": {
       "system": "システム",
       "light": "ライト",
@@ -715,6 +718,7 @@
     "copyAgain": "もう一度コピー",
     "dropFile": "ファイルをドロップ",
     "dropHint": "文字起こしする音声ファイルをここにドロップ",
+    "handsFree": "Hands-free recording",
     "transcribing": "文字起こし中…",
     "processing": "処理中…",
     "voiceTranscribing": "指示を文字起こし中…",
@@ -722,7 +726,7 @@
     "voiceDone": "AIの回答を貼り付けました"
   },
   "whatsNew": {
-    "title": "crwbar voice v{{version}} の新機能"
+    "title": "Quacky v{{version}} の新機能"
   },
   "transcribe": {
     "title": "Transcribe a file",

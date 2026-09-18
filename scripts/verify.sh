@@ -35,9 +35,9 @@ echo
 echo "────────────────────────────────────────────────────────────"
 JOIN() { local IFS=', '; echo "$*"; }
 if [ ${#FAILED[@]} -eq 0 ]; then
-  echo "VERIFY OK · crwbar-voice · $(date '+%Y-%m-%d %H:%M') · ${#PASSED[@]} gruen [$(JOIN "${PASSED[@]}")]${SKIPPED[*]:+ · uebersprungen: $(JOIN "${SKIPPED[@]}")}"
+  echo "VERIFY OK · quacky · $(date '+%Y-%m-%d %H:%M') · ${#PASSED[@]} gruen [$(JOIN "${PASSED[@]}")]${SKIPPED[*]:+ · uebersprungen: $(JOIN "${SKIPPED[@]}")}"
   exit 0
 else
-  echo "VERIFY FEHLGESCHLAGEN · crwbar-voice · $(date '+%Y-%m-%d %H:%M') · ${#FAILED[@]} rot [$(JOIN "${FAILED[@]}")] · ${#PASSED[@]} gruen"
+  echo "VERIFY FEHLGESCHLAGEN · quacky · $(date '+%Y-%m-%d %H:%M') · ${#FAILED[@]} rot [$(JOIN "${FAILED[@]}")] · ${#PASSED[@]} gruen"
   exit 1
 fi

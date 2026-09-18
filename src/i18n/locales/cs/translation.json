@@ -100,7 +100,7 @@
     },
     "permissions": {
       "title": "Vyžadována oprávnění",
-      "description": "crwbar voice potřebuje několik oprávnění pro správné fungování.",
+      "description": "Quacky potřebuje několik oprávnění pro správné fungování.",
       "microphone": {
         "title": "Přístup k mikrofonu",
         "description": "Potřebný pro zachycení vašeho hlasu k přepisu."
@@ -172,7 +172,7 @@
       "searchPlaceholder": "Hledat modely podle názvu…",
       "rescan": {
         "label": "Znovu prohledat",
-        "tooltip": "Znovu prohledat modely přidané do složky modelů nebo mezipaměti Hugging Face mimo crwbar voice"
+        "tooltip": "Znovu prohledat modely přidané do složky modelů nebo mezipaměti Hugging Face mimo Quacky"
       }
     },
     "general": {
@@ -186,7 +186,7 @@
       },
       "title": "Obecné",
       "shortcut": {
-        "title": "Zkratky crwbar voice",
+        "title": "Zkratky Quacky",
         "description": "Nastavte klávesové zkratky pro spuštění nahrávání řeči na text",
         "loading": "Načítám zkratky...",
         "none": "Žádné zkratky nejsou nastavené",
@@ -236,6 +236,10 @@
       "pushToTalk": {
         "label": "Stisk a mluv",
         "description": "Podržte pro nahrávání, uvolněte pro zastavení"
+      },
+      "doubleTapLatch": {
+        "label": "Double Tap to Keep Recording",
+        "description": "Tap the shortcut twice to keep recording hands-free until you tap it again. Holding the key still works as usual."
       }
     },
     "sound": {
@@ -306,11 +310,11 @@
       },
       "autostart": {
         "label": "Spouštět při startu",
-        "description": "Automaticky spustit crwbar voice po přihlášení do počítače."
+        "description": "Automaticky spustit Quacky po přihlášení do počítače."
       },
       "showTrayIcon": {
         "label": "Zobrazit ikonu v systémové liště",
-        "description": "Zobrazit ikonu crwbar voice v systémové liště."
+        "description": "Zobrazit ikonu Quacky v systémové liště."
       },
       "overlay": {
         "style": {
@@ -530,7 +534,7 @@
       },
       "updateChecks": {
         "label": "Kontrolovat aktualizace",
-        "description": "Automaticky kontrolovat nové verze crwbar voice"
+        "description": "Automaticky kontrolovat nové verze Quacky"
       },
       "soundTheme": {
         "label": "Zvukový motiv",
@@ -593,6 +597,10 @@
         "title": "Zpoždění vložení (po)",
         "description": "Zpoždění (v milisekundách) po klávese pro vložení, před obnovením předchozí schránky. Zvyšte, pokud se místo přepisu vkládá starý obsah schránky."
       },
+      "doubleTapWindow": {
+        "title": "Double-Tap Window",
+        "description": "How long after a tap a second tap still counts as a double tap. A single tap waits this long before it starts transcribing, so shorter feels faster but is harder to double-tap."
+      },
       "recordingBuffer": {
         "title": "Extra vyrovnávací paměť nahrávání",
         "description": "Extra čas (v milisekundách) pro pokračování nahrávání po uvolnění klávesy, pro zachycení zbývajícího zvuku. 0 = žádná extra vyrovnávací paměť."
@@ -611,31 +619,26 @@
         "title": "Barva zvýraznění",
         "description": "Zvolte vlastní barvu zvýraznění pro tlačítka, lištu nahrávání a zvýraznění. „Obnovit“ vrátí výchozí oranžovou.",
         "reset": "Obnovit"
-      },
-      "rgbMode": {
-        "label": "Emil Mode",
-        "description": "Nechá barvu zvýraznění plynule procházet duhou. Dokud je zapnutý, přepíše zvolenou barvu.",
-        "boosted": "Dvojnásobná rychlost aktivní"
       }
     },
     "about": {
       "title": "O aplikaci",
       "version": {
         "title": "Verze",
-        "description": "Aktuální verze crwbar voice"
+        "description": "Aktuální verze Quacky"
       },
       "appDataDirectory": {
         "title": "Adresář dat aplikace",
-        "description": "Umístění, kde crwbar voice ukládá data"
+        "description": "Umístění, kde Quacky ukládá data"
       },
       "sourceCode": {
         "title": "Handy",
-        "description": "crwbar voice is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
+        "description": "Quacky is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
         "button": "Open Handy on GitHub"
       },
       "supportDevelopment": {
         "title": "Podpořte vývoj",
-        "description": "Pomozte nám pokračovat ve vývoji crwbar voice",
+        "description": "Pomozte nám pokračovat ve vývoji Quacky",
         "button": "Přispět"
       },
       "acknowledgments": {
@@ -643,12 +646,12 @@
         "ggml": {
           "title": "ggml",
           "description": "Vysoce výkonné inferenční zpracování modelu automatického rozpoznávání řeči Whisper od OpenAI",
-          "details": "crwbar voice používá ggml pro rychlé lokální zpracování řeči na text. Díky skvělé práci Georgiho Gerganova a přispěvatelů."
+          "details": "Quacky používá ggml pro rychlé lokální zpracování řeči na text. Díky skvělé práci Georgiho Gerganova a přispěvatelů."
         }
       },
       "whatsNewUpdates": {
         "label": "Zobrazovat novinky",
-        "description": "Zobrazovat poznámky k vydání po aktualizacích crwbar voice"
+        "description": "Zobrazovat poznámky k vydání po aktualizacích Quacky"
       }
     }
   },
@@ -675,7 +678,7 @@
     "noOptionsFound": "Nenalezeny žádné možnosti"
   },
   "accessibility": {
-    "permissionsDescription": "crwbar voice potřebuje oprávnění usnadnění přístupu, aby mohlo psát přepsaný text.",
+    "permissionsDescription": "Quacky potřebuje oprávnění usnadnění přístupu, aby mohlo psát přepsaný text.",
     "openSettings": "Otevřít Nastavení systému"
   },
   "errors": {
@@ -698,11 +701,11 @@
   },
   "appLanguage": {
     "title": "Jazyk aplikace",
-    "description": "Změňte jazyk rozhraní crwbar voice"
+    "description": "Změňte jazyk rozhraní Quacky"
   },
   "theme": {
     "title": "Motiv aplikace",
-    "description": "Zvolte, zda má crwbar voice sledovat motiv systému, nebo zůstat světlý či tmavý",
+    "description": "Zvolte, zda má Quacky sledovat motiv systému, nebo zůstat světlý či tmavý",
     "options": {
       "system": "Systém",
       "light": "Světlý",
@@ -715,6 +718,7 @@
     "copyAgain": "Kopírovat znovu",
     "dropFile": "Pustit soubor",
     "dropHint": "Pusťte sem zvukový soubor pro přepis",
+    "handsFree": "Hands-free recording",
     "transcribing": "Přepisuji...",
     "processing": "Zpracovávám...",
     "voiceTranscribing": "Přepisuji požadavek...",
@@ -722,7 +726,7 @@
     "voiceDone": "Odpověď AI vložena"
   },
   "whatsNew": {
-    "title": "Novinky v crwbar voice v{{version}}"
+    "title": "Novinky v Quacky v{{version}}"
   },
   "transcribe": {
     "title": "Transcribe a file",

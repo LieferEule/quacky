@@ -1,11 +1,11 @@
 [package]
-name = "crwbar-voice"
-version = "0.3.0"
+name = "quacky"
+version = "0.4.0"
 description = "Private, local-first speech transcription"
-authors = ["crwbar contributors", "CJ Pais and Handy contributors"]
+authors = ["Jamie Andrew", "CJ Pais and Handy contributors"]
 edition = "2021"
 license = "MIT"
-default-run = "crwbar-voice"
+default-run = "quacky"
 
 [profile.dev]
 incremental = true # Compile your binary in smaller steps.
@@ -16,7 +16,7 @@ incremental = true # Compile your binary in smaller steps.
 # The `_lib` suffix may seem redundant but it is necessary
 # to make the lib name unique and wouldn't conflict with the bin name.
 # This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
-name = "crwbar_voice_lib"
+name = "quacky_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 # [[bin]]

@@ -13,7 +13,7 @@ interface AccentColorPickerProps {
 /**
  * Lets the user pick a custom accent color. Applies it instantly (via the same
  * runtime override the boot path uses) and persists it to AppSettings. "Reset"
- * clears it back to the built-in crw.bar orange.
+ * clears it back to the built-in Quacky orange.
  */
 export const AccentColorPicker: React.FC<AccentColorPickerProps> = React.memo(
   ({ descriptionMode = "tooltip", grouped = false }) => {

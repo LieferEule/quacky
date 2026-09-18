@@ -506,6 +506,28 @@ pub fn change_ptt_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
     Ok(())
 }
 
+/// Let a double tap of the record shortcut latch the recording (hands-free)
+/// instead of only recording while the key is held. Push-to-talk only.
+#[tauri::command]
+#[specta::specta]
+pub fn change_double_tap_latch_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.double_tap_latch = enabled;
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+/// How long after a tap a second tap still latches. Also the delay before a
+/// lone tap can start transcribing, so keep it short.
+#[tauri::command]
+#[specta::specta]
+pub fn change_double_tap_window_setting(app: AppHandle, ms: u64) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.double_tap_window_ms = ms.clamp(150, 800);
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
 #[tauri::command]
 #[specta::specta]
 pub fn change_audio_feedback_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
@@ -588,17 +610,6 @@ pub fn change_file_transcription_model_setting(
 ) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
     settings.file_transcription_model = model_id.filter(|id| !id.trim().is_empty());
-    settings::write_settings(&app, settings);
-    Ok(())
-}
-
-/// Toggle the animated rainbow accent. Cosmetic only; the frontend runs the
-/// animation and falls back to `accent_color` when this is turned off.
-#[tauri::command]
-#[specta::specta]
-pub fn change_rgb_mode_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
-    let mut settings = settings::get_settings(&app);
-    settings.rgb_mode = enabled;
     settings::write_settings(&app, settings);
     Ok(())
 }

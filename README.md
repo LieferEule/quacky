@@ -1,6 +1,6 @@
-# crwbar voice
+# Quacky
 
-`crwbar voice` is a local-first desktop transcription tool. Hold a shortcut,
+`Quacky` is a local-first desktop transcription tool. Hold a shortcut,
 speak, and paste the transcription into the active app. Audio files can also be
 dropped into the app and transcribed locally.
 
@@ -73,12 +73,12 @@ and run with `cargo test`.
 
 On macOS, a locally built or unsigned GitHub app may require a one-time
 Gatekeeper confirmation and its own microphone/accessibility permissions.
-Those permissions belong to `bar.crw.voice`; existing Handy installations and
+Those permissions belong to `com.jamieandrew.quacky`; existing Handy installations and
 their permissions are not changed.
 
 ## Data compatibility
 
-On first launch, crwbar voice can import existing data from the legacy
+On first launch, Quacky can import existing data from the legacy
 `com.pais.handy` application-data directory. The original data is left in
 place. Large model files are hard-linked when possible to avoid duplicating
 several gigabytes; all mutable files use independent copies.
@@ -87,5 +87,7 @@ several gigabytes; all mutable files use independent copies.
 
 The application code remains available under the [MIT License](LICENSE).
 Copyright and contribution history from the upstream Handy project remain
-intact. The crwbar voice branding and replacement assets in this fork are new
-and do not reuse the Handy artwork.
+intact. The Quacky name and assets are this fork's own and do not reuse the
+Handy artwork. The app mark in `src/components/icons/VoiceMark.tsx` and the
+bundle icons under `src-tauri/icons/` are still placeholders awaiting the
+Quacky logo; replacing them is the one open branding task.

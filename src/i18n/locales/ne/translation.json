@@ -100,7 +100,7 @@
     },
     "permissions": {
       "title": "अनुमतिहरू आवश्यक छन्",
-      "description": "crwbar voice लाई राम्रोसँग काम गर्न केही अनुमतिहरू चाहिन्छ।",
+      "description": "Quacky लाई राम्रोसँग काम गर्न केही अनुमतिहरू चाहिन्छ।",
       "microphone": {
         "title": "माइक्रोफोन पहुँच",
         "description": "ट्रान्सक्रिप्सनका लागि तपाईंको आवाज सुन्न आवश्यक छ।"
@@ -168,7 +168,7 @@
       },
       "title": "सामान्य",
       "shortcut": {
-        "title": "crwbar voice सर्टकटहरू",
+        "title": "Quacky सर्टकटहरू",
         "description": "स्पिच-टु-टेक्स्ट रेकर्डिङ सुरु गर्न किबोर्ड सर्टकटहरू सेट अप गर्नुहोस्",
         "loading": "सर्टकटहरू लोड गरिँदैछन्...",
         "none": "कुनै सर्टकट सेट गरिएको छैन",
@@ -218,6 +218,10 @@
       "pushToTalk": {
         "label": "पुश टु टक",
         "description": "रेकर्ड गर्न थिचिराख्नुहोस्, रोक्न छोड्नुहोस्"
+      },
+      "doubleTapLatch": {
+        "label": "Double Tap to Keep Recording",
+        "description": "Tap the shortcut twice to keep recording hands-free until you tap it again. Holding the key still works as usual."
       }
     },
     "models": {
@@ -234,7 +238,7 @@
       },
       "rescan": {
         "label": "फेरि स्क्यान गर्नुहोस्",
-        "tooltip": "crwbar voice बाहिरबाट मोडेल फोल्डर वा Hugging Face क्यासमा थपिएका मोडेलहरू फेरि स्क्यान गर्नुहोस्"
+        "tooltip": "Quacky बाहिरबाट मोडेल फोल्डर वा Hugging Face क्यासमा थपिएका मोडेलहरू फेरि स्क्यान गर्नुहोस्"
       },
       "noModelsMatch": "यो फिल्टरसँग कुनै मोडेल मिल्दैन।"
     },
@@ -306,11 +310,11 @@
       },
       "autostart": {
         "label": "स्टार्टअपमा सुरु गर्नुहोस्",
-        "description": "कम्प्युटरमा लगइन गर्दा crwbar voice स्वतः सुरु गर्नुहोस्।"
+        "description": "कम्प्युटरमा लगइन गर्दा Quacky स्वतः सुरु गर्नुहोस्।"
       },
       "showTrayIcon": {
         "label": "ट्रे आइकन देखाउनुहोस्",
-        "description": "सिस्टम ट्रेमा crwbar voice आइकन देखाउनुहोस्।"
+        "description": "सिस्टम ट्रेमा Quacky आइकन देखाउनुहोस्।"
       },
       "overlay": {
         "style": {
@@ -530,7 +534,7 @@
       },
       "updateChecks": {
         "label": "अपडेटहरू जाँच गर्नुहोस्",
-        "description": "crwbar voice को नयाँ संस्करण स्वतः जाँच गर्नुहोस्"
+        "description": "Quacky को नयाँ संस्करण स्वतः जाँच गर्नुहोस्"
       },
       "whatsNewPreview": {
         "title": "नयाँ के छ पूर्वावलोकन",
@@ -600,6 +604,10 @@
         "title": "पेस्ट ढिलाइ (पछि)",
         "description": "पेस्ट किस्ट्रोकपछि, तपाईंको अघिल्लो क्लिपबोर्ड पुनर्स्थापना गर्नुअघिको ढिलाइ (मिलिसेकेन्डमा)। ट्रान्सक्रिप्सनको सट्टा पुरानो क्लिपबोर्ड सामग्री पेस्ट भइरहेको छ भने बढाउनुहोस्।"
       },
+      "doubleTapWindow": {
+        "title": "Double-Tap Window",
+        "description": "How long after a tap a second tap still counts as a double tap. A single tap waits this long before it starts transcribing, so shorter feels faster but is harder to double-tap."
+      },
       "recordingBuffer": {
         "title": "अतिरिक्त रेकर्डिङ बफर",
         "description": "कि छोडेपछि अन्तिम अडियो समात्न रेकर्डिङ जारी राख्ने अतिरिक्त समय (मिलिसेकेन्डमा)। 0 = कुनै अतिरिक्त बफर छैन।"
@@ -611,35 +619,30 @@
         "title": "एक्सेन्ट रङ",
         "description": "बटन, रेकर्डिङ बार र हाइलाइटका लागि आफ्नै एक्सेन्ट रङ छान्नुहोस्। 'रिसेट' ले पूर्वनिर्धारित सुन्तला रङ फर्काउँछ।",
         "reset": "रिसेट"
-      },
-      "rgbMode": {
-        "label": "Emil Mode",
-        "description": "एक्सेन्ट रङलाई इन्द्रेणीभरि घुमाउँछ। सक्रिय हुँदा एक्सेन्ट रङलाई प्रतिस्थापन गर्छ।",
-        "boosted": "दोब्बर गति सक्रिय"
       }
     },
     "about": {
       "title": "बारेमा",
       "version": {
         "title": "संस्करण",
-        "description": "crwbar voice को हालको संस्करण"
+        "description": "Quacky को हालको संस्करण"
       },
       "whatsNewUpdates": {
         "label": "नयाँ के छ देखाउनुहोस्",
-        "description": "crwbar voice अपडेट भएपछि रिलिज नोटहरू देखाउनुहोस्"
+        "description": "Quacky अपडेट भएपछि रिलिज नोटहरू देखाउनुहोस्"
       },
       "appDataDirectory": {
         "title": "एप डेटा डाइरेक्टरी",
-        "description": "crwbar voice ले आफ्नो डेटा भण्डारण गर्ने स्थान"
+        "description": "Quacky ले आफ्नो डेटा भण्डारण गर्ने स्थान"
       },
       "sourceCode": {
         "title": "Handy",
-        "description": "crwbar voice is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
+        "description": "Quacky is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
         "button": "Open Handy on GitHub"
       },
       "supportDevelopment": {
         "title": "विकासलाई सहयोग गर्नुहोस्",
-        "description": "crwbar voice निर्माण जारी राख्न हामीलाई सहयोग गर्नुहोस्",
+        "description": "Quacky निर्माण जारी राख्न हामीलाई सहयोग गर्नुहोस्",
         "button": "दान गर्नुहोस्"
       },
       "acknowledgments": {
@@ -647,7 +650,7 @@
         "ggml": {
           "title": "ggml",
           "description": "अन-डिभाइस मेसिन लर्निङ अनुमानका लागि उच्च-प्रदर्शन टेन्सर लाइब्रेरी",
-          "details": "crwbar voice को स्थानीय स्पिच-टु-टेक्स्ट transcribe.cpp र ggml मा आधारित छ। Georgi Gerganov र योगदानकर्ताहरूको उत्कृष्ट कामका लागि धन्यवाद।"
+          "details": "Quacky को स्थानीय स्पिच-टु-टेक्स्ट transcribe.cpp र ggml मा आधारित छ। Georgi Gerganov र योगदानकर्ताहरूको उत्कृष्ट कामका लागि धन्यवाद।"
         }
       }
     }
@@ -666,7 +669,7 @@
     "portableUpdateButton": "GitHub Releases खोल्नुहोस्"
   },
   "whatsNew": {
-    "title": "crwbar voice v{{version}} मा नयाँ"
+    "title": "Quacky v{{version}} मा नयाँ"
   },
   "common": {
     "loading": "लोड गरिँदैछ...",
@@ -678,7 +681,7 @@
     "noOptionsFound": "कुनै विकल्प भेटिएन"
   },
   "accessibility": {
-    "permissionsDescription": "ट्रान्सक्राइब गरिएको टेक्स्ट टाइप गर्न crwbar voice लाई एक्सेसिबिलिटी अनुमति चाहिन्छ।",
+    "permissionsDescription": "ट्रान्सक्राइब गरिएको टेक्स्ट टाइप गर्न Quacky लाई एक्सेसिबिलिटी अनुमति चाहिन्छ।",
     "openSettings": "सिस्टम सेटिङहरू खोल्नुहोस्"
   },
   "errors": {
@@ -701,11 +704,11 @@
   },
   "appLanguage": {
     "title": "एपको भाषा",
-    "description": "crwbar voice इन्टरफेसको भाषा परिवर्तन गर्नुहोस्"
+    "description": "Quacky इन्टरफेसको भाषा परिवर्तन गर्नुहोस्"
   },
   "theme": {
     "title": "अनुप्रयोगको थिम",
-    "description": "crwbar voice ले तपाईंको सिस्टम थिम अनुसरण गर्ने वा उज्यालो वा अँध्यारो रहने छान्नुहोस्",
+    "description": "Quacky ले तपाईंको सिस्टम थिम अनुसरण गर्ने वा उज्यालो वा अँध्यारो रहने छान्नुहोस्",
     "options": {
       "system": "सिस्टम",
       "light": "उज्यालो",
@@ -718,6 +721,7 @@
     "copyAgain": "फेरि प्रतिलिपि गर्नुहोस्",
     "dropFile": "फाइल छोड्नुहोस्",
     "dropHint": "ट्रान्सक्राइब गर्न अडियो फाइल यहाँ छोड्नुहोस्",
+    "handsFree": "Hands-free recording",
     "transcribing": "ट्रान्सक्राइब गरिँदैछ...",
     "processing": "प्रशोधन गरिँदैछ...",
     "voiceTranscribing": "अनुरोध ट्रान्सक्राइब हुँदैछ...",

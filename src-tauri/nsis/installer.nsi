@@ -1,4 +1,4 @@
-; Custom NSIS template for crwbar voice with portable mode support.
+; Custom NSIS template for Quacky with portable mode support.
 ; Based on tauri-apps/tauri@tauri-v2.9.1 crates/tauri-bundler/src/bundle/windows/nsis/installer.nsi
 ; Portable changes are marked with "; --- PORTABLE MODE ---" comments.
 ;
@@ -597,7 +597,7 @@ Function .onInit
     FileOpen $1 "$INSTDIR\portable" r
     FileRead $1 $2
     FileClose $1
-    ${If} $2 == "crwbar voice Portable Mode"
+    ${If} $2 == "Quacky Portable Mode"
       StrCpy $PortableMode 1
     ${OrIf} $2 == "Handy Portable Mode"
       StrCpy $PortableMode 1
@@ -770,7 +770,7 @@ Section Install
   ; --- PORTABLE MODE --- Create portable marker and Data directory
   ${If} $PortableMode = 1
     FileOpen $0 "$INSTDIR\portable" w
-    FileWrite $0 "crwbar voice Portable Mode"
+    FileWrite $0 "Quacky Portable Mode"
     FileClose $0
     CreateDirectory "$INSTDIR\Data"
     DetailPrint "Portable mode: created marker file and Data directory."

@@ -100,7 +100,7 @@
     },
     "permissions": {
       "title": "İzinler Gerekli",
-      "description": "crwbar voice'nin düzgün çalışabilmesi için birkaç izne ihtiyacı var.",
+      "description": "Quacky'nin düzgün çalışabilmesi için birkaç izne ihtiyacı var.",
       "microphone": {
         "title": "Mikrofon Erişimi",
         "description": "Sesinizi transkripsiyon için alabilmek için gereklidir."
@@ -172,7 +172,7 @@
       "searchPlaceholder": "Modelleri ada göre ara…",
       "rescan": {
         "label": "Yeniden tara",
-        "tooltip": "crwbar voice dışında modeller klasörüne veya Hugging Face önbelleğine eklenen modelleri yeniden tara"
+        "tooltip": "Quacky dışında modeller klasörüne veya Hugging Face önbelleğine eklenen modelleri yeniden tara"
       }
     },
     "general": {
@@ -186,7 +186,7 @@
       },
       "title": "Genel",
       "shortcut": {
-        "title": "crwbar voice Kısayolları",
+        "title": "Quacky Kısayolları",
         "description": "Sesle yazma kaydını başlatmak için klavye kısayollarını yapılandırın",
         "loading": "Kısayollar yükleniyor...",
         "none": "Kısayol yapılandırılmadı",
@@ -236,6 +236,10 @@
       "pushToTalk": {
         "label": "Bas Konuş",
         "description": "Kaydetmek için basılı tutun, durdurmak için bırakın"
+      },
+      "doubleTapLatch": {
+        "label": "Double Tap to Keep Recording",
+        "description": "Tap the shortcut twice to keep recording hands-free until you tap it again. Holding the key still works as usual."
       }
     },
     "sound": {
@@ -306,11 +310,11 @@
       },
       "autostart": {
         "label": "Başlangıçta Çalıştır",
-        "description": "Bilgisayara giriş yaptığınızda crwbar voice otomatik olarak başlatılır."
+        "description": "Bilgisayara giriş yaptığınızda Quacky otomatik olarak başlatılır."
       },
       "showTrayIcon": {
         "label": "Tepsi simgesini göster",
-        "description": "crwbar voice simgesini sistem tepsisinde göster."
+        "description": "Quacky simgesini sistem tepsisinde göster."
       },
       "overlay": {
         "style": {
@@ -530,7 +534,7 @@
       },
       "updateChecks": {
         "label": "Güncellemeleri Kontrol Et",
-        "description": "crwbar voice için yeni sürümleri otomatik olarak kontrol eder"
+        "description": "Quacky için yeni sürümleri otomatik olarak kontrol eder"
       },
       "soundTheme": {
         "label": "Ses Teması",
@@ -593,6 +597,10 @@
         "title": "Yapıştırma gecikmesi (sonra)",
         "description": "Yapıştırma tuşundan sonra, önceki panonuz geri yüklenmeden önceki gecikme (milisaniye cinsinden). Yazıya dökülen metin yerine eski pano içeriği yapıştırılıyorsa artırın."
       },
+      "doubleTapWindow": {
+        "title": "Double-Tap Window",
+        "description": "How long after a tap a second tap still counts as a double tap. A single tap waits this long before it starts transcribing, so shorter feels faster but is harder to double-tap."
+      },
       "recordingBuffer": {
         "title": "Ekstra kayıt tamponu",
         "description": "Tuşu bıraktıktan sonra arka plandaki sesi yakalamak için kaydı sürdürme süresi (milisaniye). 0 = ekstra tampon yok."
@@ -611,31 +619,26 @@
         "title": "Vurgu rengi",
         "description": "Düğmeler, kayıt çubuğu ve vurgular için kendi vurgu renginizi seçin. “Sıfırla” varsayılan turuncuya döner.",
         "reset": "Sıfırla"
-      },
-      "rgbMode": {
-        "label": "Emil Mode",
-        "description": "Vurgu rengini gökkuşağı boyunca sürekli değiştirir. Açıkken vurgu rengini geçersiz kılar.",
-        "boosted": "Çift hız etkin"
       }
     },
     "about": {
       "title": "Hakkında",
       "version": {
         "title": "Sürüm",
-        "description": "crwbar voice'nin mevcut sürümü"
+        "description": "Quacky'nin mevcut sürümü"
       },
       "appDataDirectory": {
         "title": "Uygulama Veri Dizini",
-        "description": "crwbar voice'nin verilerini sakladığı konum"
+        "description": "Quacky'nin verilerini sakladığı konum"
       },
       "sourceCode": {
         "title": "Handy",
-        "description": "crwbar voice is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
+        "description": "Quacky is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
         "button": "Open Handy on GitHub"
       },
       "supportDevelopment": {
         "title": "Geliştirmeyi Destekle",
-        "description": "crwbar voice'yi geliştirmeye devam etmemize yardımcı olun",
+        "description": "Quacky'yi geliştirmeye devam etmemize yardımcı olun",
         "button": "Bağış Yap"
       },
       "acknowledgments": {
@@ -643,12 +646,12 @@
         "ggml": {
           "title": "ggml",
           "description": "OpenAI'nin Whisper otomatik konuşma tanıma modelinin yüksek performanslı çıkarımı",
-          "details": "crwbar voice, hızlı ve yerel konuşmadan metne dönüştürme için ggml kullanır. Georgi Gerganov ve katkıda bulunanların harika çalışmaları için teşekkür ederiz."
+          "details": "Quacky, hızlı ve yerel konuşmadan metne dönüştürme için ggml kullanır. Georgi Gerganov ve katkıda bulunanların harika çalışmaları için teşekkür ederiz."
         }
       },
       "whatsNewUpdates": {
         "label": "Yenilikleri Göster",
-        "description": "crwbar voice güncellemelerinden sonra sürüm notlarını göster"
+        "description": "Quacky güncellemelerinden sonra sürüm notlarını göster"
       }
     }
   },
@@ -675,7 +678,7 @@
     "noOptionsFound": "Seçenek bulunamadı"
   },
   "accessibility": {
-    "permissionsDescription": "crwbar voice, transkribe edilen metni yazabilmek için erişilebilirlik izinlerine ihtiyaç duyar.",
+    "permissionsDescription": "Quacky, transkribe edilen metni yazabilmek için erişilebilirlik izinlerine ihtiyaç duyar.",
     "openSettings": "Sistem Ayarlarını Aç"
   },
   "errors": {
@@ -698,11 +701,11 @@
   },
   "appLanguage": {
     "title": "Uygulama Dili",
-    "description": "crwbar voice arayüzünün dilini değiştirin"
+    "description": "Quacky arayüzünün dilini değiştirin"
   },
   "theme": {
     "title": "Uygulama teması",
-    "description": "crwbar voice'nin sistem temasını izlemesini ya da açık veya koyu kalmasını seçin",
+    "description": "Quacky'nin sistem temasını izlemesini ya da açık veya koyu kalmasını seçin",
     "options": {
       "system": "Sistem",
       "light": "Açık",
@@ -715,6 +718,7 @@
     "copyAgain": "Tekrar kopyala",
     "dropFile": "Dosyayı bırak",
     "dropHint": "Yazıya dökmek için ses dosyasını buraya bırakın",
+    "handsFree": "Hands-free recording",
     "transcribing": "Transkribe ediliyor...",
     "processing": "İşleniyor...",
     "voiceTranscribing": "İstek yazıya dökülüyor...",
@@ -722,7 +726,7 @@
     "voiceDone": "Yapay zekâ yanıtı yapıştırıldı"
   },
   "whatsNew": {
-    "title": "crwbar voice v{{version}} yenilikleri"
+    "title": "Quacky v{{version}} yenilikleri"
   },
   "transcribe": {
     "title": "Transcribe a file",

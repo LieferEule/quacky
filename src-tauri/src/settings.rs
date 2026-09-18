@@ -418,6 +418,14 @@ pub struct AppSettings {
     pub bindings: HashMap<String, ShortcutBinding>,
     #[serde(default = "default_push_to_talk")]
     pub push_to_talk: bool,
+    /// While `push_to_talk` is on, let a double tap of the shortcut latch the
+    /// recording so it keeps running hands-free until the next tap. Holding the
+    /// key is unaffected.
+    #[serde(default = "default_double_tap_latch")]
+    pub double_tap_latch: bool,
+    /// How long after a tap a second tap still counts as a double tap.
+    #[serde(default = "default_double_tap_window_ms")]
+    pub double_tap_window_ms: u64,
     #[serde(default)]
     pub audio_feedback: bool,
     #[serde(default = "default_audio_feedback_volume")]
@@ -521,14 +529,10 @@ pub struct AppSettings {
     #[serde(default)]
     pub file_transcription_model: Option<String>,
     /// User-picked accent color as a `#rrggbb` hex string. `None` keeps the
-    /// built-in crw.bar orange. Overrides `--color-logo-primary` /
+    /// built-in Quacky orange. Overrides `--color-logo-primary` /
     /// `--color-background-ui` at runtime (see `lib/utils/theme.ts`).
     #[serde(default)]
     pub accent_color: Option<String>,
-    /// Cycle the accent colour through the hue wheel continuously. Purely
-    /// cosmetic; overrides `accent_color` while enabled.
-    #[serde(default)]
-    pub rgb_mode: bool,
     #[serde(default)]
     pub experimental_enabled: bool,
     #[serde(default)]
@@ -580,6 +584,25 @@ fn default_settings_schema_version() -> u32 {
 
 fn default_push_to_talk() -> bool {
     true
+}
+
+/// On by default everywhere the keyboard cannot fake a key-up.
+///
+/// macOS and Windows repeat a held key as repeated key-down events, so a tap
+/// pair is unambiguous. X11 instead synthesizes a release before every repeated
+/// press (see #1539), and with a repeat delay shorter than `TAP_MAX_HOLD` a
+/// merely-held key emits exactly the event sequence of a deliberate double tap.
+/// `MIN_TAP_GAP` rejects the fast repeat rates, but nothing in the event stream
+/// separates the two at slow ones — so Linux gets the feature opt-in rather than
+/// a shortcut that occasionally sticks.
+fn default_double_tap_latch() -> bool {
+    !cfg!(target_os = "linux")
+}
+
+/// Also the lower bound on how quickly a lone tap can start transcribing, since
+/// a single tap has to wait the window out before it knows it was alone.
+fn default_double_tap_window_ms() -> u64 {
+    350
 }
 
 fn default_always_on_microphone() -> bool {
@@ -996,6 +1019,8 @@ pub fn get_default_settings() -> AppSettings {
         settings_schema_version: default_settings_schema_version(),
         bindings,
         push_to_talk: default_push_to_talk(),
+        double_tap_latch: default_double_tap_latch(),
+        double_tap_window_ms: default_double_tap_window_ms(),
         audio_feedback: false,
         audio_feedback_volume: default_audio_feedback_volume(),
         sound_theme: default_sound_theme(),
@@ -1041,7 +1066,6 @@ pub fn get_default_settings() -> AppSettings {
         theme: default_theme(),
         file_transcription_model: None,
         accent_color: None,
-        rgb_mode: false,
         experimental_enabled: false,
         lazy_stream_close: false,
         keyboard_implementation: KeyboardImplementation::default(),

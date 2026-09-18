@@ -1,4 +1,4 @@
-# Build crwbar voice
+# Build Quacky
 
 The current fork is developed and tested on macOS. Windows and Linux still
 inherit the upstream build targets, but they have not been verified for this
@@ -54,12 +54,12 @@ bun run tauri build --bundles app
 The result is written to:
 
 ```text
-src-tauri/target/release/bundle/macos/crwbar voice.app
+src-tauri/target/release/bundle/macos/Quacky.app
 ```
 
 The local bundle is ad-hoc signed. It is not notarized, so another Mac may show
 a one-time Gatekeeper warning. Microphone and Accessibility permissions belong
-to the bundle identifier `bar.crw.voice`.
+to the bundle identifier `com.jamieandrew.quacky`.
 
 The optional Apple Intelligence bridge needs a full Xcode installation.
 Without it, the build uses stubs; local speech recognition still works.
