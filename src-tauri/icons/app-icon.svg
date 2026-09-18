@@ -1,14 +1,43 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" role="img" aria-labelledby="title desc">
   <title id="title">Quacky app icon</title>
-  <desc id="desc">A rounded orange crow profile on the Crowbar near-black background.</desc>
-  <defs>
-    <mask id="app-eye-cutout" maskUnits="userSpaceOnUse" x="0" y="0" width="1200" height="1024">
-      <rect width="1200" height="1024" fill="#fff"/>
-      <circle cx="638" cy="330" r="24" fill="#000"/>
-    </mask>
-  </defs>
-  <rect width="1024" height="1024" rx="224" fill="#0c0e0d"/>
-  <g transform="translate(-34 -52)">
-    <path d="M178 788c10-130 48-280 118-392 62-102 148-158 242-154 74 4 140 32 188 80 26 26 54 36 94 38 54 2 106 26 136 60 12 14 6 28-14 32l-152 30c-54 8-82 36-80 82 4 72-8 140-48 190-48 58-124 92-210 98l-132 8c-76 6-146-26-142-72Z" fill="#ff6600" mask="url(#app-eye-cutout)"/>
+  <desc id="desc">A pixel-art duck on a rounded tile.</desc>
+  <!-- Swap these two for the orange tile: background #ff6600, duck #0c0e0d. -->
+  <rect width="1024" height="1024" rx="229" ry="229" fill="#ffffff"/>
+  <g fill="#000000" shape-rendering="crispEdges">
+    <rect x="358.4" y="204.8" width="172.8" height="38.4"/>
+    <rect x="320" y="243.2" width="38.4" height="38.4"/>
+    <rect x="492.8" y="243.2" width="38.4" height="38.4"/>
+    <rect x="320" y="281.6" width="38.4" height="38.4"/>
+    <rect x="396.8" y="281.6" width="38.4" height="38.4"/>
+    <rect x="492.8" y="281.6" width="38.4" height="38.4"/>
+    <rect x="224" y="320" width="134.4" height="38.4"/>
+    <rect x="492.8" y="320" width="38.4" height="38.4"/>
+    <rect x="224" y="358.4" width="172.8" height="38.4"/>
+    <rect x="492.8" y="358.4" width="38.4" height="38.4"/>
+    <rect x="358.4" y="396.8" width="38.4" height="38.4"/>
+    <rect x="454.4" y="396.8" width="38.4" height="38.4"/>
+    <rect x="723.2" y="396.8" width="76.8" height="38.4"/>
+    <rect x="320" y="435.2" width="76.8" height="38.4"/>
+    <rect x="454.4" y="435.2" width="345.6" height="38.4"/>
+    <rect x="281.6" y="473.6" width="76.8" height="38.4"/>
+    <rect x="761.6" y="473.6" width="38.4" height="38.4"/>
+    <rect x="281.6" y="512" width="38.4" height="38.4"/>
+    <rect x="665.6" y="512" width="38.4" height="38.4"/>
+    <rect x="761.6" y="512" width="38.4" height="38.4"/>
+    <rect x="281.6" y="550.4" width="38.4" height="38.4"/>
+    <rect x="435.2" y="550.4" width="38.4" height="38.4"/>
+    <rect x="627.2" y="550.4" width="38.4" height="38.4"/>
+    <rect x="761.6" y="550.4" width="38.4" height="38.4"/>
+    <rect x="281.6" y="588.8" width="38.4" height="38.4"/>
+    <rect x="435.2" y="588.8" width="192" height="38.4"/>
+    <rect x="723.2" y="588.8" width="38.4" height="38.4"/>
+    <rect x="320" y="627.2" width="38.4" height="38.4"/>
+    <rect x="684.8" y="627.2" width="38.4" height="38.4"/>
+    <rect x="358.4" y="665.6" width="326.4" height="38.4"/>
+    <rect x="435.2" y="704" width="38.4" height="38.4"/>
+    <rect x="550.4" y="704" width="38.4" height="38.4"/>
+    <rect x="320" y="742.4" width="153.6" height="38.4"/>
+    <rect x="512" y="742.4" width="76.8" height="38.4"/>
+    <rect x="473.6" y="780.8" width="115.2" height="38.4"/>
   </g>
 </svg>

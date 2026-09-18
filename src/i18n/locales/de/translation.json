@@ -633,8 +633,13 @@
       },
       "sourceCode": {
         "title": "Handy",
-        "description": "Quacky ist eine Verfeinerung der vollständigen Handy-Codebasis von CJ Pais – keine unabhängige Neuentwicklung. Dieser Fork ergänzt eigene Fehlerkorrekturen, Änderungen an Arbeitsabläufen und eine eigene visuelle Richtung.",
+        "description": "Die Codebasis, auf der Quacky aufbaut, von CJ Pais. Quacky ist eine Verfeinerung davon, keine unabhängige Neuentwicklung.",
         "button": "Handy auf GitHub öffnen"
+      },
+      "upstreamFork": {
+        "title": "crwbar voice",
+        "description": "Quacky ist direkt aus crwbar voice hervorgegangen, das zwischen Quacky und Handy steht. Von dort stammen die Dateitranskription, die Voice Actions und ein großer Teil der Oberfläche.",
+        "button": "crwbar voice auf GitHub öffnen"
       },
       "supportDevelopment": {
         "title": "Entwicklung unterstützen",

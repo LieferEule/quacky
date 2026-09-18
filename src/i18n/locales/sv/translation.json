@@ -633,8 +633,13 @@
       },
       "sourceCode": {
         "title": "Handy",
-        "description": "Quacky is a refinement of the complete Handy codebase by CJ Pais—not an independent rewrite. This fork adds its own fixes, workflow changes, and visual direction.",
+        "description": "The codebase Quacky is built on, by CJ Pais. Quacky is a refinement of it, not an independent rewrite.",
         "button": "Open Handy on GitHub"
+      },
+      "upstreamFork": {
+        "title": "crwbar voice",
+        "description": "Quacky forked directly from crwbar voice, which sits between Quacky and Handy and contributed file transcription, voice actions and much of the interface Quacky inherits.",
+        "button": "Open crwbar voice on GitHub"
       },
       "supportDevelopment": {
         "title": "Stöd utvecklingen",

@@ -4,7 +4,8 @@
 speak, and paste the transcription into the active app. Audio files can also be
 dropped into the app and transcribed locally.
 
-This is mostly a personal fork of Handy. I added some features that i wanted:
+This is a personal fork of crwbar voice, which is itself a fork of Handy. The
+features it adds on top:
 
 - audio files and voice notes can be dropped onto the recording bar or the
   main window, or picked from _General_;
@@ -17,14 +18,15 @@ Linux build targets from Handy, but those versions have not been verified yet
 and should not currently be treated as supported releases.
 
 This project is built on the complete codebase of
-[Handy by CJ Pais](https://github.com/cjpais/Handy). It is a refinement of that
-foundation with its own fixes, workflow changes, and visual direction not an
-independent rewrite. It uses its own name, bundle identifier, icon, wordmark,
-and tray assets, and is not affiliated with or endorsed by the Handy project.
+[Handy by CJ Pais](https://github.com/cjpais/Handy), by way of
+[crwbar voice](https://github.com/CouchTurtle/crwbar-voice). It is a refinement
+of that foundation with its own fixes, workflow changes and visual direction,
+not an independent rewrite. It uses its own name, bundle identifier, icon and
+wordmark, and is affiliated with neither project.
 
 ## Current status
 
-The fork runs its own release line, currently `0.2.1`, and is intended for
+The fork runs its own release line, currently `0.4.0`, and is intended for
 direct GitHub distribution, not an app store. Automatic updates are
 intentionally disabled until this repository has its own signed release channel.
 
@@ -86,8 +88,11 @@ several gigabytes; all mutable files use independent copies.
 ## License and attribution
 
 The application code remains available under the [MIT License](LICENSE).
-Copyright and contribution history from the upstream Handy project remain
-intact. The Quacky name and assets are this fork's own and do not reuse the
-Handy artwork. The app mark in `src/components/icons/VoiceMark.tsx` and the
-bundle icons under `src-tauri/icons/` are still placeholders awaiting the
-Quacky logo; replacing them is the one open branding task.
+Quacky forked from [crwbar voice](https://github.com/CouchTurtle/crwbar-voice),
+which forked from [Handy](https://github.com/cjpais/Handy) by CJ Pais.
+Copyright and contribution history from both remain intact.
+
+The Quacky name, duck mark and wordmark are this fork's own and reuse neither
+project's artwork. The duck lives in `src/components/icons/QuackyMark.tsx` and
+`src-tauri/icons/app-icon.svg`; the tray icons under `src-tauri/resources/` are
+still the inherited ones and are the remaining branding task.

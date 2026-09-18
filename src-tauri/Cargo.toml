@@ -2,7 +2,11 @@
 name = "quacky"
 version = "0.4.0"
 description = "Private, local-first speech transcription"
-authors = ["Jamie Andrew", "CJ Pais and Handy contributors"]
+authors = [
+  "Jamie Andrew",
+  "crwbar voice contributors",
+  "CJ Pais and Handy contributors",
+]
 edition = "2021"
 license = "MIT"
 default-run = "quacky"

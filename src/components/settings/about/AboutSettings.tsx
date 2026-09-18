@@ -62,6 +62,24 @@ export const AboutSettings: React.FC = () => {
           </Button>
         </SettingContainer>
 
+        {/* Quacky's direct parent. Handy above is the origin of the codebase,
+            but it reached Quacky through this fork, which is where a good deal
+            of what Quacky ships was actually written. */}
+        <SettingContainer
+          title={t("settings.about.upstreamFork.title")}
+          description={t("settings.about.upstreamFork.description")}
+          grouped={true}
+          layout="stacked"
+        >
+          <Button
+            variant="secondary"
+            size="md"
+            onClick={() => openUrl("https://github.com/CouchTurtle/crwbar-voice")}
+          >
+            {t("settings.about.upstreamFork.button")}
+          </Button>
+        </SettingContainer>
+
         <SettingContainer
           title={t("settings.about.acknowledgments.ggml.title")}
           description={t("settings.about.acknowledgments.ggml.description")}

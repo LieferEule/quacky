@@ -5,8 +5,12 @@ changing code; it records the parts that are easy to get wrong.
 
 ## What this project is
 
-`Quacky` is a personal fork of [Handy](https://github.com/cjpais/Handy)
-(MIT). Tauri v2 shell, Rust backend (`src-tauri/`), React + TypeScript frontend
+`Quacky` is a personal fork of
+[crwbar voice](https://github.com/CouchTurtle/crwbar-voice), which is itself a
+fork of [Handy](https://github.com/cjpais/Handy) (MIT). Most of what is marked
+_fork-specific_ below was written in crwbar voice, not here.
+
+Tauri v2 shell, Rust backend (`src-tauri/`), React + TypeScript frontend
 (`src/`). Speech-to-text runs locally; nothing leaves the machine unless the
 user explicitly enables AI post-processing.
 
