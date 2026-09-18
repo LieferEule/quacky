@@ -74,7 +74,9 @@ export const AboutSettings: React.FC = () => {
           <Button
             variant="secondary"
             size="md"
-            onClick={() => openUrl("https://github.com/CouchTurtle/crwbar-voice")}
+            onClick={() =>
+              openUrl("https://github.com/CouchTurtle/crwbar-voice")
+            }
           >
             {t("settings.about.upstreamFork.button")}
           </Button>

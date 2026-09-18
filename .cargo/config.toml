@@ -1,1 +1,6 @@
 [build]
+
+[env]
+# audiopus_sys builds vendored libopus through cmake; cmake >= 4 refuses the
+# crate's cmake_minimum_required(< 3.5). See AGENTS.md "Gotchas".
+CMAKE_POLICY_VERSION_MINIMUM = "3.5"

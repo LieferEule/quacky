@@ -4,6 +4,32 @@
 speak, and paste the transcription into the active app. Audio files can also be
 dropped into the app and transcribed locally.
 
+## Installation
+
+For people who just want to use Quacky — no code required.
+
+1. **Apple Silicon Macs only.** These builds are for M-series Macs; there is no
+   Intel build.
+2. **Download** the `.zip` from the
+   [latest release](../../releases/latest), unzip it, and drag `Quacky.app`
+   into your `/Applications` folder.
+3. **First launch — expect a Gatekeeper warning.** macOS will say the app is
+   "damaged" or that the developer "cannot be verified." That is expected:
+   Quacky is not notarized by Apple. To open it anyway:
+   - **Right-click** (or Control-click) `Quacky.app` and choose **Open**, then
+     confirm.
+   - If macOS still blocks it, go to **System Settings → Privacy & Security**
+     and click **Open Anyway**, then launch it again.
+   - As a last resort, clear the quarantine flag from Terminal:
+     ```bash
+     xattr -dr com.apple.quarantine /Applications/Quacky.app
+     ```
+4. **Grant permissions.** On first launch, allow **Microphone** and
+   **Accessibility** when prompted. Without Accessibility, the global shortcut
+   does nothing.
+5. **First run downloads a speech model.** This takes a few minutes. After that,
+   transcription runs fully offline.
+
 This is a personal fork of crwbar voice, which is itself a fork of Handy. The
 features it adds on top:
 

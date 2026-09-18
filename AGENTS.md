@@ -129,6 +129,17 @@ catalog. New models require regenerating the catalog with `scripts/gen_catalog.p
 (needs an `HF_TOKEN`) **and** a new build. `.github/workflows/` is currently
 empty — the script is run by hand; there is no CI job doing it.
 
+**cmake >= 4 needs a policy floor for the vendored libopus.** `audiopus_sys`
+(pulled in for Opus/WhatsApp voice-note decoding) builds its bundled `libopus`
+through cmake, and that vendored `CMakeLists.txt` declares
+`cmake_minimum_required(< 3.5)`. cmake 4 removed compatibility with those old
+policies and aborts configuration with "Compatibility with CMake < 3.5 has been
+removed". `.cargo/config.toml` therefore sets `CMAKE_POLICY_VERSION_MINIMUM=3.5`
+under `[env]`, which cmake reads as the policy floor. Do not remove it: a clean
+rebuild (or the first build on a fresh machine) fails without it, while an
+incremental build hides the problem because the `audiopus_sys` artifact is
+already cached.
+
 **Single instance.** The app uses `tauri-plugin-single-instance`. A dev build and
 an installed `/Applications` build share the identifier `com.jamieandrew.quacky`, so
 launching one while the other runs just focuses the running instance. Quit the
@@ -286,7 +297,7 @@ skips the build. It does **not** touch Rust — run those checks yourself from
 `src-tauri/`:
 
 ```bash
-cargo test         # 156 tests at 0.3.0
+cargo test         # 170 tests at 0.4.0
 cargo check
 cargo fmt -- --check
 ```
