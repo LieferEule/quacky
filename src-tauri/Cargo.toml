@@ -175,6 +175,9 @@ transcribe-cpp = { version = "0.1.3", default-features = false, features = [
 [patch.crates-io]
 tao = { git = "https://github.com/tauri-apps/tao", rev = "07f3742b1833b64be27b1ef991e38d557d4276c9" }
 tao-macros = { git = "https://github.com/tauri-apps/tao", rev = "07f3742b1833b64be27b1ef991e38d557d4276c9" }
+# handy-keys 0.3.0 with mouse buttons on a listen-only tap (vendor/handy-keys/QUACKY-PATCH.md):
+# the upstream active tap held every left click and froze Finder drags.
+handy-keys = { path = "vendor/handy-keys" }
 
 [dev-dependencies]
 tempfile = "3"
