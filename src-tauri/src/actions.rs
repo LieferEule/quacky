@@ -1280,13 +1280,19 @@ impl ShortcutAction for TranscribeAction {
                                         return;
                                     }
 
+                                    let notch_text = final_text.clone();
                                     match utils::paste(final_text, ah_clone.clone()) {
-                                        Ok(()) => debug!(
-                                            "Text pasted successfully in {:?}",
-                                            paste_time.elapsed()
-                                        ),
+                                        Ok(()) => {
+                                            debug!(
+                                                "Text pasted successfully in {:?}",
+                                                paste_time.elapsed()
+                                            );
+                                            crate::notch::done(&notch_text, true);
+                                        }
                                         Err(e) => {
                                             error!("Failed to paste transcription: {}", e);
+                                            // The notch says "⌘V" instead of "Eingefügt".
+                                            crate::notch::done(&notch_text, false);
                                             let _ = ah_clone.emit("paste-error", ());
                                         }
                                     }

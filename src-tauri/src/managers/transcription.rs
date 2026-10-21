@@ -1289,6 +1289,7 @@ impl TranscriptionManager {
     }
 
     fn emit_stream_text(&self, committed: &str, tentative: &str) {
+        crate::notch::stream_text(committed, tentative);
         *self
             .live_stream_text
             .lock()

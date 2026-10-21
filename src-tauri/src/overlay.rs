@@ -389,6 +389,12 @@ fn show_overlay_state_with_mode(app_handle: &AppHandle, state: &str, mode: &str)
     // Any state change invalidates a pending "done" auto-hide timer.
     OVERLAY_GEN.fetch_add(1, Ordering::Relaxed);
 
+    // The notch app shows the recording UI while it runs; ours stays hidden.
+    crate::notch::state(state, mode);
+    if crate::notch::active() {
+        return;
+    }
+
     // Whether the overlay shows at all is governed by overlay_style; position
     // only chooses Top vs Bottom placement.
     let settings = settings::get_settings(app_handle);
@@ -478,6 +484,9 @@ pub fn show_processing_overlay(app_handle: &AppHandle) {
 /// starts another recording within the window).
 pub fn show_done_overlay(app_handle: &AppHandle) {
     show_overlay_state(app_handle, "done");
+    if crate::notch::active() {
+        return;
+    }
     let my_gen = OVERLAY_GEN.load(Ordering::Relaxed);
     let app = app_handle.clone();
     std::thread::spawn(move || {
@@ -513,6 +522,7 @@ pub fn hide_recording_overlay(app_handle: &AppHandle) {
     // remember our value so the delayed hide below can bail if a newer overlay
     // state is shown in the meantime.
     let my_gen = OVERLAY_GEN.fetch_add(1, Ordering::Relaxed) + 1;
+    crate::notch::hide();
     // Always hide the overlay regardless of settings - if setting was changed while recording,
     // we still want to hide it properly
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
@@ -536,6 +546,7 @@ pub fn hide_recording_overlay(app_handle: &AppHandle) {
 /// by a double tap. The pill shows a small lock while it is, which is the only
 /// on-screen difference between holding the key and having latched it.
 pub fn set_overlay_hands_free(app_handle: &AppHandle, hands_free: bool) {
+    crate::notch::hands_free(hands_free);
     let _ = app_handle.emit_to("recording_overlay", "hands-free", hands_free);
 }
 
@@ -553,6 +564,11 @@ pub fn update_overlay_enabled_cache(enabled: bool) {
 }
 
 pub fn emit_levels(app_handle: &AppHandle, levels: &[f32]) {
+    // The notch draws its own bars; it gets levels even with our overlay off.
+    crate::notch::levels(levels);
+    if crate::notch::active() {
+        return;
+    }
     // Skip emission when the overlay is disabled. The recording_overlay
     // window is created at boot regardless of overlay_style, so without this
     // guard a hidden overlay's WebKit subprocess still
