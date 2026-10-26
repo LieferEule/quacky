@@ -254,14 +254,13 @@ impl TranscriptionCoordinator {
                             config,
                         } => {
                             let now = Instant::now();
-                            let pending_info =
-                                pending_release.as_ref().map(|pending| {
-                                    (
-                                        pending.binding_id.as_str(),
-                                        pending.kind,
-                                        now.saturating_duration_since(pending.released_at),
-                                    )
-                                });
+                            let pending_info = pending_release.as_ref().map(|pending| {
+                                (
+                                    pending.binding_id.as_str(),
+                                    pending.kind,
+                                    now.saturating_duration_since(pending.released_at),
+                                )
+                            });
                             let recording_binding = match &stage {
                                 Stage::Recording(id) => Some(id.as_str()),
                                 _ => None,
@@ -328,8 +327,7 @@ impl TranscriptionCoordinator {
                                 }
                                 PttAction::StopLatched => {
                                     // Guard against contact bounce on the closing tap.
-                                    if last_press
-                                        .is_some_and(|t| now.duration_since(t) < DEBOUNCE)
+                                    if last_press.is_some_and(|t| now.duration_since(t) < DEBOUNCE)
                                     {
                                         debug!("Debounced latch-stop for '{binding_id}'");
                                         continue;
