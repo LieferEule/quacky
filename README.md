@@ -121,4 +121,4 @@ Copyright and contribution history from both remain intact.
 The Quacky name, duck mark and wordmark are this fork's own and reuse neither
 project's artwork. The duck lives in `src/components/icons/QuackyMark.tsx` and
 `src-tauri/icons/app-icon.svg`; the tray icons under `src-tauri/resources/` are
-still the inherited ones and are the remaining branding task.
+rendered from it by `scripts/gen_tray_icons.py`.
