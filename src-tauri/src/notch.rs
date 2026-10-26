@@ -52,6 +52,10 @@ mod imp {
                             *WRITER.lock().unwrap_or_else(|p| p.into_inner()) = Some(writer);
                             ACTIVE.store(true, Ordering::Relaxed);
                             log::info!("notch: connected");
+                            let handle = app.clone();
+                            let _ = app.run_on_main_thread(move || {
+                                crate::overlay::hide_own_overlay_window(&handle);
+                            });
                             send(json!({ "type": "hello", "app": "quacky", "v": 1 }));
                             read_requests(&app, stream);
                             ACTIVE.store(false, Ordering::Relaxed);

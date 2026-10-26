@@ -392,6 +392,9 @@ fn show_overlay_state_with_mode(app_handle: &AppHandle, state: &str, mode: &str)
     // The notch app shows the recording UI while it runs; ours stays hidden.
     crate::notch::state(state, mode);
     if crate::notch::active() {
+        // A pill shown while the notch was briefly away (e.g. restarting) may
+        // have lost its auto-hide; nothing else would hide it now.
+        hide_own_overlay_window(app_handle);
         return;
     }
 
@@ -539,6 +542,16 @@ pub fn hide_recording_overlay(app_handle: &AppHandle) {
                 let _ = window_clone.hide();
             }
         });
+    }
+}
+
+/// Hides only Quacky's own overlay window, without telling the notch. Used
+/// while the notch owns the recording UI.
+pub fn hide_own_overlay_window(app_handle: &AppHandle) {
+    if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
+        if overlay_window.is_visible().unwrap_or(true) {
+            let _ = overlay_window.hide();
+        }
     }
 }
 
