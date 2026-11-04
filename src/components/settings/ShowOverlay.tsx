@@ -6,12 +6,11 @@ import { useSettings } from "../../hooks/useSettings";
 import type { OverlayPosition, OverlayStyle } from "@/bindings";
 
 interface ShowOverlayProps {
-  descriptionMode?: "inline" | "tooltip";
   grouped?: boolean;
 }
 
 export const ShowOverlay: React.FC<ShowOverlayProps> = React.memo(
-  ({ descriptionMode = "tooltip", grouped = false }) => {
+  ({ grouped = false }) => {
     const { t } = useTranslation();
     const { getSetting, updateSetting, isUpdating } = useSettings();
 
@@ -53,10 +52,10 @@ export const ShowOverlay: React.FC<ShowOverlayProps> = React.memo(
         <SettingContainer
           title={t("settings.advanced.overlay.style.title")}
           description={t("settings.advanced.overlay.style.description")}
-          descriptionMode={descriptionMode}
           grouped={grouped}
         >
           <Dropdown
+            variant="chips"
             options={styleOptions}
             selectedValue={selectedStyle}
             onSelect={(value) =>
@@ -70,10 +69,10 @@ export const ShowOverlay: React.FC<ShowOverlayProps> = React.memo(
           <SettingContainer
             title={t("settings.advanced.overlay.position.title")}
             description={t("settings.advanced.overlay.position.description")}
-            descriptionMode={descriptionMode}
             grouped={grouped}
           >
             <Dropdown
+              variant="chips"
               options={positionOptions}
               selectedValue={selectedPosition}
               onSelect={(value) =>

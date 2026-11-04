@@ -11,6 +11,12 @@ import {
   supportsLanguageCode,
 } from "@/lib/constants/languages.ts";
 import type { ModelInfo } from "@/bindings";
+import { useSettings } from "@/hooks/useSettings";
+import { SettingsGroup } from "../../ui/SettingsGroup";
+import { VoiceActivityDetection } from "../VoiceActivityDetection";
+import { CustomWords } from "../CustomWords";
+import { ModelUnloadTimeoutSetting } from "../ModelUnloadTimeout";
+import { AccelerationSelector } from "../AccelerationSelector";
 
 // check if model supports a language based on its supported_languages list
 const modelSupportsLanguage = (model: ModelInfo, langCode: string): boolean => {
@@ -25,6 +31,8 @@ const isLegacyModel = (model: ModelInfo): boolean =>
 
 export const ModelsSettings: React.FC = () => {
   const { t } = useTranslation();
+  const { getSetting } = useSettings();
+  const experimentalEnabled = getSetting("experimental_enabled") || false;
   const [switchingModelId, setSwitchingModelId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [languageFilter, setLanguageFilter] = useState("all");
@@ -215,7 +223,7 @@ export const ModelsSettings: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="max-w-3xl w-full mx-auto">
+      <div className="space-y-4">
         <div className="flex items-center justify-center py-16">
           <div className="w-8 h-8 border-2 border-logo-primary border-t-transparent rounded-full animate-spin" />
         </div>
@@ -224,16 +232,7 @@ export const ModelsSettings: React.FC = () => {
   }
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-4">
-      <div className="mb-4">
-        <h1 className="text-xl font-semibold mb-2">
-          {t("settings.models.title")}
-        </h1>
-        <p className="text-sm text-text/60">
-          {t("settings.models.description")}
-        </p>
-      </div>
-
+    <div className="space-y-4">
       {/* Search bar — filter the catalog by name or description */}
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-text/40 pointer-events-none" />
@@ -242,7 +241,7 @@ export const ModelsSettings: React.FC = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder={t("settings.models.searchPlaceholder")}
-          className="w-full pl-9 pr-3 py-2 text-sm bg-mid-gray/10 border border-mid-gray/40 rounded-lg focus:outline-none focus:ring-1 focus:ring-logo-primary placeholder:text-text/40"
+          className="w-full pl-9 pr-3 py-2 text-sm glass-control rounded-full focus:outline-none focus:ring-1 focus:ring-logo-primary placeholder:text-text/40"
         />
       </div>
 
@@ -293,7 +292,7 @@ export const ModelsSettings: React.FC = () => {
                   </button>
 
                   {languageDropdownOpen && (
-                    <div className="absolute top-full right-0 mt-1 w-56 bg-background border border-mid-gray/80 rounded-lg shadow-lg z-50 overflow-hidden">
+                    <div className="absolute top-full right-0 mt-1 w-56 glass-pop z-50 overflow-hidden">
                       <div className="p-2 border-b border-mid-gray/40">
                         <input
                           ref={languageSearchInputRef}
@@ -408,6 +407,13 @@ export const ModelsSettings: React.FC = () => {
           {t("settings.models.noModelsMatch")}
         </div>
       )}
+
+      <SettingsGroup title={t("shell.questions.recognition")}>
+        <VoiceActivityDetection grouped={true} />
+        <CustomWords grouped />
+        <ModelUnloadTimeoutSetting grouped={true} />
+        {experimentalEnabled && <AccelerationSelector grouped={true} />}
+      </SettingsGroup>
     </div>
   );
 };

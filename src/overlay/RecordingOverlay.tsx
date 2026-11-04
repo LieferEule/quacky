@@ -14,7 +14,6 @@ import type {
 import BuiltStateIcon from "@/components/icons/BuiltStateIcon";
 import i18n, { syncLanguageFromSettings } from "@/i18n";
 import { getLanguageDirection } from "@/lib/utils/rtl";
-import { applyAccentColor } from "@/lib/utils/theme";
 
 type OverlayState =
   | "recording"
@@ -103,7 +102,6 @@ const RecordingOverlay: React.FC = () => {
             );
             dragDropEnabledRef.current =
               settings.data.drag_drop_enabled ?? false;
-            applyAccentColor(settings.data.accent_color ?? null);
             if (overlayState === "done") {
               setDoneCopied(
                 settings.data.clipboard_handling === "copy_to_clipboard",

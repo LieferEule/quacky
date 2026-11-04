@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "glisse/styles.css";
 @import "./styles/theme.css";
 
 /* Register the shared color tokens (src/styles/theme.css) as Tailwind
@@ -11,6 +12,7 @@
   --color-logo-stroke: var(--color-logo-stroke);
   --color-text-stroke: var(--color-text-stroke);
   --color-mid-gray: var(--color-mid-gray);
+  --color-accent-ink: var(--accent-ink);
 }
 
 :root {
@@ -63,10 +65,12 @@
  * Explicit theme override, driven by the `theme` setting via
  * `document.documentElement.dataset.theme`. When set, the higher-specificity
  * attribute selectors win over the `prefers-color-scheme` media query above,
- * so a user can keep Handy light or dark regardless of the OS setting.
- * `system` (or no attribute) leaves the OS in charge.
+ * so a user can keep Quacky light or dark regardless of the OS setting.
+ * `system` (or no attribute) leaves the OS in charge. `color-scheme` follows,
+ * so `light-dark()` below and native controls pick the same side.
  */
 :root[data-theme="light"] {
+  color-scheme: light;
   --color-text: var(--light-color-text);
   --color-background: var(--light-color-background);
   --color-logo-primary: var(--light-color-logo-primary);
@@ -74,15 +78,266 @@
 }
 
 :root[data-theme="dark"] {
+  color-scheme: dark;
   --color-text: var(--dark-color-text);
   --color-background: var(--dark-color-background);
   --color-logo-primary: var(--dark-color-logo-primary);
   --color-logo-stroke: var(--dark-color-logo-stroke);
 }
 
-/* macOS - tint native overlay scrollbar thumb */
+/*
+ * Liquid glass. On macOS the main window is system glass (window_glass.rs),
+ * so the page is transparent and every surface is a translucent layer on it,
+ * lit by a white rim along the top edge, as in Puddle. Elsewhere the window
+ * is opaque and the same tokens fall back to flat surfaces.
+ */
+:root {
+  color-scheme: light dark;
+  --glass-card: var(--color-background);
+  --glass-control: color-mix(in srgb, var(--color-mid-gray) 10%, transparent);
+  --glass-pop: var(--color-background);
+  --glass-rim: color-mix(in srgb, var(--color-mid-gray) 20%, transparent);
+  --glass-hair: color-mix(in srgb, var(--color-mid-gray) 16%, transparent);
+  --glass-sheen: transparent;
+  --glass-shadow: none;
+
+  /* The accent as ink for text, icons and marks: deepened on light ground,
+     lifted on dark, so a dark user accent still reads on dark glass (Puddle
+     lifts accents the same way). Fills keep the accent itself. */
+  --accent-ink: light-dark(
+    color-mix(in oklab, var(--color-logo-primary) 90%, black),
+    color-mix(in oklab, var(--color-logo-primary) 60%, white)
+  );
+
+  /* Glisse's switch and slider wear the accent; the switch at the finer
+     macOS settings size rather than iOS's. */
+  --lg-on: var(--color-background-ui);
+  --lg-fill: var(--color-background-ui);
+
+  /* Motion: a spring-like ease for what travels, a short ease-out for what
+     appears. */
+  --ease-paddle: cubic-bezier(0.32, 0.72, 0, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 :root[data-platform="macos"] {
+  background-color: transparent;
   scrollbar-color: var(--scrollbar-thumb) transparent;
+  --glass-card: light-dark(rgb(255 255 255 / 0.72), rgb(255 255 255 / 0.07));
+  --glass-control: light-dark(rgb(255 255 255 / 0.82), rgb(255 255 255 / 0.1));
+  --glass-pop: light-dark(rgb(250 248 244 / 0.86), rgb(32 32 36 / 0.86));
+  --glass-rim: light-dark(rgb(0 0 0 / 0.07), rgb(255 255 255 / 0.1));
+  --glass-hair: light-dark(rgb(0 0 0 / 0.07), rgb(255 255 255 / 0.08));
+  --glass-sheen: light-dark(rgb(255 255 255 / 0.95), rgb(255 255 255 / 0.14));
+  --glass-shadow:
+    0 1px 2px rgb(0 0 0 / 0.04),
+    0 6px 20px light-dark(rgb(0 0 0 / 0.05), rgb(0 0 0 / 0.22));
+}
+
+@layer components {
+  .glass-card {
+    background: var(--glass-card);
+    border-radius: 16px;
+    box-shadow:
+      inset 0 1px 0 var(--glass-sheen),
+      0 0 0 0.5px var(--glass-rim),
+      var(--glass-shadow);
+  }
+
+  .glass-control {
+    background: var(--glass-control);
+    border: 0.5px solid var(--glass-rim);
+    box-shadow:
+      inset 0 1px 0 var(--glass-sheen),
+      0 1px 2px rgb(0 0 0 / 0.05);
+  }
+
+  /* Menus, tooltips, toasts and dialogs float over the page, so they blur
+     what is under them on top of the window's own glass. */
+  .glass-pop {
+    background: var(--glass-pop);
+    border: 0.5px solid var(--glass-rim);
+    border-radius: 12px;
+    box-shadow:
+      inset 0 1px 0 var(--glass-sheen),
+      0 12px 32px rgb(0 0 0 / 0.18);
+    -webkit-backdrop-filter: blur(24px) saturate(1.8);
+    backdrop-filter: blur(24px) saturate(1.8);
+  }
+
+  /* A key cap, for shortcuts shown or recorded. */
+  .key-cap {
+    display: inline-block;
+    min-width: 26px;
+    margin-inline: 0.3em;
+    padding: 0 7px;
+    border-radius: 7px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 22px;
+    text-align: center;
+    color: var(--color-text);
+    background: var(--glass-control);
+    box-shadow:
+      inset 0 1px 0 var(--glass-sheen),
+      0 0 0 0.5px var(--glass-rim),
+      0 1px 2px rgb(0 0 0 / 0.08);
+  }
+}
+
+.lg-switch {
+  --lg-scale: 0.3;
+}
+
+/* The section tabs are Glisse's segmented control, sized for a window's
+   title bar rather than a phone. */
+.section-tabs {
+  --lg-tab-width: 78px;
+  --lg-tab-height: 30px;
+  font-size: 12.5px;
+  font-weight: 500;
+}
+
+/* The duck speaks: an avatar beside each group, the group a speech bubble
+   with its tail corner at the avatar. Bubbles settle in one after another. */
+.duck-avatar {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  flex: none;
+  margin-top: 6px;
+  border-radius: 999px;
+  color: var(--accent-ink);
+  background: var(--glass-card);
+  box-shadow:
+    inset 0 1px 0 var(--glass-sheen),
+    0 0 0 0.5px var(--glass-rim);
+}
+
+.duck-bubble {
+  background: var(--glass-card);
+  border-radius: 6px 18px 18px 18px;
+  box-shadow:
+    inset 0 1px 0 var(--glass-sheen),
+    0 0 0 0.5px var(--glass-rim),
+    var(--glass-shadow);
+}
+
+.duck-say {
+  animation: duck-say 420ms var(--ease-out) backwards;
+}
+
+.duck-say:nth-of-type(2) {
+  animation-delay: 60ms;
+}
+.duck-say:nth-of-type(3) {
+  animation-delay: 120ms;
+}
+.duck-say:nth-of-type(n + 4) {
+  animation-delay: 180ms;
+}
+
+@keyframes duck-say {
+  from {
+    opacity: 0.25;
+    transform: translateY(8px) scale(0.985);
+  }
+}
+
+/* A section settles in rather than popping. */
+.section-page {
+  animation: page-in 240ms var(--ease-out);
+}
+
+@keyframes page-in {
+  from {
+    opacity: 0.4;
+  }
+}
+
+/* Dictate's top row: the duck bobs while it listens; the quack meter follows
+   the microphone level (--level, set per bar from `mic-level`). */
+.hero-duck {
+  flex: none;
+  transition: transform 320ms var(--ease-out);
+}
+
+.duck-hero[data-state="recording"] .hero-duck {
+  animation: duck-bob 1100ms ease-in-out infinite;
+}
+
+.duck-hero[data-state="transcribing"] .hero-duck {
+  transform: rotate(-6deg);
+}
+
+@keyframes duck-bob {
+  50% {
+    transform: translateY(-2px) rotate(-4deg);
+  }
+}
+
+.quack-meter {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  height: 26px;
+  flex: none;
+}
+
+/* At rest the bars hold a small still wave; while recording each bar takes
+   the live level instead. */
+.quack-meter i {
+  width: 3px;
+  height: var(--rest);
+  border-radius: 2px;
+  background: var(--accent-ink);
+  opacity: 0.55;
+  transition:
+    height 120ms ease-out,
+    opacity 200ms ease-out;
+}
+
+.quack-meter i:nth-child(1),
+.quack-meter i:nth-child(5) {
+  --rest: 5px;
+}
+.quack-meter i:nth-child(2),
+.quack-meter i:nth-child(4) {
+  --rest: 9px;
+}
+.quack-meter i:nth-child(3) {
+  --rest: 13px;
+}
+
+.duck-hero[data-state="recording"] .quack-meter i {
+  height: calc(4px + 20px * var(--level, 0));
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .duck-say,
+  .section-page,
+  .hero-duck {
+    animation: none !important;
+  }
+}
+
+/* Accent as text or icon goes through the contrast-safe ink; fills, borders
+   and rings keep the user's accent exactly. */
+.text-logo-primary {
+  color: var(--accent-ink);
+}
+
+/* Browser surfaces carry the palette too. */
+::selection {
+  background: color-mix(in srgb, var(--color-background-ui) 28%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid color-mix(in srgb, var(--accent-ink) 75%, transparent);
+  outline-offset: 2px;
 }
 
 /* Custom Scrollbar - only on Windows/Linux; macOS uses native overlay scrollbars */
@@ -123,4 +378,74 @@
   fill: var(--color-logo-stroke);
   stroke: var(--color-logo-stroke);
   stroke-width: 1;
+}
+
+/* Answer chips: a short choice offered as capsules; the chosen one is filled
+   with the accent and springs in. */
+.answer-chip {
+  height: 26px;
+  padding: 0 11px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-text);
+  background: var(--glass-control);
+  box-shadow:
+    inset 0 1px 0 var(--glass-sheen),
+    0 0 0 0.5px var(--glass-rim);
+  cursor: pointer;
+  transition:
+    background-color 200ms var(--ease-out),
+    color 200ms var(--ease-out),
+    transform 260ms var(--ease-paddle);
+}
+
+.answer-chip:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.answer-chip:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.answer-chip.is-chosen {
+  color: #fff;
+  background: var(--color-background-ui);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.3);
+}
+
+.answer-chip:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.model-card-active {
+  box-shadow:
+    inset 0 0 0 1.5px
+      color-mix(in srgb, var(--color-background-ui) 70%, transparent),
+    inset 0 1px 0 var(--glass-sheen),
+    var(--glass-shadow);
+}
+
+.model-card-featured {
+  box-shadow:
+    inset 0 0 0 1px
+      color-mix(in srgb, var(--color-background-ui) 30%, transparent),
+    inset 0 1px 0 var(--glass-sheen),
+    var(--glass-shadow);
+}
+
+/* The Files drop target: quiet at rest, and the whole pane lights up with
+   the accent while a file hovers over the window. */
+.drop-pond {
+  border-radius: 14px;
+  transition:
+    background-color 200ms var(--ease-out),
+    box-shadow 200ms var(--ease-out);
+}
+
+.drop-pond.is-dragging {
+  background: color-mix(in srgb, var(--color-background-ui) 10%, transparent);
+  box-shadow: inset 0 0 0 1.5px
+    color-mix(in srgb, var(--color-background-ui) 60%, transparent);
 }

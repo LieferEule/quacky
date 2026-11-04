@@ -8,14 +8,7 @@
     "cancel": "إلغاء"
   },
   "sidebar": {
-    "general": "عام",
-    "advanced": "متقدم",
-    "postProcessing": "معالجة لاحقة",
-    "history": "السجل",
-    "debug": "تصحيح الأخطاء",
-    "about": "حول",
-    "models": "النماذج",
-    "transcribe": "Transcribe"
+    "navigation": "Sections"
   },
   "onboarding": {
     "subtitle": "للبدء، اختر نموذج التفريغ الصوتي",
@@ -163,7 +156,6 @@
         "label": "النسخ تلقائيًا إلى الحافظة",
         "description": "ينسخ كل عملية نسخ مكتملة تلقائيًا إلى الحافظة."
       },
-      "title": "عام",
       "shortcut": {
         "title": "اختصارات Quacky",
         "description": "إعداد اختصارات لوحة المفاتيح لبدء تسجيل التفريغ الصوتي",
@@ -222,7 +214,6 @@
       }
     },
     "sound": {
-      "title": "الصوت",
       "microphone": {
         "title": "الميكروفون",
         "description": "اختر جهاز الميكروفون المفضل لديك",
@@ -255,13 +246,6 @@
       }
     },
     "advanced": {
-      "groups": {
-        "app": "التطبيق",
-        "output": "الإخراج",
-        "transcription": "التفريغ الصوتي",
-        "history": "السجل",
-        "experimental": "تجريبي"
-      },
       "experimentalToggle": {
         "label": "الميزات التجريبية",
         "description": ".تمكين الميزات التجريبية التي لا تزال قيد التطوير"
@@ -385,11 +369,8 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "مفتاح الاختصار"
-      },
+      "hotkey": {},
       "api": {
-        "title": "API (متوافق مع OpenAI)",
         "provider": {
           "title": "المزود",
           "description": "اختر مزوداً متوافقاً مع OpenAI."
@@ -417,7 +398,6 @@
         }
       },
       "prompts": {
-        "title": "المطالبة",
         "selectedPrompt": {
           "title": "المطالبة المختارة",
           "description": ".اختر قالباً لتحسين التفريغ الصوتي أو أنشئ قالباً جديداً. استخدم ${output} داخل نص المطالبة للإشارة إلى النص الملتقط"
@@ -438,7 +418,6 @@
         "createFirst": ".انقر على 'إنشاء مطالبة جديدة' أعلاه لإنشاء أول مطالبة معالجة لاحقة لك"
       },
       "voiceAction": {
-        "title": "Voice Actions",
         "backend": {
           "title": "AI Backend",
           "description": "Use the configured API provider or an installed, signed-in Codex or Claude CLI.",
@@ -461,9 +440,7 @@
         },
         "privacy": "Your spoken instruction and any enabled context are sent to the selected AI service. Clipboard context is off by default."
       },
-      "enable": {
-        "title": "AI Features"
-      }
+      "enable": {}
     },
     "history": {
       "sourceMic": "الميكروفون",
@@ -474,7 +451,6 @@
         "file": "ملف"
       },
       "emptyFiltered": "لا توجد عناصر في هذه الفئة.",
-      "title": "السجل",
       "openFolder": "فتح مجلد التسجيلات",
       "loading": "...جاري تحميل السجل",
       "empty": "!لا يوجد تفريغ صوتي بعد. ابدأ التسجيل لبناء سجلك",
@@ -593,7 +569,6 @@
       }
     },
     "appearance": {
-      "title": "المظهر",
       "accent": {
         "title": "لون التمييز",
         "description": "اختر لون تمييز مخصصًا للأزرار وشريط التسجيل والعناصر البارزة. تعيد \"إعادة تعيين\" اللون البرتقالي الافتراضي.",
@@ -601,7 +576,6 @@
       }
     },
     "about": {
-      "title": "حول",
       "version": {
         "title": "الإصدار",
         "description": "الإصدار الحالي من Quacky"
@@ -626,7 +600,6 @@
         "button": "تبرع"
       },
       "acknowledgments": {
-        "title": "شكر وتقدير",
         "ggml": {
           "title": "ggml",
           "description": "استنتاج عالي الأداء لنموذج التعرف التلقائي على الكلام Whisper من OpenAI",
@@ -638,12 +611,7 @@
         "description": "إظهار ملاحظات الإصدار بعد تحديثات Quacky"
       }
     },
-    "modelSettings": {
-      "title": "إعدادات النموذج"
-    },
     "models": {
-      "title": "نماذج النسخ",
-      "description": "اختر نموذج نسخ أو قم بتنزيل نماذج إضافية. تقدم النماذج المختلفة مستويات متفاوتة من الدقة والسرعة.",
       "yourModels": "النماذج المحمّلة",
       "availableModels": "متاح للتنزيل",
       "deleteConfirm": "هل أنت متأكد أنك تريد حذف {{modelName}}؟ ستحتاج إلى تنزيله مرة أخرى لاستخدامه.",
@@ -734,7 +702,6 @@
     "title": "الجديد في Quacky v{{version}}"
   },
   "transcribe": {
-    "title": "Transcribe a file",
     "heading": "Transcribe an audio file",
     "body": "Pick a recording and it is transcribed here, in the app. Nothing is typed into other windows and nothing appears on the recording bar — useful for meetings and long voice notes.",
     "formats": "WAV, MP3, M4A, AAC, FLAC, OGG and OPUS — WhatsApp voice notes and Apple Voice Memos included.",
@@ -754,7 +721,6 @@
     "progress": "{{done}} of {{total}} transcribed",
     "remaining": "about {{time}} left",
     "model": {
-      "title": "Model for files",
       "description": "Dictation needs a model that keeps up live. A recorded meeting does not, so it can use a slower, more accurate one. Switching models here means the next dictation reloads its own.",
       "followDictation": "Same as dictation",
       "followDictationHint": "Uses whatever model dictation is set to."
@@ -764,5 +730,81 @@
     "cancellingHint": "Finishing the current piece, then handing back everything transcribed so far.",
     "partialTitle": "Partial transcript",
     "partialNote": "This run stopped before the end of the recording. What you see is everything that was transcribed up to that point — the rest of the audio is not in it."
+  },
+  "shell": {
+    "pages": {
+      "transcribe": {
+        "title": "Transcribe",
+        "subtitle": "Drop a voice note in the pond and get text back."
+      },
+      "history": {
+        "title": "History",
+        "subtitle": "Everything you ever quacked, kept on your Mac."
+      },
+      "models": {
+        "title": "Models",
+        "subtitle": "The ears Quacky listens with. All of them local."
+      },
+      "postprocessing": {
+        "title": "AI & Actions",
+        "subtitle": "Let an AI tidy up your chatter. Only when you switch it on."
+      },
+      "app": {
+        "title": "App",
+        "subtitle": "Looks, behaviour, and where Quacky nests."
+      },
+      "about": {
+        "title": "About Quacky",
+        "subtitle": "Version, lineage and thanks."
+      },
+      "debug": {
+        "title": "Debug",
+        "subtitle": "The workshop behind the pond."
+      }
+    },
+    "status": {
+      "ready": "Ready to quack",
+      "listening": "Quacky is listening…",
+      "transcribing": "Quacky is writing it down…",
+      "holdHint": "Hold {{shortcut}} and speak.",
+      "pressHint": "Press {{shortcut}} to start, press again to stop.",
+      "noShortcut": "No dictation shortcut set yet.",
+      "meter": "Quack meter: your microphone level",
+      "systemDefault": "System default"
+    },
+    "tabs": {
+      "dictate": "Dictate",
+      "transcribe": "Files",
+      "history": "History",
+      "models": "Models",
+      "postprocessing": "AI",
+      "app": "App",
+      "about": "About",
+      "debug": "Debug"
+    },
+    "questions": {
+      "shortcuts": "How do you want to call me?",
+      "microphone": "Which ear should I listen with?",
+      "output": "And where does the text go?",
+      "appearance": "How should I look?",
+      "behavior": "When should I show up?",
+      "folders": "Where do my files nest?",
+      "experimental": "Fancy some experiments?",
+      "recognition": "What should I listen out for?",
+      "retention": "How long should I remember everything?",
+      "dropFiles": "Shall I catch dropped files?",
+      "language": "Which language do you chatter in?",
+      "languageFor": "Applies to {{model}}",
+      "listenFile": "What shall I listen to for you?",
+      "fileModel": "Which ear do I use for files?",
+      "aiEnable": "Shall an AI chatter along?",
+      "voiceActions": "What may I do on command?",
+      "aiHotkey": "How do you call the polish?",
+      "aiApi": "Which AI should I talk to?",
+      "aiPrompt": "How should the AI tidy your text?",
+      "whoAmI": "Who am I?",
+      "thanks": "Who do I owe all this to?"
+    },
+    "customSound": "Custom WAV…"
   }
 }

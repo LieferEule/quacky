@@ -36,13 +36,13 @@ export const ModelSettingsCard: React.FC = () => {
 
   return (
     <SettingsGroup
-      title={t("settings.modelSettings.title", {
+      title={t("shell.questions.language")}
+      description={t("shell.questions.languageFor", {
         model: currentModelInfo.name,
       })}
     >
       {showLanguageSelector && (
         <LanguageSelector
-          descriptionMode="tooltip"
           grouped={true}
           supportedLanguages={currentModelInfo.supported_languages}
           supportsLanguageDetection={
@@ -50,9 +50,7 @@ export const ModelSettingsCard: React.FC = () => {
           }
         />
       )}
-      {supportsTranslation && (
-        <TranslateToEnglish descriptionMode="tooltip" grouped={true} />
-      )}
+      {supportsTranslation && <TranslateToEnglish grouped={true} />}
     </SettingsGroup>
   );
 };

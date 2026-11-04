@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, type ReactNode } from "react";
+import React, { useEffect, useState, useRef, type ReactNode } from "react";
 import { toast, Toaster } from "sonner";
 import { useTranslation } from "react-i18next";
 import { listen } from "@tauri-apps/api/event";
@@ -11,9 +11,13 @@ import {
 import { ModelStateEvent, RecordingErrorEvent } from "./lib/types/events";
 import "./App.css";
 import AccessibilityPermissions from "./components/AccessibilityPermissions";
-import Footer from "./components/footer";
+import ModelSelector from "./components/model-selector";
 import Onboarding, { AccessibilityOnboarding } from "./components/onboarding";
-import { Sidebar, SidebarSection, SECTIONS_CONFIG } from "./components/Sidebar";
+import {
+  SectionTabs,
+  Section,
+  SECTIONS_CONFIG,
+} from "./components/SectionTabs";
 import { WhatsNewGate } from "./components/whats-new";
 import { useSettings } from "./hooks/useSettings";
 import { useSettingsStore } from "./stores/settingsStore";
@@ -22,10 +26,30 @@ import { getLanguageDirection, initializeRTL } from "@/lib/utils/rtl";
 
 type OnboardingStep = "accessibility" | "model" | "done";
 
-const renderSettingsContent = (section: SidebarSection) => {
+// Each section opens with its title and one line of duck wit, then its panes.
+// Keyed by section so the page settles in afresh on every switch.
+const SectionPage: React.FC<{ section: Section }> = ({ section }) => {
+  const { t } = useTranslation();
   const ActiveComponent =
-    SECTIONS_CONFIG[section]?.component || SECTIONS_CONFIG.general.component;
-  return <ActiveComponent />;
+    SECTIONS_CONFIG[section]?.component || SECTIONS_CONFIG.dictate.component;
+  return (
+    <div className="section-page max-w-2xl w-full mx-auto">
+      {/* Dictate opens on the duck's own status row instead of a title. */}
+      {section !== "dictate" && (
+        <header className="mb-4 px-1 pt-2">
+          <h1 className="text-[17px] font-semibold leading-6 tracking-[-0.01em]">
+            {t(`shell.pages.${section}.title`)}
+          </h1>
+          <p className="text-[12px] text-text/65">
+            {t(`shell.pages.${section}.subtitle`)}
+          </p>
+        </header>
+      )}
+      <div className="space-y-4">
+        <ActiveComponent />
+      </div>
+    </div>
+  );
 };
 
 function App() {
@@ -36,8 +60,7 @@ function App() {
   // Track if this is a returning user who just needs to grant permissions
   // (vs a new user who needs full onboarding including model selection)
   const [isReturningUser, setIsReturningUser] = useState(false);
-  const [currentSection, setCurrentSection] =
-    useState<SidebarSection>("general");
+  const [currentSection, setCurrentSection] = useState<Section>("dictate");
   const { settings, updateSetting } = useSettings();
   const direction = getLanguageDirection(i18n.language);
   const refreshAudioDevices = useSettingsStore(
@@ -132,8 +155,14 @@ function App() {
   // overlay is a non-activating panel on macOS and never receives Finder drops,
   // so this window is the dependable drop target.
   // Read through a ref: the drop listener is registered once, so capturing the
-  // section directly would freeze it at "general".
-  const sectionRef = useRef<SidebarSection>(currentSection);
+  // section directly would freeze it at "dictate".
+  const sectionRef = useRef<Section>(currentSection);
+  // The content scrolls in one container shared by every section, so a new
+  // section would otherwise open at the previous one's scroll position.
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ top: 0 });
+  }, [currentSection]);
   useEffect(() => {
     sectionRef.current = currentSection;
   }, [currentSection]);
@@ -304,8 +333,7 @@ function App() {
       toastOptions={{
         unstyled: true,
         classNames: {
-          toast:
-            "bg-background border border-mid-gray/20 rounded-lg shadow-lg px-4 py-3 flex items-center gap-3 text-sm",
+          toast: "glass-pop px-4 py-3 flex items-center gap-3 text-sm",
           title: "font-medium",
           description: "text-mid-gray",
         },
@@ -335,24 +363,28 @@ function App() {
         className="h-screen flex flex-col select-none cursor-default"
       >
         <WhatsNewGate />
-        {/* Main content area that takes remaining space */}
-        <div className="flex-1 flex overflow-hidden">
-          <Sidebar
+        {/* Title bar: the traffic lights on the left, the section tabs centred.
+            The whole strip drags the window. */}
+        <header
+          data-tauri-drag-region
+          className="grid h-[52px] shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-3 px-4"
+        >
+          {/* The traffic lights sit in the first column. */}
+          <span />
+          <SectionTabs
             activeSection={currentSection}
             onSectionChange={setCurrentSection}
           />
-          {/* Scrollable content area */}
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <div className="flex-1 overflow-y-auto">
-              <div className="flex flex-col items-center p-4 gap-4">
-                <AccessibilityPermissions />
-                {renderSettingsContent(currentSection)}
-              </div>
-            </div>
+          <div className="flex min-w-0 justify-end text-[12px] text-text/65">
+            <ModelSelector />
+          </div>
+        </header>
+        <div ref={scrollRef} className="flex-1 overflow-y-auto">
+          <div className="flex flex-col items-center px-12 pt-1 pb-8 gap-4">
+            <AccessibilityPermissions />
+            <SectionPage key={currentSection} section={currentSection} />
           </div>
         </div>
-        {/* Fixed footer at bottom */}
-        <Footer />
       </div>
     );
   }

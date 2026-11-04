@@ -8,14 +8,7 @@
     "cancel": "キャンセル"
   },
   "sidebar": {
-    "general": "一般",
-    "models": "モデル",
-    "advanced": "詳細設定",
-    "postProcessing": "後処理",
-    "history": "履歴",
-    "debug": "デバッグ",
-    "about": "概要",
-    "transcribe": "Transcribe"
+    "navigation": "Sections"
   },
   "onboarding": {
     "subtitle": "開始するには、文字起こしのモデルを選択してください",
@@ -154,12 +147,7 @@
     "legacy": "旧式"
   },
   "settings": {
-    "modelSettings": {
-      "title": "{{model}} の設定"
-    },
     "models": {
-      "title": "文字起こしのモデル",
-      "description": "文字起こしのモデルを選択するか、追加のモデルをダウンロードします。異なるモデルは精度と速度のレベルが異なります。",
       "deleteConfirm": "{{modelName}}を削除してもよろしいですか? 再度使用するにはダウンロードが必要です。",
       "deleteActiveConfirm": "{{modelName}}は現在使用中のモデルです。削除すると、新しいモデルを選択するまで文字起こしが停止します。本当に削除しますか?",
       "deleteTitle": "モデルを削除",
@@ -184,7 +172,6 @@
         "label": "クリップボードへ自動コピー",
         "description": "完了した文字起こしを毎回クリップボードへ自動的にコピーします。"
       },
-      "title": "一般",
       "shortcut": {
         "title": "Quacky ショートカット",
         "description": "音声録音を開始するキーボードショートカットを設定",
@@ -243,7 +230,6 @@
       }
     },
     "sound": {
-      "title": "サウンド",
       "microphone": {
         "title": "マイク",
         "description": "使用するマイクデバイスを選択",
@@ -276,13 +262,6 @@
       }
     },
     "advanced": {
-      "groups": {
-        "app": "アプリ",
-        "output": "出力",
-        "transcription": "文字起こし",
-        "history": "履歴",
-        "experimental": "実験的"
-      },
       "experimentalToggle": {
         "label": "実験的な機能",
         "description": "まだ開発中の実験的な機能を有効にします。"
@@ -406,11 +385,8 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "ショートカット"
-      },
+      "hotkey": {},
       "api": {
-        "title": "API (OpenAI 互換)",
         "provider": {
           "title": "プロバイダー",
           "description": "OpenAI 互換のプロバイダーを選択。"
@@ -438,7 +414,6 @@
         }
       },
       "prompts": {
-        "title": "プロンプト",
         "selectedPrompt": {
           "title": "選択したプロンプト",
           "description": "文字起こしを改善するテンプレートを選択するか、新しく作成します。プロンプトテキスト内で ${output} を使用して、キャプチャした文字起こしを参照します。"
@@ -459,7 +434,6 @@
         "createFirst": "上の「新しいプロンプトを作成」をクリックして、最初の後処理プロンプトを作成してください。"
       },
       "voiceAction": {
-        "title": "Voice Actions",
         "backend": {
           "title": "AI Backend",
           "description": "Use the configured API provider or an installed, signed-in Codex or Claude CLI.",
@@ -482,9 +456,7 @@
         },
         "privacy": "Your spoken instruction and any enabled context are sent to the selected AI service. Clipboard context is off by default."
       },
-      "enable": {
-        "title": "AI Features"
-      }
+      "enable": {}
     },
     "history": {
       "sourceMic": "マイク",
@@ -495,7 +467,6 @@
         "file": "ファイル"
       },
       "emptyFiltered": "このカテゴリには項目がありません。",
-      "title": "履歴",
       "openFolder": "録音フォルダを開く",
       "loading": "履歴を読み込み中…",
       "empty": "まだ文字起こしがありません。録音を開始して履歴を作成しましょう!",
@@ -614,7 +585,6 @@
       }
     },
     "appearance": {
-      "title": "外観",
       "accent": {
         "title": "アクセントカラー",
         "description": "ボタン、録音バー、ハイライトのアクセントカラーを自由に設定できます。「リセット」で既定のオレンジに戻ります。",
@@ -622,7 +592,6 @@
       }
     },
     "about": {
-      "title": "概要",
       "version": {
         "title": "バージョン",
         "description": "Quacky の現在のバージョン"
@@ -647,7 +616,6 @@
         "button": "寄付する"
       },
       "acknowledgments": {
-        "title": "謝辞",
         "ggml": {
           "title": "ggml",
           "description": "オンデバイス機械学習推論のための高性能テンソルライブラリ",
@@ -734,7 +702,6 @@
     "title": "Quacky v{{version}} の新機能"
   },
   "transcribe": {
-    "title": "Transcribe a file",
     "heading": "Transcribe an audio file",
     "body": "Pick a recording and it is transcribed here, in the app. Nothing is typed into other windows and nothing appears on the recording bar — useful for meetings and long voice notes.",
     "formats": "WAV, MP3, M4A, AAC, FLAC, OGG and OPUS — WhatsApp voice notes and Apple Voice Memos included.",
@@ -754,7 +721,6 @@
     "progress": "{{done}} of {{total}} transcribed",
     "remaining": "about {{time}} left",
     "model": {
-      "title": "Model for files",
       "description": "Dictation needs a model that keeps up live. A recorded meeting does not, so it can use a slower, more accurate one. Switching models here means the next dictation reloads its own.",
       "followDictation": "Same as dictation",
       "followDictationHint": "Uses whatever model dictation is set to."
@@ -764,5 +730,81 @@
     "cancellingHint": "Finishing the current piece, then handing back everything transcribed so far.",
     "partialTitle": "Partial transcript",
     "partialNote": "This run stopped before the end of the recording. What you see is everything that was transcribed up to that point — the rest of the audio is not in it."
+  },
+  "shell": {
+    "pages": {
+      "transcribe": {
+        "title": "Transcribe",
+        "subtitle": "Drop a voice note in the pond and get text back."
+      },
+      "history": {
+        "title": "History",
+        "subtitle": "Everything you ever quacked, kept on your Mac."
+      },
+      "models": {
+        "title": "Models",
+        "subtitle": "The ears Quacky listens with. All of them local."
+      },
+      "postprocessing": {
+        "title": "AI & Actions",
+        "subtitle": "Let an AI tidy up your chatter. Only when you switch it on."
+      },
+      "app": {
+        "title": "App",
+        "subtitle": "Looks, behaviour, and where Quacky nests."
+      },
+      "about": {
+        "title": "About Quacky",
+        "subtitle": "Version, lineage and thanks."
+      },
+      "debug": {
+        "title": "Debug",
+        "subtitle": "The workshop behind the pond."
+      }
+    },
+    "status": {
+      "ready": "Ready to quack",
+      "listening": "Quacky is listening…",
+      "transcribing": "Quacky is writing it down…",
+      "holdHint": "Hold {{shortcut}} and speak.",
+      "pressHint": "Press {{shortcut}} to start, press again to stop.",
+      "noShortcut": "No dictation shortcut set yet.",
+      "meter": "Quack meter: your microphone level",
+      "systemDefault": "System default"
+    },
+    "tabs": {
+      "dictate": "Dictate",
+      "transcribe": "Files",
+      "history": "History",
+      "models": "Models",
+      "postprocessing": "AI",
+      "app": "App",
+      "about": "About",
+      "debug": "Debug"
+    },
+    "questions": {
+      "shortcuts": "How do you want to call me?",
+      "microphone": "Which ear should I listen with?",
+      "output": "And where does the text go?",
+      "appearance": "How should I look?",
+      "behavior": "When should I show up?",
+      "folders": "Where do my files nest?",
+      "experimental": "Fancy some experiments?",
+      "recognition": "What should I listen out for?",
+      "retention": "How long should I remember everything?",
+      "dropFiles": "Shall I catch dropped files?",
+      "language": "Which language do you chatter in?",
+      "languageFor": "Applies to {{model}}",
+      "listenFile": "What shall I listen to for you?",
+      "fileModel": "Which ear do I use for files?",
+      "aiEnable": "Shall an AI chatter along?",
+      "voiceActions": "What may I do on command?",
+      "aiHotkey": "How do you call the polish?",
+      "aiApi": "Which AI should I talk to?",
+      "aiPrompt": "How should the AI tidy your text?",
+      "whoAmI": "Who am I?",
+      "thanks": "Who do I owe all this to?"
+    },
+    "customSound": "Custom WAV…"
   }
 }

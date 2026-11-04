@@ -38,17 +38,34 @@ def acc_from_wer(wer):
 CURATION = {
     "parakeet-unified-en-0.6b":        {"rank": 1, "rec": True, "desc": "Fast, accurate live English transcription"},
     "nemotron-3.5-asr-streaming-0.6b": {"rank": 2, "rec": True, "desc": "Live multilingual transcription across 28 languages"},
-    "canary-180m-flash":               {"rank": 3, "rec": True, "desc": "Tiny and instant, runs well on any hardware"},
-    "cohere-transcribe-03-2026":       {"rank": 4, "rec": True, "desc": "Highest accuracy, 14 languages, slower"},
-    "whisper-medium":                  {"rank": 5, "rec": True, "desc": "Broadest language, but may run a bit slow"},
+    # Post-trained parakeet-tdt-0.6b-v3: same size and speed, lower WER in every
+    # language checked (FLEURS de 4.58 vs 5.24), so it takes v3's place up top.
+    "parakeet-ultra":                  {"rank": 3, "rec": True, "desc": "Fast and very accurate in 25 European languages, German included"},
+    "canary-180m-flash":               {"rank": 4, "rec": True, "desc": "Tiny and instant, runs well on any hardware"},
+    "cohere-transcribe-03-2026":       {"rank": 5, "rec": True, "desc": "Highest accuracy, 14 languages, slower"},
+    "whisper-medium":                  {"rank": 6, "rec": True, "desc": "Broadest language, but may run a bit slow"},
     # ranked (sorted high) but NOT tagged recommended
-    "Voxtral-Mini-4B-Realtime-2602":   {"rank": 6, "desc": "Live multilingual, excellent on powerful machines"},
-    "parakeet-tdt-0.6b-v3":            {"rank": 7, "desc": "Fast and accurate. Supports 25 European languages"},
-    "parakeet-tdt-0.6b-v2":            {"rank": 8, "desc": "English only. The best model for English speakers"},
-    "Qwen3-ASR-0.6B":                  {"rank": 9, "desc": "Excellent multilingual model"},
-    "Fun-ASR-MLT-Nano-2512":           {"rank": 10, "desc": "A tiny multilingual model"},
+    "Voxtral-Mini-4B-Realtime-2602":   {"rank": 7, "desc": "Live multilingual, excellent on powerful machines"},
+    "parakeet-tdt-0.6b-v3":            {"rank": 8, "desc": "Fast and accurate. Supports 25 European languages"},
+    "parakeet-tdt-0.6b-v2":            {"rank": 9, "desc": "English only. The best model for English speakers"},
+    "Qwen3-ASR-0.6B":                  {"rank": 10, "desc": "Excellent multilingual model"},
+    "Fun-ASR-MLT-Nano-2512":           {"rank": 11, "desc": "A tiny multilingual model"},
     # description-only (unranked, not recommended) — carried over from the legacy .bin entry
     "Breeze-ASR-25":                   {"desc": "Optimized for Taiwanese Mandarin. Code-switching support."},
+    # Not dictation models, or architectures transcribe-cpp 0.1.3 cannot load
+    # (granite_speech5_ctc, moss, sortformer, silero_vad, ecapa_tdnn need >= 0.2).
+    "moss-transcribe-diarize":                {"hidden": True},
+    "diar_streaming_sortformer_4spk-v2.1":    {"hidden": True},
+    "lang-id-voxlingua107-ecapa":             {"hidden": True},
+    "silero-vad-v6.2":                        {"hidden": True},
+    "granite-speech-5.0-470m-turboctc":       {"hidden": True},
+    "granite-speech-5.0-470m-turboctc-nc":    {"hidden": True},
+    # Runs, but no gain for Quacky's users: English diarization, Arabic-only,
+    # and two v3 tunes that trail parakeet-ultra on FLEURS German.
+    "multitalker-parakeet-streaming-0.6b-v1": {"hidden": True},
+    "cohere-transcribe-arabic-07-2026":       {"hidden": True},
+    "parakeet-primeline":                     {"hidden": True},
+    "orukeet":                                {"hidden": True},
 }
 # temporary capability corrections pending a card re-push (remove once cards fixed)
 OVERRIDES = {

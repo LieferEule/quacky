@@ -8,7 +8,7 @@ use std::sync::{Arc, Mutex};
 use tauri::image::Image;
 use tauri::menu::{CheckMenuItem, Menu, MenuItem, PredefinedMenuItem, Submenu};
 use tauri::tray::TrayIcon;
-use tauri::{AppHandle, Manager, Theme};
+use tauri::{AppHandle, Emitter, Manager, Theme};
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum TrayIconState {
@@ -116,6 +116,15 @@ pub fn change_tray_icon(app: &AppHandle, icon: TrayIconState) {
 
     // Store current state
     app.state::<CurrentTrayIconState>().set(icon);
+
+    // The main window mirrors it (the duck on Dictate). The tray follows every
+    // dictation, while the overlay stays silent whenever Puddle owns the UI.
+    let state = match icon {
+        TrayIconState::Idle => "idle",
+        TrayIconState::Recording => "recording",
+        TrayIconState::Transcribing => "transcribing",
+    };
+    let _ = app.emit_to("main", "recording-state", state);
 
     let icon_path = get_icon_path(theme, icon);
 

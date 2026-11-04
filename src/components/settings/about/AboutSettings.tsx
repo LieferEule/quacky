@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { getVersion } from "@tauri-apps/api/app";
-import { openUrl } from "@tauri-apps/plugin-opener";
 import { SettingsGroup } from "../../ui/SettingsGroup";
 import { SettingContainer } from "../../ui/SettingContainer";
-import { Button } from "../../ui/Button";
-import { AppDataDirectory } from "../AppDataDirectory";
-import { AppLanguageSelector } from "../AppLanguageSelector";
-import { ThemeSelector } from "../ThemeSelector";
-import { LogDirectory } from "../debug";
 
 export const AboutSettings: React.FC = () => {
   const { t } = useTranslation();
@@ -29,10 +23,8 @@ export const AboutSettings: React.FC = () => {
   }, []);
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
-      <SettingsGroup title={t("settings.about.title")}>
-        <AppLanguageSelector descriptionMode="tooltip" grouped={true} />
-        <ThemeSelector descriptionMode="tooltip" grouped={true} />
+    <div className="space-y-4">
+      <SettingsGroup title={t("shell.questions.whoAmI")}>
         <SettingContainer
           title={t("settings.about.version.title")}
           description={t("settings.about.version.description")}
@@ -41,47 +33,9 @@ export const AboutSettings: React.FC = () => {
           {/* eslint-disable-next-line i18next/no-literal-string */}
           <span className="text-sm font-mono">v{version}</span>
         </SettingContainer>
-
-        <AppDataDirectory descriptionMode="tooltip" grouped={true} />
-        <LogDirectory grouped={true} />
       </SettingsGroup>
 
-      <SettingsGroup title={t("settings.about.acknowledgments.title")}>
-        <SettingContainer
-          title={t("settings.about.sourceCode.title")}
-          description={t("settings.about.sourceCode.description")}
-          grouped={true}
-          layout="stacked"
-        >
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={() => openUrl("https://github.com/cjpais/Handy")}
-          >
-            {t("settings.about.sourceCode.button")}
-          </Button>
-        </SettingContainer>
-
-        {/* Quacky's direct parent. Handy above is the origin of the codebase,
-            but it reached Quacky through this fork, which is where a good deal
-            of what Quacky ships was actually written. */}
-        <SettingContainer
-          title={t("settings.about.upstreamFork.title")}
-          description={t("settings.about.upstreamFork.description")}
-          grouped={true}
-          layout="stacked"
-        >
-          <Button
-            variant="secondary"
-            size="md"
-            onClick={() =>
-              openUrl("https://github.com/CouchTurtle/crwbar-voice")
-            }
-          >
-            {t("settings.about.upstreamFork.button")}
-          </Button>
-        </SettingContainer>
-
+      <SettingsGroup title={t("shell.questions.thanks")}>
         <SettingContainer
           title={t("settings.about.acknowledgments.ggml.title")}
           description={t("settings.about.acknowledgments.ggml.description")}

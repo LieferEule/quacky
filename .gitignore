@@ -48,3 +48,6 @@ blob-report/
 
 # Nix build output
 result
+
+# Design review captures (regenerated per review)
+.impeccable/review/

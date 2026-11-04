@@ -61,6 +61,10 @@ fn overlay_dimensions(state: &str) -> (f64, f64) {
 
 static LAST_MIC_LEVEL_EMIT: AtomicU64 = AtomicU64::new(0);
 const EMIT_THROTTLE_MS: u64 = 33; // ~30 FPS
+static LAST_MAIN_LEVEL_EMIT: AtomicU64 = AtomicU64::new(0);
+/// The quack meter in the main window needs far less than the overlay's bars,
+/// and every event costs WebKit memory (see `emit_levels`), so ~10 FPS.
+const MAIN_EMIT_THROTTLE_MS: u64 = 100;
 
 // Bumped on every overlay state change and on hide. The completion confirmation
 // schedules a delayed auto-hide guarded by this counter, so a new recording
@@ -576,9 +580,32 @@ pub fn update_overlay_enabled_cache(enabled: bool) {
     OVERLAY_ENABLED.store(enabled, Ordering::Relaxed);
 }
 
+/// Levels for the quack meter on Dictate. Sent before the notch and overlay
+/// guards, since the meter shows whether or not either of them draws bars, but
+/// only while a dictation is recording: with `always_on_microphone` the level
+/// callback runs forever, and every event costs WebKit memory (see below).
+fn emit_main_levels(app_handle: &AppHandle, levels: &[f32]) {
+    let now = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap_or_default()
+        .as_millis() as u64;
+    let last = LAST_MAIN_LEVEL_EMIT.load(Ordering::Relaxed);
+    if now.saturating_sub(last) < MAIN_EMIT_THROTTLE_MS {
+        return;
+    }
+    LAST_MAIN_LEVEL_EMIT.store(now, Ordering::Relaxed);
+    let recording = app_handle
+        .try_state::<crate::tray::CurrentTrayIconState>()
+        .is_some_and(|s| s.get() == crate::tray::TrayIconState::Recording);
+    if recording {
+        let _ = app_handle.emit_to("main", "mic-level", levels);
+    }
+}
+
 pub fn emit_levels(app_handle: &AppHandle, levels: &[f32]) {
     // The notch draws its own bars; it gets levels even with our overlay off.
     crate::notch::levels(levels);
+    emit_main_levels(app_handle, levels);
     if crate::notch::active() {
         return;
     }

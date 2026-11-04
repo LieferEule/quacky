@@ -23,6 +23,8 @@ mod transcription_coordinator;
 mod tray;
 mod tray_i18n;
 mod utils;
+#[cfg(target_os = "macos")]
+mod window_glass;
 
 pub use cli::CliArgs;
 #[cfg(debug_assertions)]
@@ -840,13 +842,31 @@ pub fn run(cli_args: CliArgs) {
                     .maximizable(false)
                     .visible(false);
 
+            // Transparent with the title bar folded into the content, so the
+            // glass (window_glass.rs) reaches up under the traffic lights.
+            #[cfg(target_os = "macos")]
+            {
+                win_builder = win_builder
+                    .transparent(true)
+                    .title_bar_style(tauri::TitleBarStyle::Overlay)
+                    .hidden_title(true);
+            }
+
             if let Some(data_dir) = portable::data_dir() {
                 win_builder = win_builder.data_directory(data_dir.join("webview"));
             }
 
-            win_builder.build()?;
+            let main_window = win_builder.build()?;
 
             let mut settings = get_settings(app.handle());
+
+            #[cfg(target_os = "macos")]
+            {
+                window_glass::apply(&main_window);
+                window_glass::set_theme(&main_window, settings.theme);
+            }
+            #[cfg(not(target_os = "macos"))]
+            let _ = main_window;
 
             // Apply the persisted appearance theme to the Windows title bar before
             // the window is shown, so it matches the in-app palette without a flash

@@ -5,7 +5,6 @@ interface TextDisplayProps {
   label: string;
   description: string;
   value: string;
-  descriptionMode?: "inline" | "tooltip";
   grouped?: boolean;
   placeholder?: string;
   copyable?: boolean;
@@ -17,7 +16,6 @@ export const TextDisplay: React.FC<TextDisplayProps> = ({
   label,
   description,
   value,
-  descriptionMode = "tooltip",
   grouped = false,
   placeholder = "Not available",
   copyable = false,
@@ -48,7 +46,6 @@ export const TextDisplay: React.FC<TextDisplayProps> = ({
     <SettingContainer
       title={label}
       description={description}
-      descriptionMode={descriptionMode}
       grouped={grouped}
       layout="stacked"
     >

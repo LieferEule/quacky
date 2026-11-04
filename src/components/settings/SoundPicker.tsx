@@ -1,4 +1,5 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 import { open } from "@tauri-apps/plugin-dialog";
 import { Button } from "../ui/Button";
 import { Dropdown, DropdownOption } from "../ui/Dropdown";
@@ -17,6 +18,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
   label,
   description,
 }) => {
+  const { t } = useTranslation();
   const { getSetting, updateSetting } = useSettings();
   const playTestSound = useSettingsStore((state) => state.playTestSound);
   const customSounds = useSettingsStore((state) => state.customSounds);
@@ -27,7 +29,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
   const options: DropdownOption[] = [
     { value: "marimba", label: "Marimba" },
     { value: "pop", label: "Pop" },
-    { value: "custom", label: "Custom WAV…" },
+    { value: "custom", label: t("shell.customSound") },
   ];
 
   const importCustomSound = async () => {
@@ -83,6 +85,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
     >
       <div className="flex items-center gap-2">
         <Dropdown
+          variant="chips"
           selectedValue={selectedTheme}
           onSelect={handleThemeSelect}
           options={options}

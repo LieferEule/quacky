@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { commands, events } from "@/bindings";
 import { Button } from "../../ui/Button";
+import { DragDropToggle } from "../DragDropToggle";
 import { SettingsGroup } from "../../ui/SettingsGroup";
 import { useSettings } from "../../../hooks/useSettings";
 import { useModelStore } from "../../../stores/modelStore";
@@ -375,9 +376,9 @@ export const TranscribeSettings: React.FC = () => {
   }, [progress]);
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
-      <SettingsGroup title={t("transcribe.title")}>
-        <div className="p-6 text-left">
+    <div className="space-y-4">
+      <SettingsGroup title={t("shell.questions.listenFile")}>
+        <div className="p-3 text-left">
           {running ? (
             <div className="flex items-start gap-4">
               <Loader2 className="w-6 h-6 shrink-0 mt-0.5 text-logo-primary animate-spin" />
@@ -431,29 +432,28 @@ export const TranscribeSettings: React.FC = () => {
             </div>
           ) : (
             <div
-              className={`rounded-lg border-2 border-dashed p-6 text-center transition-colors ${
-                dragging
-                  ? "border-logo-primary bg-logo-primary/10"
-                  : "border-mid-gray/30"
+              className={`drop-pond px-4 py-5 text-center ${
+                dragging ? "is-dragging" : ""
               }`}
             >
-              <div className="inline-flex rounded-lg bg-logo-primary/10 p-3">
-                <Upload className="w-6 h-6 text-logo-primary" />
-              </div>
-              <p className="text-base font-medium text-text mt-3">
+              <Upload
+                className="mx-auto w-5 h-5 text-logo-primary"
+                strokeWidth={1.75}
+              />
+              <p className="text-[13.5px] font-semibold text-text mt-2">
                 {dragging ? t("transcribe.dropNow") : t("transcribe.heading")}
               </p>
-              <p className="text-sm text-text/60 mt-1 max-w-md mx-auto">
+              <p className="text-[12px] leading-4 text-text/65 mt-1 max-w-sm mx-auto">
                 {t("transcribe.body")}
               </p>
-              <div className="mt-4">
+              <div className="mt-3.5">
                 <Button variant="primary" size="md" onClick={handlePick}>
                   {phase.status === "idle"
                     ? t("transcribe.pick")
                     : t("transcribe.pickAnother")}
                 </Button>
               </div>
-              <p className="text-xs text-mid-gray mt-4">
+              <p className="text-[11.5px] leading-4 text-text/60 mt-3">
                 {t("transcribe.formats")}
               </p>
             </div>
@@ -462,7 +462,7 @@ export const TranscribeSettings: React.FC = () => {
       </SettingsGroup>
 
       <SettingsGroup
-        title={t("transcribe.model.title")}
+        title={t("shell.questions.fileModel")}
         description={t("transcribe.model.description")}
       >
         <button
@@ -585,6 +585,10 @@ export const TranscribeSettings: React.FC = () => {
           </div>
         </SettingsGroup>
       )}
+
+      <SettingsGroup title={t("shell.questions.dropFiles")}>
+        <DragDropToggle grouped={true} />
+      </SettingsGroup>
     </div>
   );
 };

@@ -8,21 +8,14 @@
     "cancel": "Abbrechen"
   },
   "sidebar": {
-    "general": "Allgemein",
-    "models": "Modelle",
-    "advanced": "Erweitert",
-    "postProcessing": "KI & Voice Actions",
-    "history": "Verlauf",
-    "debug": "Debug",
-    "about": "Info",
-    "transcribe": "Transkribieren"
+    "navigation": "Bereiche"
   },
   "onboarding": {
     "subtitle": "Wähle ein Transkriptionsmodell, um loszulegen",
-    "existingModelsTitle": "Compatible Models",
-    "downloadModelsTitle": "Available to Download",
-    "showAllModels": "Show all {{total}} models",
-    "showFewerModels": "Show fewer models",
+    "existingModelsTitle": "Passende Modelle",
+    "downloadModelsTitle": "Zum Download verfügbar",
+    "showAllModels": "Alle {{total}} Modelle zeigen",
+    "showFewerModels": "Weniger Modelle zeigen",
     "recommended": "Empfohlen",
     "customModelDescription": "Nicht offiziell unterstützt",
     "modelCard": {
@@ -96,7 +89,7 @@
       }
     },
     "errors": {
-      "selectModel": "Failed to select model"
+      "selectModel": "Modell konnte nicht ausgewählt werden"
     },
     "permissions": {
       "title": "Berechtigungen erforderlich",
@@ -142,7 +135,7 @@
     "downloadSpeed": "{{speed}} MB/s",
     "capabilities": {
       "languageSelection": "Unterstützt mehrere Eingabesprachen",
-      "languageCount": "{{total}} languages",
+      "languageCount": "{{total}} Sprachen",
       "translation": "Kann ins Englische übersetzen",
       "translate": "Ins Englische übersetzen",
       "singleLanguage": "Unterstützt nur diese Sprache",
@@ -154,12 +147,7 @@
     "legacy": "Veraltet"
   },
   "settings": {
-    "modelSettings": {
-      "title": "{{model}}-Einstellungen"
-    },
     "models": {
-      "title": "Transkriptionsmodelle",
-      "description": "Wähle ein Transkriptionsmodell aus oder lade zusätzliche Modelle herunter. Verschiedene Modelle bieten unterschiedliche Genauigkeits- und Geschwindigkeitsstufen.",
       "deleteConfirm": "Bist du sicher, dass du {{modelName}} löschen möchtest? Du musst es erneut herunterladen, um es zu verwenden.",
       "deleteActiveConfirm": "{{modelName}} ist dein aktives Modell. Das Löschen stoppt Transkriptionen, bis du ein neues Modell auswählst. Bist du sicher?",
       "deleteTitle": "Modell löschen",
@@ -176,10 +164,9 @@
       }
     },
     "general": {
-      "title": "Allgemein",
       "dragDrop": {
         "label": "Datei-Drop transkribieren",
-        "description": "Erlaubt, eine Audiodatei auf die Aufnahme-Leiste zu ziehen, um sie statt des Mikrofons zu transkribieren."
+        "description": "Zieh eine Audiodatei auf die Aufnahme-Leiste, und ich höre die statt des Mikrofons."
       },
       "autoCopy": {
         "label": "Automatisch in die Zwischenablage",
@@ -203,11 +190,11 @@
           },
           "transcribe_with_post_process": {
             "name": "Nachbearbeitungs-Tastenkürzel",
-            "description": "Optional: Ein dediziertes Tastenkürzel, das immer die KI-Nachbearbeitung auf deine Transkription anwendet."
+            "description": "Ein eigenes Kürzel, bei dem die KI jedes Mal mitglättet."
           },
           "voice_action": {
             "name": "Voice-Action-Tastenkürzel",
-            "description": "Sprich eine Anweisung und erzeuge daraus mit optionalem Kontext und dem gewählten KI-Backend einen Text."
+            "description": "Sag mir, was du brauchst, und die KI schreibt es dir."
           },
           "copy_last_transcript": {
             "name": "Kopieren-Tastenkürzel",
@@ -215,7 +202,7 @@
           },
           "insert_last_transcript": {
             "name": "Einfügen-Tastenkürzel",
-            "description": "Das Tastenkürzel, um die letzte Transkription in das aktive Feld zu tippen, ohne die Zwischenablage zu verändern."
+            "description": "Tippt den letzten Text ins aktive Feld, die Zwischenablage bleibt unberührt."
           }
         },
         "errors": {
@@ -228,7 +215,7 @@
       },
       "language": {
         "title": "Sprache",
-        "description": "Wähle die Sprache für die Spracherkennung. Auto erkennt die Sprache automatisch, die Auswahl einer bestimmten Sprache kann die Genauigkeit verbessern.",
+        "description": "Auto erkennt die Sprache selbst. Eine feste Sprache trifft oft genauer.",
         "searchPlaceholder": "Sprachen suchen...",
         "noResults": "Keine Sprachen gefunden",
         "auto": "Auto"
@@ -239,11 +226,10 @@
       },
       "doubleTapLatch": {
         "label": "Doppeltippen hält die Aufnahme",
-        "description": "Tippe das Kürzel zweimal, dann läuft die Aufnahme freihändig weiter, bis du erneut tippst. Gedrückt halten funktioniert wie gewohnt."
+        "description": "Zweimal tippen, und ich höre freihändig weiter, bis du wieder tippst."
       }
     },
     "sound": {
-      "title": "Ton",
       "microphone": {
         "title": "Mikrofon",
         "description": "Bevorzugtes Mikrofon auswählen",
@@ -276,13 +262,6 @@
       }
     },
     "advanced": {
-      "groups": {
-        "app": "App",
-        "output": "Ausgabe",
-        "transcription": "Transkription",
-        "history": "Verlauf",
-        "experimental": "Experimentell"
-      },
       "experimentalToggle": {
         "label": "Experimentelle Funktionen",
         "description": "Experimentelle Funktionen aktivieren, die sich noch in Entwicklung befinden."
@@ -306,20 +285,20 @@
       },
       "startHidden": {
         "label": "Versteckt starten",
-        "description": "In den Systembereich starten, ohne das Fenster zu öffnen."
+        "description": "Startet still in der Menüleiste, ohne das Fenster zu öffnen."
       },
       "autostart": {
         "label": "Beim Start ausführen",
         "description": "Quacky automatisch beim Anmelden starten."
       },
       "showTrayIcon": {
-        "label": "Taskleistensymbol anzeigen",
-        "description": "Das Quacky-Symbol in der Taskleiste anzeigen."
+        "label": "Ente in der Menüleiste",
+        "description": "Zeigt mich oben in der Menüleiste."
       },
       "overlay": {
         "style": {
           "title": "Overlay",
-          "description": "Choose the recording overlay: None hides it, Minimal shows a compact pill, Live shows transcription in real time as you speak (streaming-capable models only — look for the Streaming badge in the model picker). On Linux 'None' is recommended.",
+          "description": "Wie die Aufnahme-Leiste aussieht: Live zeigt den Text schon beim Sprechen.",
           "options": {
             "none": "Keine",
             "minimal": "Minimal",
@@ -328,7 +307,7 @@
         },
         "position": {
           "title": "Overlay-Position",
-          "description": "Visuelles Feedback-Overlay während Aufnahme und Transkription anzeigen. Unter Linux wird 'Keine' empfohlen.",
+          "description": "Wo die Aufnahme-Leiste auf dem Bildschirm erscheint.",
           "options": {
             "bottom": "Unten",
             "top": "Oben"
@@ -337,7 +316,7 @@
       },
       "pasteMethod": {
         "title": "Einfügemethode",
-        "description": "Wähle, wie Text eingefügt wird. Direkt: simuliert Tippen über Systemeingabe. Keine: überspringt Einfügen, aktualisiert nur Verlauf/Zwischenablage.",
+        "description": "Wie der Text ins Fenster kommt. „Keine“ legt ihn nur in Verlauf und Zwischenablage.",
         "options": {
           "clipboard": "Zwischenablage ({{modifier}}+V)",
           "clipboardCtrlShiftV": "Zwischenablage (Strg+Umschalt+V)",
@@ -357,7 +336,7 @@
       },
       "clipboardHandling": {
         "title": "Zwischenablage-Verhalten",
-        "description": "Zwischenablage nicht ändern bewahrt den aktuellen Inhalt nach der Transkription. In Zwischenablage kopieren hinterlässt das Transkriptionsergebnis in der Zwischenablage.",
+        "description": "Ob nach dem Einfügen dein alter Inhalt zurückkommt oder das Diktat liegen bleibt.",
         "options": {
           "dontModify": "Zwischenablage nicht ändern",
           "copyToClipboard": "In Zwischenablage kopieren"
@@ -365,11 +344,11 @@
       },
       "autoSubmit": {
         "title": "Automatisch absenden",
-        "description": "Sendet nach dem Einfügen von Text automatisch die ausgewählte Tastenkombination. Cmd+Enter gilt für macOS, während Windows/Linux Super+Enter verwenden.",
+        "description": "Drückt nach dem Einfügen die gewählte Taste, etwa ⌘↩ zum Absenden.",
         "options": {
           "off": "Aus",
           "enter": "Enter",
-          "cmdEnter": "Cmd+Enter",
+          "cmdEnter": "⌘↩",
           "superEnter": "Super+Enter",
           "ctrlEnter": "Ctrl+Enter"
         }
@@ -380,7 +359,7 @@
       },
       "modelUnload": {
         "title": "Modell entladen",
-        "description": "GPU/CPU-Speicher automatisch freigeben, wenn das Modell für die angegebene Zeit nicht verwendet wurde",
+        "description": "Gibt Speicher frei, wenn ich eine Weile nichts zu tun hatte.",
         "options": {
           "never": "Nie",
           "immediately": "Sofort",
@@ -394,30 +373,25 @@
       },
       "customWords": {
         "title": "Benutzerdefinierte Wörter",
-        "description": "Wörter hinzufügen, die oft falsch gehört oder geschrieben werden. Das System korrigiert automatisch ähnlich klingende Wörter entsprechend deiner Liste.",
+        "description": "Namen und Fachwörter, die ich sonst gern verhöre. Ich korrigiere ähnlich Klingendes.",
         "placeholder": "Wort hinzufügen",
         "add": "Hinzufügen",
         "remove": "{{word}} entfernen",
         "duplicate": "\"{{word}}\" existiert bereits"
       },
       "voiceActivityDetection": {
-        "title": "Voice Activity Detection",
-        "description": "Filter silence from recordings. Streaming-capable models use a longer VAD tail; disabling VAD records raw audio."
+        "title": "Stille erkennen",
+        "description": "Schneidet Stille aus der Aufnahme. Aus bedeutet: rohes Audio."
       }
     },
     "postProcessing": {
-      "enable": {
-        "title": "KI-Funktionen"
-      },
-      "hotkey": {
-        "title": "Nachbearbeitungs-Tastenkürzel"
-      },
+      "enable": {},
+      "hotkey": {},
       "voiceAction": {
-        "title": "Voice Actions",
         "privacy": "Deine gesprochene Anweisung und aktivierter Kontext werden an den gewählten KI-Dienst gesendet. Zwischenablage-Kontext ist standardmäßig aus.",
         "backend": {
           "title": "KI-Backend",
-          "description": "Nutze den konfigurierten API-Anbieter oder eine installierte und eingeloggte Codex- oder Claude-CLI.",
+          "description": "Deine konfigurierte API oder eine eingeloggte Codex- bzw. Claude-CLI.",
           "options": {
             "api": "Konfigurierte API",
             "codexCli": "Codex CLI",
@@ -426,7 +400,7 @@
         },
         "clipboardContext": {
           "label": "Zwischenablage als Kontext verwenden",
-          "description": "Sendet den aktuellen Text aus der Zwischenablage als Ausgangsmaterial mit – etwa für ‚Schreib daraus eine Mail‘."
+          "description": "Schickt den Text aus der Zwischenablage mit, etwa für „Schreib daraus eine Mail“."
         },
         "context": {
           "title": "Dauerhafter Kontext",
@@ -437,7 +411,6 @@
         }
       },
       "api": {
-        "title": "API (OpenAI-kompatibel)",
         "provider": {
           "title": "Anbieter",
           "description": "Wähle einen OpenAI-kompatiblen Anbieter."
@@ -447,7 +420,7 @@
         },
         "baseUrl": {
           "title": "Basis-URL",
-          "description": "API-Basis-URL für den ausgewählten Anbieter. Nur der benutzerdefinierte Anbieter kann bearbeitet werden.",
+          "description": "Nur beim eigenen Anbieter änderbar.",
           "placeholder": "https://api.openai.com/v1"
         },
         "apiKey": {
@@ -465,7 +438,6 @@
         }
       },
       "prompts": {
-        "title": "Prompt",
         "selectedPrompt": {
           "title": "Ausgewählter Prompt",
           "description": "Wähle eine Vorlage zur Verfeinerung von Transkriptionen oder erstelle eine neue. Verwende ${output} im Prompt-Text, um auf das erfasste Transkript zu verweisen."
@@ -487,7 +459,6 @@
       }
     },
     "history": {
-      "title": "Verlauf",
       "openFolder": "Aufnahmeordner öffnen",
       "sourceMic": "Mikrofon",
       "sourceFile": "Datei",
@@ -614,15 +585,13 @@
       }
     },
     "appearance": {
-      "title": "Darstellung",
       "accent": {
         "title": "Akzentfarbe",
-        "description": "Wähle eine eigene Akzentfarbe für Buttons, die Aufnahme-Leiste und Hervorhebungen. „Zurücksetzen“ stellt das Standard-Orange wieder her.",
+        "description": "Die Farbe für Auswahl, Schalter und Aufnahme-Leiste.",
         "reset": "Zurücksetzen"
       }
     },
     "about": {
-      "title": "Info",
       "version": {
         "title": "Version",
         "description": "Aktuelle Version von Quacky"
@@ -647,7 +616,6 @@
         "button": "Spenden"
       },
       "acknowledgments": {
-        "title": "Danksagung",
         "ggml": {
           "title": "ggml",
           "description": "Hochleistungs-Inferenz des Whisper-Spracherkennungsmodells von OpenAI",
@@ -710,7 +678,7 @@
   },
   "theme": {
     "title": "Anwendungsdesign",
-    "description": "Wählen Sie, ob Quacky dem Systemthema folgt oder hell bzw. dunkel bleibt",
+    "description": "Folge dem System oder bleib immer hell bzw. dunkel.",
     "options": {
       "system": "System",
       "light": "Hell",
@@ -734,9 +702,8 @@
     "title": "Neu in Quacky v{{version}}"
   },
   "transcribe": {
-    "title": "Datei transkribieren",
     "heading": "Audiodatei transkribieren",
-    "body": "Wähle eine Aufnahme — sie wird hier in der App transkribiert. Nichts wird in andere Fenster getippt und nichts erscheint auf der Aufnahmeleiste. Gedacht für Meetings und lange Sprachnachrichten.",
+    "body": "Die Datei wird hier in der App abgehört, nichts wird anderswo getippt. Ideal für Meetings und lange Sprachnachrichten.",
     "formats": "WAV, MP3, M4A, AAC, FLAC, OGG und OPUS — auch WhatsApp-Sprachnachrichten und Apple-Sprachmemos.",
     "filter": "Audio",
     "pick": "Audiodatei wählen…",
@@ -754,8 +721,7 @@
     "progress": "{{done}} von {{total}} transkribiert",
     "remaining": "noch etwa {{time}}",
     "model": {
-      "title": "Modell für Dateien",
-      "description": "Beim Diktieren muss das Modell live mithalten. Eine aufgezeichnete Besprechung muss das nicht und verträgt ein langsameres, genaueres. Ein anderes Modell hier bedeutet, dass das Diktat-Modell beim nächsten Mal neu geladen wird.",
+      "description": "Für Dateien darf ich mir Zeit lassen: ein langsameres, genaueres Modell lohnt sich hier.",
       "followDictation": "Wie beim Diktieren",
       "followDictationHint": "Nutzt das Modell, das fürs Diktieren eingestellt ist."
     },
@@ -764,5 +730,81 @@
     "cancellingHint": "Das aktuelle Stück wird noch fertig, danach bekommst du alles bisher Transkribierte.",
     "partialTitle": "Teiltranskript",
     "partialNote": "Dieser Lauf wurde vor dem Ende der Aufnahme gestoppt. Du siehst alles, was bis dahin transkribiert wurde — der Rest der Aufnahme fehlt."
+  },
+  "shell": {
+    "pages": {
+      "transcribe": {
+        "title": "Dateien",
+        "subtitle": "Wirf eine Sprachnachricht in den Teich, der Text kommt zurück."
+      },
+      "history": {
+        "title": "Verlauf",
+        "subtitle": "Alles, was du je gequakt hast. Bleibt auf deinem Mac."
+      },
+      "models": {
+        "title": "Modelle",
+        "subtitle": "Die Ohren, mit denen Quacky zuhört. Alle lokal."
+      },
+      "postprocessing": {
+        "title": "KI & Aktionen",
+        "subtitle": "Lass eine KI dein Geschnatter glätten. Nur, wenn du es einschaltest."
+      },
+      "app": {
+        "title": "App",
+        "subtitle": "Aussehen, Verhalten und wo Quacky nistet."
+      },
+      "about": {
+        "title": "Über Quacky",
+        "subtitle": "Version, Herkunft und Dank."
+      },
+      "debug": {
+        "title": "Debug",
+        "subtitle": "Die Werkstatt hinterm Teich."
+      }
+    },
+    "status": {
+      "ready": "Bereit zum Quaken",
+      "listening": "Quacky hört zu …",
+      "transcribing": "Quacky schreibt mit …",
+      "holdHint": "Halte {{shortcut}} und sprich.",
+      "pressHint": "Drück {{shortcut}} zum Starten und nochmal zum Stoppen.",
+      "noShortcut": "Noch kein Diktier-Kürzel gesetzt.",
+      "meter": "Quak-Meter: dein Mikrofonpegel",
+      "systemDefault": "Systemstandard"
+    },
+    "tabs": {
+      "dictate": "Diktieren",
+      "transcribe": "Dateien",
+      "history": "Verlauf",
+      "models": "Modelle",
+      "postprocessing": "KI",
+      "app": "App",
+      "about": "Über",
+      "debug": "Debug"
+    },
+    "questions": {
+      "shortcuts": "Wie willst du mich rufen?",
+      "microphone": "Mit welchem Ohr soll ich zuhören?",
+      "output": "Und wohin mit dem Text?",
+      "appearance": "Wie soll ich aussehen?",
+      "behavior": "Wann soll ich auftauchen?",
+      "folders": "Wo nisten meine Dateien?",
+      "experimental": "Lust auf Experimente?",
+      "recognition": "Worauf soll ich besonders hören?",
+      "retention": "Wie lange soll ich mir alles merken?",
+      "dropFiles": "Soll ich fallengelassene Dateien schnappen?",
+      "language": "In welcher Sprache schnatterst du?",
+      "languageFor": "Gilt für {{model}}",
+      "listenFile": "Was soll ich für dich abhören?",
+      "fileModel": "Mit welchem Ohr höre ich Dateien?",
+      "aiEnable": "Soll eine KI mitschnattern?",
+      "voiceActions": "Was darf ich auf Zuruf erledigen?",
+      "aiHotkey": "Wie rufst du die Nachbearbeitung?",
+      "aiApi": "Mit welcher KI soll ich reden?",
+      "aiPrompt": "Wie soll die KI deinen Text glätten?",
+      "whoAmI": "Wer bin ich?",
+      "thanks": "Wem verdanke ich das alles?"
+    },
+    "customSound": "Eigene WAV …"
   }
 }

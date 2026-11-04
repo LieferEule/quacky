@@ -4,7 +4,6 @@ import { ToggleSwitch } from "../ui/ToggleSwitch";
 import { useSettings } from "../../hooks/useSettings";
 
 interface DoubleTapLatchProps {
-  descriptionMode?: "inline" | "tooltip";
   grouped?: boolean;
   disabled?: boolean;
 }
@@ -16,7 +15,7 @@ interface DoubleTapLatchProps {
  * already latches, so the caller disables this.
  */
 export const DoubleTapLatch: React.FC<DoubleTapLatchProps> = React.memo(
-  ({ descriptionMode = "tooltip", grouped = false, disabled = false }) => {
+  ({ grouped = false, disabled = false }) => {
     const { t } = useTranslation();
     const { getSetting, updateSetting, isUpdating } = useSettings();
 
@@ -30,7 +29,6 @@ export const DoubleTapLatch: React.FC<DoubleTapLatchProps> = React.memo(
         disabled={disabled}
         label={t("settings.general.doubleTapLatch.label")}
         description={t("settings.general.doubleTapLatch.description")}
-        descriptionMode={descriptionMode}
         grouped={grouped}
       />
     );

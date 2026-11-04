@@ -160,8 +160,6 @@ const settingUpdaters: {
   log_level: (value) => commands.setLogLevel(value as any),
   app_language: (value) => commands.changeAppLanguageSetting(value as string),
   theme: (value) => commands.changeThemeSetting(value as string),
-  accent_color: (value) =>
-    commands.changeAccentColorSetting(value as string | null),
   file_transcription_model: (value) =>
     commands.changeFileTranscriptionModelSetting(value as string | null),
   experimental_enabled: (value) =>

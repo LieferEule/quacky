@@ -14,14 +14,12 @@ import { commands } from "@/bindings";
 import { toast } from "sonner";
 
 interface GlobalShortcutInputProps {
-  descriptionMode?: "inline" | "tooltip";
   grouped?: boolean;
   shortcutId: string;
   disabled?: boolean;
 }
 
 export const GlobalShortcutInput: React.FC<GlobalShortcutInputProps> = ({
-  descriptionMode = "tooltip",
   grouped = false,
   shortcutId,
   disabled = false,
@@ -211,7 +209,6 @@ export const GlobalShortcutInput: React.FC<GlobalShortcutInputProps> = ({
       <SettingContainer
         title={t("settings.general.shortcut.title")}
         description={t("settings.general.shortcut.description")}
-        descriptionMode={descriptionMode}
         grouped={grouped}
       >
         <div className="text-sm text-mid-gray">
@@ -227,7 +224,6 @@ export const GlobalShortcutInput: React.FC<GlobalShortcutInputProps> = ({
       <SettingContainer
         title={t("settings.general.shortcut.title")}
         description={t("settings.general.shortcut.description")}
-        descriptionMode={descriptionMode}
         grouped={grouped}
       >
         <div className="text-sm text-mid-gray">
@@ -243,7 +239,6 @@ export const GlobalShortcutInput: React.FC<GlobalShortcutInputProps> = ({
       <SettingContainer
         title={t("settings.general.shortcut.title")}
         description={t("settings.general.shortcut.notFound")}
-        descriptionMode={descriptionMode}
         grouped={grouped}
       >
         <div className="text-sm text-mid-gray">
@@ -269,7 +264,6 @@ export const GlobalShortcutInput: React.FC<GlobalShortcutInputProps> = ({
     <SettingContainer
       title={translatedName}
       description={translatedDescription}
-      descriptionMode={descriptionMode}
       grouped={grouped}
       disabled={disabled}
       layout="horizontal"
@@ -278,16 +272,16 @@ export const GlobalShortcutInput: React.FC<GlobalShortcutInputProps> = ({
         {editingShortcutId === shortcutId ? (
           <div
             ref={(ref) => setShortcutRef(shortcutId, ref)}
-            className="px-2 py-1 text-sm font-semibold border border-logo-primary bg-logo-primary/30 rounded-md"
+            className="key-cap !m-0 !px-2.5 text-logo-primary ring-2 ring-[var(--color-background-ui)]/40 animate-pulse"
           >
             {formatCurrentKeys()}
           </div>
         ) : (
           <div
-            className={`px-2 py-1 text-sm font-semibold border rounded-md cursor-pointer hover:bg-logo-primary/10 hover:border-logo-primary ${
+            className={`key-cap !m-0 !px-2.5 cursor-pointer transition-transform duration-150 hover:-translate-y-px active:translate-y-0 ${
               isDisabled
-                ? "bg-transparent border-dashed border-mid-gray/50 text-text/50"
-                : "bg-mid-gray/10 border-mid-gray/80"
+                ? "!bg-transparent !shadow-none text-text/45 font-medium"
+                : ""
             }`}
             onClick={() => startRecording(shortcutId)}
           >

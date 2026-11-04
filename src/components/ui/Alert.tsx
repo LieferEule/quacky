@@ -25,10 +25,11 @@ const variantStyles: Record<
     icon: "text-yellow-500",
     text: "text-yellow-400",
   },
+  // Inside a duck bubble an info note is the duck's aside, not a banner.
   info: {
-    container: "bg-blue-500/10",
-    icon: "text-blue-500",
-    text: "text-blue-400",
+    container: "",
+    icon: "text-logo-primary",
+    text: "text-text/70",
   },
   success: {
     container: "bg-green-500/10",
@@ -55,10 +56,10 @@ export const Alert: React.FC<AlertProps> = ({
 
   return (
     <div
-      className={`flex items-start gap-3 p-4 ${styles.container} ${contained ? "" : "rounded-lg"} ${className}`}
+      className={`flex items-start gap-2.5 px-3.5 py-2.5 ${styles.container} ${contained ? "" : "rounded-xl"} ${className}`}
     >
-      <Icon className={`w-5 h-5 shrink-0 mt-0.5 ${styles.icon}`} />
-      <p className={`text-sm ${styles.text}`}>{children}</p>
+      <Icon className={`w-4 h-4 shrink-0 mt-px ${styles.icon}`} />
+      <p className={`text-[12px] leading-4 ${styles.text}`}>{children}</p>
     </div>
   );
 };

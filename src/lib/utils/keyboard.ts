@@ -190,16 +190,56 @@ const formatKeyPart = (part: string): string => {
 };
 
 /**
- * Get display-friendly key combination string for the current OS
+ * Get display-friendly key combination string for the current OS.
  * Formats raw hotkey strings like "option_left+shift+space" into
- * human-readable form like "Left Option + Shift + Space"
+ * "Left Option + Shift + Space", or "L⌥⇧ Space" on macOS.
  */
 export const formatKeyCombination = (
   combination: string,
-  _osType: OSType,
+  osType: OSType,
 ): string => {
   if (!combination) return "";
+  if (osType === "macos") return formatMacCombination(combination);
   return combination.split("+").map(formatKeyPart).join(" + ");
+};
+
+const MAC_MODIFIER_GLYPHS: Record<string, string> = {
+  command: "⌘",
+  cmd: "⌘",
+  super: "⌘",
+  meta: "⌘",
+  option: "⌥",
+  alt: "⌥",
+  shift: "⇧",
+  ctrl: "⌃",
+  control: "⌃",
+};
+
+/**
+ * macOS writes shortcuts the way its menus do: modifier glyphs in the fixed
+ * order ⌃⌥⇧⌘, then the key ("⌥⌘ Space", "⌥ C"). A side-specific modifier
+ * keeps its side as a small L/R so a right-Option binding stays telling.
+ */
+const formatMacCombination = (combination: string): string => {
+  const order = ["⌃", "⌥", "⇧", "⌘"];
+  const modifiers: { glyph: string; label: string }[] = [];
+  const keys: string[] = [];
+  for (const raw of combination.split("+")) {
+    const part = raw.trim();
+    if (!part) continue;
+    const side = part.endsWith("_left")
+      ? "L"
+      : part.endsWith("_right")
+        ? "R"
+        : "";
+    const name = side ? part.slice(0, part.lastIndexOf("_")) : part;
+    const glyph = MAC_MODIFIER_GLYPHS[name.toLowerCase()];
+    if (glyph) modifiers.push({ glyph, label: side + glyph });
+    else keys.push(formatKeyPart(part));
+  }
+  modifiers.sort((a, b) => order.indexOf(a.glyph) - order.indexOf(b.glyph));
+  const mods = modifiers.map((m) => m.label).join("");
+  return [mods, ...keys].filter(Boolean).join(" ");
 };
 
 /**

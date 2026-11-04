@@ -15,6 +15,9 @@ interface DropdownProps {
   placeholder?: string;
   disabled?: boolean;
   onRefresh?: () => void;
+  /** "chips" offers a fixed, short set of answers as capsules (theme,
+   *  ducking speed); lists that grow or come from data stay a menu. */
+  variant?: "menu" | "chips";
 }
 
 export const Dropdown: React.FC<DropdownProps> = ({
@@ -25,6 +28,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
   placeholder = "Select an option...",
   disabled = false,
   onRefresh,
+  variant = "menu",
 }) => {
   const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
@@ -52,6 +56,64 @@ export const Dropdown: React.FC<DropdownProps> = ({
     setIsOpen(false);
   };
 
+  if (variant === "chips") {
+    // Arrow keys move the choice, as in any radio group.
+    const step = (from: number, delta: number) => {
+      const n = options.length;
+      for (let i = 1; i <= n; i++) {
+        const next = options[(from + delta * i + n * n) % n];
+        if (!next.disabled) return next;
+      }
+      return null;
+    };
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
+      const delta =
+        e.key === "ArrowRight" || e.key === "ArrowDown"
+          ? 1
+          : e.key === "ArrowLeft" || e.key === "ArrowUp"
+            ? -1
+            : 0;
+      if (!delta || disabled) return;
+      e.preventDefault();
+      const from = options.findIndex((o) => o.value === selectedValue);
+      const next = step(Math.max(from, 0), delta);
+      if (next) {
+        onSelect(next.value);
+        const chips = e.currentTarget.querySelectorAll("button");
+        (chips[options.indexOf(next)] as HTMLButtonElement)?.focus();
+      }
+    };
+    return (
+      <div
+        role="radiogroup"
+        onKeyDown={handleKeyDown}
+        className={`answer-chips flex flex-wrap justify-end gap-1.5 ${
+          disabled ? "opacity-50" : ""
+        } ${className}`}
+      >
+        {options.map((option) => {
+          const selected = option.value === selectedValue;
+          return (
+            <button
+              key={option.value}
+              type="button"
+              role="radio"
+              aria-checked={selected}
+              tabIndex={
+                selected || (!selectedValue && option === options[0]) ? 0 : -1
+              }
+              disabled={disabled || option.disabled}
+              className={`answer-chip ${selected ? "is-chosen" : ""}`}
+              onClick={() => onSelect(option.value)}
+            >
+              {option.label}
+            </button>
+          );
+        })}
+      </div>
+    );
+  }
+
   const handleToggle = () => {
     if (disabled) return;
     if (!isOpen && onRefresh) onRefresh();
@@ -62,7 +124,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
     <div className={`relative ${className}`} ref={dropdownRef}>
       <button
         type="button"
-        className={`px-2 py-[5px] text-sm font-semibold bg-mid-gray/10 border border-mid-gray/80 rounded-md min-w-[200px] w-full text-start grid grid-cols-[1fr_auto] gap-2 items-center transition-all duration-150 ${
+        className={`px-2.5 py-1 text-[12.5px] font-medium glass-control rounded-lg min-w-[180px] w-full text-start grid grid-cols-[1fr_auto] gap-2 items-center transition-all duration-150 ${
           disabled
             ? "opacity-50 cursor-not-allowed"
             : "hover:bg-logo-primary/10 cursor-pointer hover:border-logo-primary"
@@ -86,7 +148,7 @@ export const Dropdown: React.FC<DropdownProps> = ({
         </svg>
       </button>
       {isOpen && !disabled && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-background border border-mid-gray/80 rounded-md shadow-lg z-50 max-h-60 overflow-y-auto">
+        <div className="absolute top-full left-0 right-0 mt-1 glass-pop z-50 max-h-60 overflow-y-auto py-1">
           {options.length === 0 ? (
             <div className="px-2 py-1 text-sm text-mid-gray">
               {t("common.noOptionsFound")}

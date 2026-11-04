@@ -8,14 +8,7 @@
     "cancel": "Cancel"
   },
   "sidebar": {
-    "general": "General",
-    "models": "Models",
-    "advanced": "Advanced",
-    "postProcessing": "AI & Voice Actions",
-    "history": "History",
-    "debug": "Debug",
-    "about": "About",
-    "transcribe": "Transcribe"
+    "navigation": "Sections"
   },
   "onboarding": {
     "subtitle": "To get started, choose a transcription model",
@@ -154,14 +147,10 @@
     }
   },
   "settings": {
-    "modelSettings": {
-      "title": "{{model}} Settings"
-    },
     "general": {
-      "title": "General",
       "dragDrop": {
         "label": "Transcribe dropped files",
-        "description": "Lets you drag an audio file onto the recording bar to transcribe it instead of the microphone."
+        "description": "Drop an audio file on the recording bar and I'll listen to that instead of the mic."
       },
       "autoCopy": {
         "label": "Copy to clipboard automatically",
@@ -185,11 +174,11 @@
           },
           "transcribe_with_post_process": {
             "name": "Post-Processing Hotkey",
-            "description": "Optional: A dedicated hotkey that always applies AI post-processing to your transcription."
+            "description": "A shortcut of its own where the AI always tidies up too."
           },
           "voice_action": {
             "name": "Voice Action Shortcut",
-            "description": "Speak an instruction and generate text using optional context and your selected AI backend."
+            "description": "Tell me what you need and the AI writes it for you."
           },
           "copy_last_transcript": {
             "name": "Copy Last Transcript",
@@ -197,7 +186,7 @@
           },
           "insert_last_transcript": {
             "name": "Insert Last Transcript",
-            "description": "The keyboard shortcut to type the most recent transcription into the focused field, without changing the clipboard."
+            "description": "Types the last text into the active field and leaves the clipboard alone."
           }
         },
         "errors": {
@@ -210,7 +199,7 @@
       },
       "language": {
         "title": "Language",
-        "description": "Select the language for speech recognition. Auto will automatically determine the language, while selecting a specific language can improve accuracy for that language.",
+        "description": "Auto detects the language. A fixed one is often more accurate.",
         "searchPlaceholder": "Search languages...",
         "noResults": "No languages found",
         "auto": "Auto"
@@ -221,12 +210,10 @@
       },
       "doubleTapLatch": {
         "label": "Double Tap to Keep Recording",
-        "description": "Tap the shortcut twice to keep recording hands-free until you tap it again. Holding the key still works as usual."
+        "description": "Tap twice and I keep listening hands-free until you tap again."
       }
     },
     "models": {
-      "title": "Transcription Models",
-      "description": "Select a transcription model or download additional models. Different models offer varying levels of accuracy and speed.",
       "searchPlaceholder": "Search models by name…",
       "yourModels": "Downloaded Models",
       "availableModels": "Available to Download",
@@ -243,7 +230,6 @@
       "noModelsMatch": "No models match this filter."
     },
     "sound": {
-      "title": "Sound",
       "microphone": {
         "title": "Microphone",
         "description": "Select your preferred microphone device",
@@ -276,13 +262,6 @@
       }
     },
     "advanced": {
-      "groups": {
-        "app": "App",
-        "output": "Output",
-        "transcription": "Transcription",
-        "history": "History",
-        "experimental": "Experimental"
-      },
       "experimentalToggle": {
         "label": "Experimental Features",
         "description": "Enable experimental features that are still in development."
@@ -306,20 +285,20 @@
       },
       "startHidden": {
         "label": "Start Hidden",
-        "description": "Launch to system tray without opening the window."
+        "description": "Starts quietly in the menu bar without opening the window."
       },
       "autostart": {
         "label": "Launch on Startup",
         "description": "Automatically start Quacky when you log in to your computer."
       },
       "showTrayIcon": {
-        "label": "Show Tray Icon",
-        "description": "Display the Quacky icon in the system tray."
+        "label": "Duck in the menu bar",
+        "description": "Shows me up in the menu bar."
       },
       "overlay": {
         "style": {
           "title": "Overlay",
-          "description": "Choose the recording overlay: None hides it, Minimal shows a compact pill, Live shows transcription in real time as you speak (streaming-capable models only — look for the Streaming badge in the model picker). On Linux 'None' is recommended.",
+          "description": "How the recording bar looks: Live shows the text while you speak.",
           "options": {
             "none": "None",
             "minimal": "Minimal",
@@ -328,7 +307,7 @@
         },
         "position": {
           "title": "Overlay Position",
-          "description": "Where the overlay appears on screen during recording and transcription.",
+          "description": "Where the recording bar appears on screen.",
           "options": {
             "bottom": "Bottom",
             "top": "Top"
@@ -337,7 +316,7 @@
       },
       "pasteMethod": {
         "title": "Paste Method",
-        "description": "Choose how text is inserted. Direct: simulates typing via system input. None: skips paste, only updates history/clipboard.",
+        "description": "How the text gets into the window. “None” only puts it in history and the clipboard.",
         "options": {
           "clipboard": "Clipboard ({{modifier}}+V)",
           "clipboardCtrlShiftV": "Clipboard (Ctrl+Shift+V)",
@@ -357,7 +336,7 @@
       },
       "clipboardHandling": {
         "title": "Clipboard Handling",
-        "description": "Don't Modify Clipboard preserves your current clipboard contents after transcription. Copy to Clipboard leaves the transcription result in your clipboard after pasting.",
+        "description": "Whether your old clipboard comes back after pasting or the dictation stays there.",
         "options": {
           "dontModify": "Don't Modify Clipboard",
           "copyToClipboard": "Copy to Clipboard"
@@ -365,7 +344,7 @@
       },
       "autoSubmit": {
         "title": "Auto Submit",
-        "description": "Automatically send the selected key combination after text insertion. Cmd+Enter applies on macOS, while Windows/Linux use Super+Enter.",
+        "description": "Presses the chosen key after pasting, such as ⌘↩ to send.",
         "options": {
           "off": "Off",
           "enter": "Enter",
@@ -380,7 +359,7 @@
       },
       "modelUnload": {
         "title": "Unload Model",
-        "description": "Automatically free GPU/CPU memory when the model hasn't been used for the specified time",
+        "description": "Frees memory once I've had nothing to do for a while.",
         "options": {
           "never": "Never",
           "immediately": "Immediately",
@@ -394,7 +373,7 @@
       },
       "customWords": {
         "title": "Custom Words",
-        "description": "Add words that are often misheard or misspelled during transcription. The system will automatically correct similar-sounding words to match your list.",
+        "description": "Names and jargon I tend to mishear. I fix anything that sounds close.",
         "placeholder": "Add a word",
         "add": "Add",
         "remove": "Remove {{word}}",
@@ -402,22 +381,17 @@
       },
       "voiceActivityDetection": {
         "title": "Voice Activity Detection",
-        "description": "Filter silence from recordings. Streaming-capable models use a longer VAD tail; disabling VAD records raw audio."
+        "description": "Cuts silence from the recording. Off means raw audio."
       }
     },
     "postProcessing": {
-      "enable": {
-        "title": "AI Features"
-      },
-      "hotkey": {
-        "title": "Post-Processing Hotkey"
-      },
+      "enable": {},
+      "hotkey": {},
       "voiceAction": {
-        "title": "Voice Actions",
         "privacy": "Your spoken instruction and any enabled context are sent to the selected AI service. Clipboard context is off by default.",
         "backend": {
           "title": "AI Backend",
-          "description": "Use the configured API provider or an installed, signed-in Codex or Claude CLI.",
+          "description": "Your configured API, or a signed-in Codex or Claude CLI.",
           "options": {
             "api": "Configured API",
             "codexCli": "Codex CLI",
@@ -426,7 +400,7 @@
         },
         "clipboardContext": {
           "label": "Include Clipboard Context",
-          "description": "Send the current text clipboard as source material for commands such as ‘Write an email from this’."
+          "description": "Sends the clipboard text along, e.g. for “turn this into an email”."
         },
         "context": {
           "title": "Persistent Context",
@@ -437,7 +411,6 @@
         }
       },
       "api": {
-        "title": "API (OpenAI Compatible)",
         "provider": {
           "title": "Provider",
           "description": "Select an OpenAI-compatible provider."
@@ -447,7 +420,7 @@
         },
         "baseUrl": {
           "title": "Base URL",
-          "description": "API base URL for the selected provider. Only the custom provider can be edited.",
+          "description": "Only editable for the custom provider.",
           "placeholder": "https://api.openai.com/v1"
         },
         "apiKey": {
@@ -465,7 +438,6 @@
         }
       },
       "prompts": {
-        "title": "Prompt",
         "selectedPrompt": {
           "title": "Selected Prompt",
           "description": "Select a template for refining transcriptions or create a new one. Use ${output} inside the prompt text to reference the captured transcript."
@@ -487,7 +459,6 @@
       }
     },
     "history": {
-      "title": "History",
       "openFolder": "Open Recordings Folder",
       "sourceMic": "Microphone",
       "sourceFile": "File",
@@ -614,15 +585,13 @@
       }
     },
     "appearance": {
-      "title": "Appearance",
       "accent": {
         "title": "Accent color",
-        "description": "Pick a custom accent color for buttons, the recording bar, and highlights. Reset returns to the default orange.",
+        "description": "The colour for selection, switches and the recording bar.",
         "reset": "Reset"
       }
     },
     "about": {
-      "title": "About",
       "version": {
         "title": "Version",
         "description": "Current version of Quacky"
@@ -651,7 +620,6 @@
         "button": "Donate"
       },
       "acknowledgments": {
-        "title": "Acknowledgments",
         "ggml": {
           "title": "ggml",
           "description": "High-performance tensor library for on-device machine learning inference",
@@ -713,7 +681,7 @@
   },
   "theme": {
     "title": "Application Theme",
-    "description": "Choose whether Quacky follows your system theme or stays light or dark",
+    "description": "Follow the system, or always stay light or dark.",
     "options": {
       "system": "System",
       "light": "Light",
@@ -734,9 +702,8 @@
     "handsFree": "Hands-free recording"
   },
   "transcribe": {
-    "title": "Transcribe a file",
     "heading": "Transcribe an audio file",
-    "body": "Pick a recording and it is transcribed here, in the app. Nothing is typed into other windows and nothing appears on the recording bar — useful for meetings and long voice notes.",
+    "body": "The file is listened to right here in the app; nothing gets typed anywhere else. Made for meetings and long voice notes.",
     "formats": "WAV, MP3, M4A, AAC, FLAC, OGG and OPUS — WhatsApp voice notes and Apple Voice Memos included.",
     "filter": "Audio",
     "pick": "Choose audio file…",
@@ -754,8 +721,7 @@
     "progress": "{{done}} of {{total}} transcribed",
     "remaining": "about {{time}} left",
     "model": {
-      "title": "Model for files",
-      "description": "Dictation needs a model that keeps up live. A recorded meeting does not, so it can use a slower, more accurate one. Switching models here means the next dictation reloads its own.",
+      "description": "Files let me take my time, so a slower, more accurate model pays off here.",
       "followDictation": "Same as dictation",
       "followDictationHint": "Uses whatever model dictation is set to."
     },
@@ -764,5 +730,81 @@
     "cancellingHint": "Finishing the current piece, then handing back everything transcribed so far.",
     "partialTitle": "Partial transcript",
     "partialNote": "This run stopped before the end of the recording. What you see is everything that was transcribed up to that point — the rest of the audio is not in it."
+  },
+  "shell": {
+    "pages": {
+      "transcribe": {
+        "title": "Files",
+        "subtitle": "Drop a voice note in the pond and get text back."
+      },
+      "history": {
+        "title": "History",
+        "subtitle": "Everything you ever quacked, kept on your Mac."
+      },
+      "models": {
+        "title": "Models",
+        "subtitle": "The ears Quacky listens with. All of them local."
+      },
+      "postprocessing": {
+        "title": "AI & Actions",
+        "subtitle": "Let an AI tidy up your chatter. Only when you switch it on."
+      },
+      "app": {
+        "title": "App",
+        "subtitle": "Looks, behaviour, and where Quacky nests."
+      },
+      "about": {
+        "title": "About Quacky",
+        "subtitle": "Version, lineage and thanks."
+      },
+      "debug": {
+        "title": "Debug",
+        "subtitle": "The workshop behind the pond."
+      }
+    },
+    "status": {
+      "ready": "Ready to quack",
+      "listening": "Quacky is listening…",
+      "transcribing": "Quacky is writing it down…",
+      "holdHint": "Hold {{shortcut}} and speak.",
+      "pressHint": "Press {{shortcut}} to start, press again to stop.",
+      "noShortcut": "No dictation shortcut set yet.",
+      "meter": "Quack meter: your microphone level",
+      "systemDefault": "System default"
+    },
+    "tabs": {
+      "dictate": "Dictate",
+      "transcribe": "Files",
+      "history": "History",
+      "models": "Models",
+      "postprocessing": "AI",
+      "app": "App",
+      "about": "About",
+      "debug": "Debug"
+    },
+    "questions": {
+      "shortcuts": "How do you want to call me?",
+      "microphone": "Which ear should I listen with?",
+      "output": "And where does the text go?",
+      "appearance": "How should I look?",
+      "behavior": "When should I show up?",
+      "folders": "Where do my files nest?",
+      "experimental": "Fancy some experiments?",
+      "recognition": "What should I listen out for?",
+      "retention": "How long should I remember everything?",
+      "dropFiles": "Shall I catch dropped files?",
+      "language": "Which language do you chatter in?",
+      "languageFor": "Applies to {{model}}",
+      "listenFile": "What shall I listen to for you?",
+      "fileModel": "Which ear do I use for files?",
+      "aiEnable": "Shall an AI chatter along?",
+      "voiceActions": "What may I do on command?",
+      "aiHotkey": "How do you call the polish?",
+      "aiApi": "Which AI should I talk to?",
+      "aiPrompt": "How should the AI tidy your text?",
+      "whoAmI": "Who am I?",
+      "thanks": "Who do I owe all this to?"
+    },
+    "customSound": "Custom WAV…"
   }
 }

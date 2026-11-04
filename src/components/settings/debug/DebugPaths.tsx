@@ -3,21 +3,16 @@ import { useTranslation } from "react-i18next";
 import { SettingContainer } from "../../ui/SettingContainer";
 
 interface DebugPathsProps {
-  descriptionMode?: "tooltip" | "inline";
   grouped?: boolean;
 }
 
-export const DebugPaths: React.FC<DebugPathsProps> = ({
-  descriptionMode = "inline",
-  grouped = false,
-}) => {
+export const DebugPaths: React.FC<DebugPathsProps> = ({ grouped = false }) => {
   const { t } = useTranslation();
 
   return (
     <SettingContainer
       title="Debug Paths"
       description="Display internal file paths and directories for debugging purposes"
-      descriptionMode={descriptionMode}
       grouped={grouped}
     >
       <div className="text-sm text-gray-600 space-y-2">

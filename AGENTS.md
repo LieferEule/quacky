@@ -75,7 +75,8 @@ src/
   components/settings/      # settings UI, grouped by tab
   overlay/                  # recording overlay React app (separate window)
   stores/settingsStore.ts   # setting key -> command mapping
-  lib/utils/theme.ts        # theme + accent color runtime application
+  lib/utils/theme.ts        # theme runtime application
+  window_glass.rs           # (src-tauri) NSGlassEffectView behind the main window
   i18n/locales/*/           # translations; en + de are the maintained pair
 ```
 
@@ -93,8 +94,7 @@ src/
 | Shortcuts can be switched off                               | empty `current_binding`, `shortcut::is_disabled`                                                                  |
 | File transcription that stays in the app                    | `TranscribeSettings.tsx`, `transcribe_file(.., deliver: false)`                                                   |
 | History distinguishes microphone vs file                    | `managers/history.rs::source_from_file_name`                                                                      |
-| Custom accent color                                         | `settings.accent_color`, `src/lib/utils/theme.ts`, `AccentColorPicker.tsx`                                        |
-| Voice actions (API / Codex CLI / Claude CLI)                | `actions.rs`, `post-processing/VoiceActionSettings.tsx`                                                           |
+| Voice actions (API / Codex CLI / Claude CLI)                | `actions.rs` — backend only; the AI tab was removed, so it is off unless a store already had it on                |
 | Audio ducking instead of hard mute, at a configurable speed | `managers/audio.rs`, `settings.rs::DuckingSpeed`                                                                  |
 | Double tap latches hands-free recording                     | `transcription_coordinator.rs::classify_ptt_event`, `settings.double_tap_latch` / `double_tap_window_ms`          |
 
@@ -156,11 +156,21 @@ not user visible — do not "fix" it without a migration.
 locale (`settings.rs::default_app_language`). Keep `en` and `de` in sync; run
 `bun run check:translations` after touching locale files.
 
-**Accent color overrides CSS variables at runtime.** `applyAccentColor` writes
-inline `--color-logo-primary` / `--color-background-ui` on the document root so
-it beats the `:root` / `[data-theme]` rules. It must be applied in both entry
-points (`src/main.tsx` and `src/overlay/main.tsx`) or the overlay keeps the
-default orange.
+**The accent is fixed Quacky orange.** The picker is gone and nothing applies
+`settings.accent_color` any more; the field and `change_accent_color_setting`
+stay in Rust only so existing settings stores still load. Text and icons in
+the accent go through `--accent-ink` (lifted on dark glass); fills, borders and
+rings use `--color-background-ui` / `--color-logo-primary` unchanged.
+
+**The main window is glass on macOS.** It is transparent with an overlay title
+bar, and `window_glass.rs` puts an `NSGlassEffectView` behind the webview
+(vibrancy fallback before macOS 26). The page background is therefore
+transparent on macOS; surfaces use the `--glass-*` tokens in `App.css`. The
+window's appearance follows the `theme` setting per window (`set_theme`), not
+app-wide, so the overlay is unaffected. Settings groups render as the duck's
+speech bubbles (`SettingsGroup`), sections are Glisse's `SegmentedControl` in
+the title bar (`SectionTabs.tsx`), and `Dropdown variant="chips"` turns a
+fixed, short enum into answer chips.
 
 **A new shortcut needs three things, not one.** A `ShortcutBinding` in
 `settings.rs::get_default_settings`, a matching entry in `actions.rs::ACTION_MAP`,

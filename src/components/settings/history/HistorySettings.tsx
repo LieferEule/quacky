@@ -26,6 +26,9 @@ import { useOsType } from "@/hooks/useOsType";
 import { formatDateTime } from "@/utils/dateFormat";
 import { AudioPlayer, AudioPlayerGroup } from "../../ui/AudioPlayer";
 import { Button } from "../../ui/Button";
+import { SettingsGroup } from "../../ui/SettingsGroup";
+import { HistoryLimit } from "../HistoryLimit";
+import { RecordingRetentionPeriodSelector } from "../RecordingRetentionPeriod";
 
 const IconButton: React.FC<{
   onClick: () => void;
@@ -382,50 +385,51 @@ export const HistorySettings: React.FC = () => {
   }
 
   return (
-    <div className="max-w-3xl w-full mx-auto space-y-6">
-      <div className="space-y-2">
-        <div className="px-4 flex items-center justify-between">
-          <div>
-            <h2 className="text-xs font-medium text-mid-gray uppercase tracking-wide">
-              {t("settings.history.title")}
-            </h2>
-          </div>
+    <div className="space-y-4">
+      <div className="space-y-3">
+        <div className="flex items-center justify-between gap-3">
+          {!loading && sourceCounts ? (
+            <div className="glass-control inline-flex items-center gap-0.5 rounded-full p-0.5">
+              {(["all", "microphone", "file"] as const).map((f) => {
+                const count =
+                  f === "all" ? sourceCounts.total : sourceCounts[f];
+                const disabled = count === 0;
+
+                return (
+                  <button
+                    key={f}
+                    onClick={() => setFilter(f)}
+                    aria-pressed={filter === f}
+                    disabled={disabled}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-medium transition-[background-color,color,box-shadow] duration-200 disabled:cursor-not-allowed disabled:text-text/20 ${
+                      filter === f
+                        ? "bg-background-ui/15 text-logo-primary shadow-[inset_0_1px_0_var(--glass-sheen)]"
+                        : "text-text/55 hover:text-text"
+                    }`}
+                  >
+                    <span>{t(`settings.history.filter.${f}`)}</span>
+                    <span className="min-w-4 rounded-full bg-mid-gray/10 px-1 text-[10px] tabular-nums text-current">
+                      {count}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <span />
+          )}
           <OpenRecordingsButton
             onClick={openRecordingsFolder}
             label={t("settings.history.openFolder")}
           />
         </div>
-        {!loading && sourceCounts && (
-          <div className="px-4 flex items-center gap-1">
-            {(["all", "microphone", "file"] as const).map((f) => {
-              const count = f === "all" ? sourceCounts.total : sourceCounts[f];
-              const disabled = count === 0;
-
-              return (
-                <button
-                  key={f}
-                  onClick={() => setFilter(f)}
-                  aria-pressed={filter === f}
-                  disabled={disabled}
-                  className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-colors disabled:cursor-not-allowed disabled:text-text/20 ${
-                    filter === f
-                      ? "bg-logo-primary/15 text-logo-primary"
-                      : "text-text/50 hover:text-text"
-                  }`}
-                >
-                  <span>{t(`settings.history.filter.${f}`)}</span>
-                  <span className="min-w-4 rounded-full bg-mid-gray/10 px-1 text-[10px] tabular-nums text-current">
-                    {count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        )}
-        <div className="bg-background border border-mid-gray/20 rounded-lg overflow-visible">
-          {content}
-        </div>
+        <div className="glass-card overflow-visible">{content}</div>
       </div>
+
+      <SettingsGroup title={t("shell.questions.retention")}>
+        <HistoryLimit grouped={true} />
+        <RecordingRetentionPeriodSelector grouped={true} />
+      </SettingsGroup>
     </div>
   );
 };

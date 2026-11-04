@@ -4,7 +4,6 @@ import { Slider } from "../../ui/Slider";
 import { useSettings } from "../../../hooks/useSettings";
 
 interface DoubleTapWindowProps {
-  descriptionMode?: "tooltip" | "inline";
   grouped?: boolean;
 }
 
@@ -14,7 +13,6 @@ interface DoubleTapWindowProps {
  * cost of missing slower double taps.
  */
 export const DoubleTapWindow: React.FC<DoubleTapWindowProps> = ({
-  descriptionMode = "tooltip",
   grouped = false,
 }) => {
   const { t } = useTranslation();
@@ -29,7 +27,6 @@ export const DoubleTapWindow: React.FC<DoubleTapWindowProps> = ({
       step={25}
       label={t("settings.debug.doubleTapWindow.title")}
       description={t("settings.debug.doubleTapWindow.description")}
-      descriptionMode={descriptionMode}
       grouped={grouped}
       formatValue={(v) => `${v}ms`}
     />

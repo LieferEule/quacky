@@ -8,14 +8,7 @@
     "cancel": "रद्द गर्नुहोस्"
   },
   "sidebar": {
-    "general": "सामान्य",
-    "models": "मोडेलहरू",
-    "advanced": "उन्नत",
-    "postProcessing": "पोस्ट प्रोसेस",
-    "history": "हिस्ट्री",
-    "debug": "डिबग",
-    "about": "बारेमा",
-    "transcribe": "Transcribe"
+    "navigation": "Sections"
   },
   "onboarding": {
     "subtitle": "सुरु गर्न, एउटा ट्रान्सक्रिप्सन मोडेल छान्नुहोस्",
@@ -154,9 +147,6 @@
     }
   },
   "settings": {
-    "modelSettings": {
-      "title": "{{model}} सेटिङहरू"
-    },
     "general": {
       "dragDrop": {
         "label": "ड्रप गरिएका फाइल ट्रान्सक्राइब गर्नुहोस्",
@@ -166,7 +156,6 @@
         "label": "क्लिपबोर्डमा स्वतः प्रतिलिपि गर्नुहोस्",
         "description": "पूरा भएको प्रत्येक ट्रान्सक्रिप्सनलाई क्लिपबोर्डमा स्वतः प्रतिलिपि गर्छ।"
       },
-      "title": "सामान्य",
       "shortcut": {
         "title": "Quacky सर्टकटहरू",
         "description": "स्पिच-टु-टेक्स्ट रेकर्डिङ सुरु गर्न किबोर्ड सर्टकटहरू सेट अप गर्नुहोस्",
@@ -225,8 +214,6 @@
       }
     },
     "models": {
-      "title": "ट्रान्सक्रिप्सन मोडेलहरू",
-      "description": "ट्रान्सक्रिप्सन मोडेल चयन गर्नुहोस् वा थप मोडेलहरू डाउनलोड गर्नुहोस्। फरक मोडेलहरूले फरक स्तरको शुद्धता र गति दिन्छन्।",
       "searchPlaceholder": "नामद्वारा मोडेल खोज्नुहोस्…",
       "yourModels": "डाउनलोड गरिएका मोडेलहरू",
       "availableModels": "डाउनलोड गर्न उपलब्ध",
@@ -243,7 +230,6 @@
       "noModelsMatch": "यो फिल्टरसँग कुनै मोडेल मिल्दैन।"
     },
     "sound": {
-      "title": "साउन्ड",
       "microphone": {
         "title": "माइक्रोफोन",
         "description": "आफ्नो मनपर्ने माइक्रोफोन डिभाइस चयन गर्नुहोस्",
@@ -276,13 +262,6 @@
       }
     },
     "advanced": {
-      "groups": {
-        "app": "एप",
-        "output": "आउटपुट",
-        "transcription": "ट्रान्सक्रिप्सन",
-        "history": "हिस्ट्री",
-        "experimental": "प्रयोगात्मक"
-      },
       "experimentalToggle": {
         "label": "प्रयोगात्मक सुविधाहरू",
         "description": "अझै विकासमा रहेका प्रयोगात्मक सुविधाहरू अन गर्नुहोस्।"
@@ -406,11 +385,8 @@
       }
     },
     "postProcessing": {
-      "hotkey": {
-        "title": "हटकी"
-      },
+      "hotkey": {},
       "api": {
-        "title": "API (OpenAI अनुकूल)",
         "provider": {
           "title": "प्रदायक",
           "description": "OpenAI-अनुकूल प्रदायक चयन गर्नुहोस्।"
@@ -438,7 +414,6 @@
         }
       },
       "prompts": {
-        "title": "प्रम्प्ट",
         "selectedPrompt": {
           "title": "चयन गरिएको प्रम्प्ट",
           "description": "ट्रान्सक्रिप्सन परिष्कृत गर्न टेम्प्लेट चयन गर्नुहोस् वा नयाँ बनाउनुहोस्। क्याप्चर गरिएको ट्रान्सक्रिप्ट उल्लेख गर्न प्रम्प्ट टेक्स्टभित्र ${output} प्रयोग गर्नुहोस्।"
@@ -459,7 +434,6 @@
         "createFirst": "आफ्नो पहिलो पोस्ट-प्रोसेसिङ प्रम्प्ट बनाउन माथिको 'नयाँ प्रम्प्ट बनाउनुहोस्' क्लिक गर्नुहोस्।"
       },
       "voiceAction": {
-        "title": "Voice Actions",
         "backend": {
           "title": "AI Backend",
           "description": "Use the configured API provider or an installed, signed-in Codex or Claude CLI.",
@@ -482,9 +456,7 @@
         },
         "privacy": "Your spoken instruction and any enabled context are sent to the selected AI service. Clipboard context is off by default."
       },
-      "enable": {
-        "title": "AI Features"
-      }
+      "enable": {}
     },
     "history": {
       "sourceMic": "माइक्रोफोन",
@@ -495,7 +467,6 @@
         "file": "फाइल"
       },
       "emptyFiltered": "यस वर्गमा कुनै प्रविष्टि छैन।",
-      "title": "हिस्ट्री",
       "openFolder": "रेकर्डिङ फोल्डर खोल्नुहोस्",
       "loading": "हिस्ट्री लोड गरिँदैछ...",
       "empty": "अहिलेसम्म कुनै ट्रान्सक्रिप्सन छैन। हिस्ट्री बनाउन रेकर्डिङ सुरु गर्नुहोस्!",
@@ -614,7 +585,6 @@
       }
     },
     "appearance": {
-      "title": "रूप",
       "accent": {
         "title": "एक्सेन्ट रङ",
         "description": "बटन, रेकर्डिङ बार र हाइलाइटका लागि आफ्नै एक्सेन्ट रङ छान्नुहोस्। 'रिसेट' ले पूर्वनिर्धारित सुन्तला रङ फर्काउँछ।",
@@ -622,7 +592,6 @@
       }
     },
     "about": {
-      "title": "बारेमा",
       "version": {
         "title": "संस्करण",
         "description": "Quacky को हालको संस्करण"
@@ -651,7 +620,6 @@
         "button": "दान गर्नुहोस्"
       },
       "acknowledgments": {
-        "title": "आभार",
         "ggml": {
           "title": "ggml",
           "description": "अन-डिभाइस मेसिन लर्निङ अनुमानका लागि उच्च-प्रदर्शन टेन्सर लाइब्रेरी",
@@ -734,7 +702,6 @@
     "voiceDone": "AI को जवाफ टाँसियो"
   },
   "transcribe": {
-    "title": "Transcribe a file",
     "heading": "Transcribe an audio file",
     "body": "Pick a recording and it is transcribed here, in the app. Nothing is typed into other windows and nothing appears on the recording bar — useful for meetings and long voice notes.",
     "formats": "WAV, MP3, M4A, AAC, FLAC, OGG and OPUS — WhatsApp voice notes and Apple Voice Memos included.",
@@ -754,7 +721,6 @@
     "progress": "{{done}} of {{total}} transcribed",
     "remaining": "about {{time}} left",
     "model": {
-      "title": "Model for files",
       "description": "Dictation needs a model that keeps up live. A recorded meeting does not, so it can use a slower, more accurate one. Switching models here means the next dictation reloads its own.",
       "followDictation": "Same as dictation",
       "followDictationHint": "Uses whatever model dictation is set to."
@@ -764,5 +730,81 @@
     "cancellingHint": "Finishing the current piece, then handing back everything transcribed so far.",
     "partialTitle": "Partial transcript",
     "partialNote": "This run stopped before the end of the recording. What you see is everything that was transcribed up to that point — the rest of the audio is not in it."
+  },
+  "shell": {
+    "pages": {
+      "transcribe": {
+        "title": "Transcribe",
+        "subtitle": "Drop a voice note in the pond and get text back."
+      },
+      "history": {
+        "title": "History",
+        "subtitle": "Everything you ever quacked, kept on your Mac."
+      },
+      "models": {
+        "title": "Models",
+        "subtitle": "The ears Quacky listens with. All of them local."
+      },
+      "postprocessing": {
+        "title": "AI & Actions",
+        "subtitle": "Let an AI tidy up your chatter. Only when you switch it on."
+      },
+      "app": {
+        "title": "App",
+        "subtitle": "Looks, behaviour, and where Quacky nests."
+      },
+      "about": {
+        "title": "About Quacky",
+        "subtitle": "Version, lineage and thanks."
+      },
+      "debug": {
+        "title": "Debug",
+        "subtitle": "The workshop behind the pond."
+      }
+    },
+    "status": {
+      "ready": "Ready to quack",
+      "listening": "Quacky is listening…",
+      "transcribing": "Quacky is writing it down…",
+      "holdHint": "Hold {{shortcut}} and speak.",
+      "pressHint": "Press {{shortcut}} to start, press again to stop.",
+      "noShortcut": "No dictation shortcut set yet.",
+      "meter": "Quack meter: your microphone level",
+      "systemDefault": "System default"
+    },
+    "tabs": {
+      "dictate": "Dictate",
+      "transcribe": "Files",
+      "history": "History",
+      "models": "Models",
+      "postprocessing": "AI",
+      "app": "App",
+      "about": "About",
+      "debug": "Debug"
+    },
+    "questions": {
+      "shortcuts": "How do you want to call me?",
+      "microphone": "Which ear should I listen with?",
+      "output": "And where does the text go?",
+      "appearance": "How should I look?",
+      "behavior": "When should I show up?",
+      "folders": "Where do my files nest?",
+      "experimental": "Fancy some experiments?",
+      "recognition": "What should I listen out for?",
+      "retention": "How long should I remember everything?",
+      "dropFiles": "Shall I catch dropped files?",
+      "language": "Which language do you chatter in?",
+      "languageFor": "Applies to {{model}}",
+      "listenFile": "What shall I listen to for you?",
+      "fileModel": "Which ear do I use for files?",
+      "aiEnable": "Shall an AI chatter along?",
+      "voiceActions": "What may I do on command?",
+      "aiHotkey": "How do you call the polish?",
+      "aiApi": "Which AI should I talk to?",
+      "aiPrompt": "How should the AI tidy your text?",
+      "whoAmI": "Who am I?",
+      "thanks": "Who do I owe all this to?"
+    },
+    "customSound": "Custom WAV…"
   }
 }

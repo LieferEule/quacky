@@ -581,6 +581,10 @@ pub fn change_theme_setting(app: AppHandle, theme: String) -> Result<(), String>
     settings::write_settings(&app, settings);
     #[cfg(target_os = "windows")]
     apply_window_theme(&app, parsed);
+    #[cfg(target_os = "macos")]
+    if let Some(window) = app.get_webview_window("main") {
+        crate::window_glass::set_theme(&window, parsed);
+    }
     Ok(())
 }
 
