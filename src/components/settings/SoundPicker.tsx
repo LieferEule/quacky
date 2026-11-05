@@ -29,6 +29,7 @@ export const SoundPicker: React.FC<SoundPickerProps> = ({
   const options: DropdownOption[] = [
     { value: "marimba", label: "Marimba" },
     { value: "pop", label: "Pop" },
+    { value: "quack", label: t("shell.quackSound") },
     { value: "custom", label: t("shell.customSound") },
   ];
 

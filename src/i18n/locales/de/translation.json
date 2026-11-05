@@ -702,12 +702,12 @@
     "title": "Neu in Quacky v{{version}}"
   },
   "transcribe": {
-    "heading": "Audiodatei transkribieren",
+    "heading": "Audiodateien transkribieren",
     "body": "Die Datei wird hier in der App abgehört, nichts wird anderswo getippt. Ideal für Meetings und lange Sprachnachrichten.",
     "formats": "WAV, MP3, M4A, AAC, FLAC, OGG und OPUS — auch WhatsApp-Sprachnachrichten und Apple-Sprachmemos.",
     "filter": "Audio",
-    "pick": "Audiodatei wählen…",
-    "pickAnother": "Weitere Datei transkribieren",
+    "pick": "Audiodateien wählen…",
+    "pickAnother": "Weitere Dateien wählen…",
     "workingHint": "Lange Aufnahmen werden in Stücken transkribiert; eine Stunde Audio kann einige Minuten dauern.",
     "resultTitle": "Transkript",
     "copy": "Kopieren",
@@ -715,7 +715,6 @@
     "savedToHistory": "Im Verlauf gespeichert und dort als Datei-Transkription markiert.",
     "empty": "Das Modell hat für diese Datei keinen Text geliefert.",
     "errorTitle": "Diese Datei konnte nicht transkribiert werden",
-    "unexpectedError": "Die Datei konnte nicht transkribiert werden.",
     "dropNow": "Loslassen zum Transkribieren",
     "notAudio": "Das ist keine Audiodatei, die diese App lesen kann.",
     "progress": "{{done}} von {{total}} transkribiert",
@@ -729,7 +728,13 @@
     "cancelling": "Wird gestoppt…",
     "cancellingHint": "Das aktuelle Stück wird noch fertig, danach bekommst du alles bisher Transkribierte.",
     "partialTitle": "Teiltranskript",
-    "partialNote": "Dieser Lauf wurde vor dem Ende der Aufnahme gestoppt. Du siehst alles, was bis dahin transkribiert wurde — der Rest der Aufnahme fehlt."
+    "partialNote": "Dieser Lauf wurde vor dem Ende der Aufnahme gestoppt. Du siehst alles, was bis dahin transkribiert wurde — der Rest der Aufnahme fehlt.",
+    "queued_one": "Danach kommt noch eine Datei.",
+    "queued_other": "Danach kommen noch {{count}} Dateien.",
+    "copyAll": "Alle kopieren",
+    "clearList": "Liste leeren",
+    "resultsTitle": "Das habe ich gehört",
+    "copiedToClipboard": "Text liegt in der Zwischenablage"
   },
   "shell": {
     "pages": {
@@ -805,6 +810,7 @@
       "whoAmI": "Wer bin ich?",
       "thanks": "Wem verdanke ich das alles?"
     },
-    "customSound": "Eigene WAV …"
+    "customSound": "Eigene WAV …",
+    "quackSound": "Quak"
   }
 }

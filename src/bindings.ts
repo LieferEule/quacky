@@ -568,6 +568,12 @@ async showMainWindowCommand() : Promise<Result<null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+/**
+ * Files waiting for the Files tab; taking them empties the list.
+ */
+async takeOpenedFiles() : Promise<string[]> {
+    return await TAURI_INVOKE("take_opened_files");
+},
 async cancelOperation() : Promise<void> {
     await TAURI_INVOKE("cancel_operation");
 },
@@ -1198,7 +1204,7 @@ export type RecordingRetentionPeriod = "never" | "preserve_limit" | "days_3" | "
 export type RedactedString = string
 export type SecretMap = Partial<{ [key in string]: string }>
 export type ShortcutBinding = { id: string; name: string; description: string; default_binding: string; current_binding: string }
-export type SoundTheme = "marimba" | "pop" | "custom"
+export type SoundTheme = "marimba" | "pop" | "quack" | "custom"
 /**
  * Phase of the streaming overlay card, emitted to drive its UI state.
  */

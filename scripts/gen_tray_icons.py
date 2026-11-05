@@ -3,6 +3,8 @@
 The tray is drawn at 18 pt high, so each PNG is 36x36 px: one pixel per
 half-cell of the app icon's pixel grid, crisp on retina. Idle is the outline,
 recording the filled silhouette, transcribing the outline with a faint fill.
+While recording the silhouette also waddles: tray_waddle_left/right lean it from
+the feet up, lifted a pixel.
 macOS treats them as template images and only reads their alpha.
 
     python3 scripts/gen_tray_icons.py
@@ -57,6 +59,11 @@ inner = solid - outline
 ox, oy = (SIZE - width) // 2, (SIZE - height) // 2
 
 
+def waddled(cells, lean, lift):
+    """Shear the cells around the feet by up to `lean` pixels at the head."""
+    return {(x + round(lean * (height - 1 - y) / (height - 1)), y - lift) for x, y in cells}
+
+
 def render(layers, rgb, name):
     img = Image.new("RGBA", (SIZE, SIZE), (0, 0, 0, 0))
     for cellset, alpha in layers:
@@ -70,3 +77,7 @@ for suffix, rgb in (("", (0xEC, 0xE7, 0xDD)), ("_dark", (0x0C, 0x0E, 0x0D))):
     render([(outline, 255)], rgb, f"tray_idle{suffix}.png")
     render([(solid, 255)], rgb, f"tray_recording{suffix}.png")
     render([(outline, 255), (inner, 110)], rgb, f"tray_transcribing{suffix}.png")
+
+# The waddle is shown as template images only, so one colour is enough.
+render([(waddled(solid, -2, 1), 255)], (0xEC, 0xE7, 0xDD), "tray_waddle_left.png")
+render([(waddled(solid, 2, 1), 255)], (0xEC, 0xE7, 0xDD), "tray_waddle_right.png")

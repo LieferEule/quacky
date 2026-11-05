@@ -4,11 +4,16 @@ use crate::settings;
 use crate::tray_i18n::get_tray_translations;
 use log::{debug, error, info};
 use std::path::PathBuf;
+#[cfg(target_os = "macos")]
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use tauri::image::Image;
 use tauri::menu::{CheckMenuItem, Menu, MenuItem, PredefinedMenuItem, Submenu};
 use tauri::tray::TrayIcon;
 use tauri::{AppHandle, Emitter, Manager, Theme};
+
+#[cfg(target_os = "macos")]
+const WADDLE_FRAME: std::time::Duration = std::time::Duration::from_millis(170);
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 pub enum TrayIconState {
@@ -126,6 +131,11 @@ pub fn change_tray_icon(app: &AppHandle, icon: TrayIconState) {
     };
     let _ = app.emit_to("main", "recording-state", state);
 
+    #[cfg(target_os = "macos")]
+    if icon == TrayIconState::Recording {
+        start_waddle(app);
+    }
+
     let icon_path = get_icon_path(theme, icon);
 
     let icon_started = std::time::Instant::now();
@@ -149,6 +159,51 @@ pub fn change_tray_icon(app: &AppHandle, icon: TrayIconState) {
         icon_elapsed,
         menu_started.elapsed()
     );
+}
+
+/// While recording, the menu-bar duck waddles through its frames. The thread
+/// ends by itself once the state moves on, and repaints that state on its way
+/// out, because its last frame can land just after `change_tray_icon` set the
+/// final icon.
+#[cfg(target_os = "macos")]
+fn start_waddle(app: &AppHandle) {
+    static RUNNING: AtomicBool = AtomicBool::new(false);
+    if RUNNING.swap(true, Ordering::SeqCst) {
+        return;
+    }
+    let app = app.clone();
+    std::thread::spawn(move || {
+        // Template images, so only their alpha matters: one set serves both
+        // themes. Lean left, stand, lean right, stand.
+        let frames: Vec<Image<'static>> = [
+            "tray_waddle_left",
+            "tray_recording",
+            "tray_waddle_right",
+            "tray_recording",
+        ]
+        .iter()
+        .filter_map(|name| {
+            let path = format!("resources/{name}.png");
+            load_tray_icon(
+                app.path()
+                    .resolve(path, tauri::path::BaseDirectory::Resource),
+            )
+            .ok()
+        })
+        .collect();
+        let recording = || app.state::<CurrentTrayIconState>().get() == TrayIconState::Recording;
+        let tray = app.state::<TrayIcon>();
+        for frame in frames.iter().cycle() {
+            if !recording() {
+                break;
+            }
+            let _ = tray.set_icon_with_as_template(Some(frame.clone()), true);
+            std::thread::sleep(WADDLE_FRAME);
+        }
+        RUNNING.store(false, Ordering::SeqCst);
+        // Also restarts the waddle if recording began again just as this ended.
+        refresh_tray_icon(&app);
+    });
 }
 
 /// Re-applies the last known tray state — for when only the *theme* changed

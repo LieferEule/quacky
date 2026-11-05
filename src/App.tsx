@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { listen } from "@tauri-apps/api/event";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
 import { platform } from "@tauri-apps/plugin-os";
+import { writeText } from "@tauri-apps/plugin-clipboard-manager";
 import {
   checkAccessibilityPermission,
   checkMicrophonePermission,
@@ -21,6 +22,7 @@ import {
 import { WhatsNewGate } from "./components/whats-new";
 import { useSettings } from "./hooks/useSettings";
 import { useSettingsStore } from "./stores/settingsStore";
+import { transcriptsAsText, useFileQueueStore } from "./stores/fileQueueStore";
 import { commands } from "@/bindings";
 import { getLanguageDirection, initializeRTL } from "@/lib/utils/rtl";
 
@@ -180,6 +182,17 @@ function App() {
         if (sectionRef.current === "transcribe") return;
         const file = event.payload.paths?.[0];
         if (!file) return;
+        // While the queue works, a second run alongside it would reset its
+        // shared cancel flag and partial buffer. Join the queue instead.
+        const queue = useFileQueueStore.getState();
+        if (
+          queue.items.some(
+            (item) => item.status === "queued" || item.status === "running",
+          )
+        ) {
+          queue.enqueue(event.payload.paths);
+          return;
+        }
         // Read the setting per drop so toggling it takes effect immediately.
         void commands.getAppSettings().then((settings) => {
           if (settings.status !== "ok" || !settings.data.drag_drop_enabled)
@@ -199,6 +212,33 @@ function App() {
       if (unlisten) unlisten();
     };
   }, []);
+
+  // Audio files sent from the Finder's right-click service land in the Files
+  // queue. They may have arrived before this window was listening, so check at
+  // mount too. The batch ends on the clipboard: the point of the right-click is
+  // to get the text without having to come back to this window.
+  useEffect(() => {
+    if (onboardingStep !== "done") return;
+    const takeOpenedFiles = async () => {
+      const paths = await commands.takeOpenedFiles();
+      if (paths.length === 0) return;
+      setCurrentSection("transcribe");
+      useFileQueueStore.getState().enqueue(paths, (items) => {
+        const text = transcriptsAsText(items);
+        if (!text) return;
+        void writeText(text).then(
+          () => toast.success(t("transcribe.copiedToClipboard")),
+          (error) => console.error("Failed to copy the transcript:", error),
+        );
+      });
+    };
+    // Listen first: an event sent before the listener exists would be lost.
+    const unlisten = listen("files-opened", () => void takeOpenedFiles());
+    void unlisten.then(takeOpenedFiles);
+    return () => {
+      unlisten.then((fn) => fn());
+    };
+  }, [onboardingStep, t]);
 
   useEffect(() => {
     const unlisten = listen("paste-error", () => {
@@ -367,7 +407,7 @@ function App() {
             The whole strip drags the window. */}
         <header
           data-tauri-drag-region
-          className="grid h-[52px] shrink-0 grid-cols-[1fr_auto_1fr] items-center gap-3 px-4"
+          className="grid h-[52px] shrink-0 grid-cols-[minmax(64px,1fr)_auto_minmax(140px,1fr)] items-center gap-2 px-3"
         >
           {/* The traffic lights sit in the first column. */}
           <span />

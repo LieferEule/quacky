@@ -93,6 +93,10 @@ src/
 | Shortcuts to copy / insert the last transcript              | `last_transcript.rs`, `actions.rs` (`copy_last_transcript`, `insert_last_transcript`)                             |
 | Shortcuts can be switched off                               | empty `current_binding`, `shortcut::is_disabled`                                                                  |
 | File transcription that stays in the app                    | `TranscribeSettings.tsx`, `transcribe_file(.., deliver: false)`                                                   |
+| Several files at once, in a queue                           | `src/stores/fileQueueStore.ts`, `TranscribeSettings.tsx`                                                          |
+| Finder right-click "Transcribe with Quacky"                 | `opened_files.rs`, `Info.plist` (`NSServices`), `macos/de.lproj/ServicesMenu.strings`                             |
+| Quack sound theme (CC0, Freesound 515408)                   | `scripts/gen_quack_sounds.py`, `resources/quack_*.wav`                                                            |
+| Waddling menu-bar duck while recording                      | `tray.rs::start_waddle`, `scripts/gen_tray_icons.py`                                                              |
 | History distinguishes microphone vs file                    | `managers/history.rs::source_from_file_name`                                                                      |
 | Voice actions (API / Codex CLI / Claude CLI)                | `actions.rs` — backend only; the AI tab was removed, so it is off unless a store already had it on                |
 | Audio ducking instead of hard mute, at a configurable speed | `managers/audio.rs`, `settings.rs::DuckingSpeed`                                                                  |
@@ -171,6 +175,20 @@ app-wide, so the overlay is unaffected. Settings groups render as the duck's
 speech bubbles (`SettingsGroup`), sections are Glisse's `SegmentedControl` in
 the title bar (`SectionTabs.tsx`), and `Dropdown variant="chips"` turns a
 fixed, short enum into answer chips.
+
+**The file queue lives outside the Files tab.** `fileQueueStore` runs files one
+at a time so it survives tab switches and can be fed by the Finder service. While
+it works, a drop on another tab joins the queue instead of starting a second run,
+because two chunked runs would share one cancel flag and partial buffer. Import
+WAVs are named in milliseconds: a queue finishes short files within one second,
+and whole seconds made the later file overwrite the earlier one's recording.
+
+**The Finder service only works from a registered bundle.** macOS routes it to the
+`.app` by bundle identifier, so a dev binary never receives it, and `NSPortName`
+must equal the executable name (`quacky`, not `Quacky`). `NSPerformService` wants
+the default (English) item name. Paths wait in `opened_files.rs` until the frontend
+takes them, because the service can be what launches the app. A fresh ad-hoc
+bundle stops at the permissions screen, and files wait until that is done.
 
 **A new shortcut needs three things, not one.** A `ShortcutBinding` in
 `settings.rs::get_default_settings`, a matching entry in `actions.rs::ACTION_MAP`,

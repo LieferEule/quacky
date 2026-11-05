@@ -4597,7 +4597,7 @@ dependencies = [
 
 [[package]]
 name = "quacky"
-version = "0.4.2"
+version = "0.4.3"
 dependencies = [
  "anyhow",
  "audiopus",
@@ -4618,6 +4618,7 @@ dependencies = [
  "natural",
  "objc2",
  "objc2-app-kit",
+ "objc2-foundation",
  "ogg",
  "once_cell",
  "rdev",

@@ -215,7 +215,9 @@ pub async fn transcribe_file(
     // Persist a 16 kHz WAV + history entry so the audio player and the overlay's
     // re-copy button (which reads the latest history entry) both work.
     let hm = app.state::<Arc<HistoryManager>>();
-    let file_name = format!("handy-import-{}.wav", chrono::Utc::now().timestamp());
+    // Milliseconds: a queue finishes short files within the same second, and
+    // whole seconds would have the later one overwrite the earlier one's WAV.
+    let file_name = format!("handy-import-{}.wav", chrono::Utc::now().timestamp_millis());
     let wav_path = hm.recordings_dir().join(&file_name);
     match crate::audio_toolkit::save_wav_file(&wav_path, &samples) {
         Ok(()) => {

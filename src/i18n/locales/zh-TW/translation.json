@@ -715,7 +715,6 @@
     "savedToHistory": "Saved to History, where it is tagged as a file transcription.",
     "empty": "The model returned no text for this file.",
     "errorTitle": "Could not transcribe this file",
-    "unexpectedError": "The file could not be transcribed.",
     "dropNow": "Drop to transcribe",
     "notAudio": "That is not an audio file this app can read.",
     "progress": "{{done}} of {{total}} transcribed",
@@ -729,7 +728,13 @@
     "cancelling": "Stopping…",
     "cancellingHint": "Finishing the current piece, then handing back everything transcribed so far.",
     "partialTitle": "Partial transcript",
-    "partialNote": "This run stopped before the end of the recording. What you see is everything that was transcribed up to that point — the rest of the audio is not in it."
+    "partialNote": "This run stopped before the end of the recording. What you see is everything that was transcribed up to that point — the rest of the audio is not in it.",
+    "queued_one": "One more file after this.",
+    "queued_other": "{{count}} more files after this.",
+    "copyAll": "Copy all",
+    "clearList": "Clear list",
+    "resultsTitle": "Here's what I heard",
+    "copiedToClipboard": "Text is on the clipboard"
   },
   "shell": {
     "pages": {
@@ -805,6 +810,7 @@
       "whoAmI": "Who am I?",
       "thanks": "Who do I owe all this to?"
     },
-    "customSound": "Custom WAV…"
+    "customSound": "Custom WAV…",
+    "quackSound": "Quack"
   }
 }

@@ -274,6 +274,7 @@ impl ModelUnloadTimeout {
 pub enum SoundTheme {
     Marimba,
     Pop,
+    Quack,
     Custom,
 }
 
@@ -282,6 +283,7 @@ impl SoundTheme {
         match self {
             SoundTheme::Marimba => "marimba",
             SoundTheme::Pop => "pop",
+            SoundTheme::Quack => "quack",
             SoundTheme::Custom => "custom",
         }
     }

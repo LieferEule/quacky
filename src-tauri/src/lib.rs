@@ -14,6 +14,7 @@ mod last_transcript;
 mod llm_client;
 mod managers;
 mod notch;
+mod opened_files;
 mod overlay;
 pub mod portable;
 mod settings;
@@ -98,7 +99,7 @@ fn build_console_filter() -> env_filter::Filter {
     builder.build()
 }
 
-fn show_main_window(app: &AppHandle) {
+pub(crate) fn show_main_window(app: &AppHandle) {
     if let Some(main_window) = app.get_webview_window("main") {
         if let Err(e) = main_window.unminimize() {
             log::error!("Failed to unminimize webview window: {}", e);
@@ -615,6 +616,7 @@ pub fn run(cli_args: CliArgs) {
             shortcut::handy_keys::start_handy_keys_recording,
             shortcut::handy_keys::stop_handy_keys_recording,
             show_main_window_command,
+            opened_files::take_opened_files,
             commands::cancel_operation,
             commands::is_portable,
             commands::get_app_dir_path,
@@ -864,6 +866,7 @@ pub fn run(cli_args: CliArgs) {
             {
                 window_glass::apply(&main_window);
                 window_glass::set_theme(&main_window, settings.theme);
+                opened_files::register(app.handle());
             }
             #[cfg(not(target_os = "macos"))]
             let _ = main_window;
