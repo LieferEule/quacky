@@ -42,12 +42,12 @@ recording UI while it runs.
 
 ## Capabilities and Constraints
 
-- Sections today: General, Transcribe, Models, Advanced, History,
-  Post-processing (with voice actions), Debug (hidden unless debug mode is
-  on), About.
-- Every setting maps to a Tauri command (`settingToCommand`). The
-  redesign can regroup and reorder settings but must keep every one of them
-  reachable.
+- Sections since 0.4.2: Dictate, Files, History, Models, App, About, and
+  Debug (hidden unless debug mode is on).
+- Every setting maps to a Tauri command (`settingToCommand`). Regrouping is
+  fine, but a setting stays reachable unless the user decides to drop it.
+  The user dropped the AI tab (post-processing, voice actions), the accent
+  picker and the experiments switch in 0.4.2. Their Rust side remains.
 - en and de are the maintained languages, and their keys stay in sync.
   Twenty other locales exist and fall back to en.
 - The window is 680×570 at minimum and can be resized.
@@ -58,8 +58,8 @@ recording UI while it runs.
   or identity.
 - The duck mark (`src-tauri/icons/app-icon.svg`,
   `src/components/icons/QuackyMark.tsx`) and the pixel-duck tray icons.
-- Accent Quacky orange `#ff6600`, which the user can change (accent
-  picker).
+- Accent Quacky orange `#ff6600`, fixed. It is not user-changeable since
+  0.4.2.
 - Voice is playful, with duck wit where it fits ("Quacky is listening",
   "Nothing quacked yet"). Everything else stays clear and short, and the
   jokes never get in the way of an instruction.
@@ -77,4 +77,4 @@ No testimonials, press or usage numbers. None may be invented.
    the Mac.
 3. Duck personality in the details, never at the cost of clarity.
 4. Every setting stays reachable. Regrouping is allowed, silently dropping a
-   setting is not.
+   setting is not; removing one is the user's call.

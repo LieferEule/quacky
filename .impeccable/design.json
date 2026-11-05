@@ -1,0 +1,321 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-04T18:30:44.917426+00:00",
+  "title": "Design System: Quacky",
+  "extensions": {
+    "colorMeta": {
+      "quacky-orange": {
+        "role": "primary",
+        "displayName": "Quacky Orange",
+        "canonical": "#ff6600",
+        "tonalRamp": [
+          "oklch(15% 0.06 45)",
+          "oklch(27% 0.1 45)",
+          "oklch(39% 0.14 45)",
+          "oklch(51% 0.18 45)",
+          "oklch(63% 0.21 45)",
+          "oklch(70% 0.21 45)",
+          "oklch(83% 0.11 45)",
+          "oklch(95% 0.03 45)"
+        ]
+      },
+      "accent-ink-light": {
+        "role": "primary",
+        "displayName": "Accent Ink (light ground)",
+        "canonical": "light-dark(color-mix(in oklab, var(--color-logo-primary) 90%, black), ...) via --accent-ink"
+      },
+      "accent-ink-dark": {
+        "role": "primary",
+        "displayName": "Accent Ink (dark glass)",
+        "canonical": "light-dark(..., color-mix(in oklab, var(--color-logo-primary) 60%, white)) via --accent-ink"
+      },
+      "daylight-paper": {
+        "role": "neutral",
+        "displayName": "Daylight Paper",
+        "canonical": "#faf8f4"
+      },
+      "pond-night": {
+        "role": "neutral",
+        "displayName": "Pond Night",
+        "canonical": "#0c0e0d"
+      },
+      "roast-ink": {
+        "role": "neutral",
+        "displayName": "Roast Ink",
+        "canonical": "#1a1512"
+      },
+      "warm-bone": {
+        "role": "neutral",
+        "displayName": "Warm Bone",
+        "canonical": "#ece7dd"
+      },
+      "reed-gray": {
+        "role": "neutral",
+        "displayName": "Reed Gray",
+        "canonical": "#808080"
+      },
+      "duck-stroke-light": {
+        "role": "neutral",
+        "displayName": "Duck Stroke (light)",
+        "canonical": "#2a1408"
+      },
+      "duck-stroke-dark": {
+        "role": "neutral",
+        "displayName": "Duck Stroke (dark)",
+        "canonical": "#ffce9e"
+      },
+      "glass-card-light": {
+        "role": "neutral",
+        "displayName": "Glass Card (light)",
+        "canonical": "--glass-card on macOS"
+      },
+      "glass-card-dark": {
+        "role": "neutral",
+        "displayName": "Glass Card (dark)",
+        "canonical": "--glass-card on macOS"
+      },
+      "glass-control-light": {
+        "role": "neutral",
+        "displayName": "Glass Control (light)",
+        "canonical": "--glass-control on macOS"
+      },
+      "glass-control-dark": {
+        "role": "neutral",
+        "displayName": "Glass Control (dark)",
+        "canonical": "--glass-control on macOS"
+      },
+      "glass-pop-light": {
+        "role": "neutral",
+        "displayName": "Glass Pop (light)",
+        "canonical": "--glass-pop on macOS"
+      },
+      "glass-pop-dark": {
+        "role": "neutral",
+        "displayName": "Glass Pop (dark)",
+        "canonical": "--glass-pop on macOS"
+      },
+      "glass-rim-light": {
+        "role": "neutral",
+        "displayName": "Glass Rim (light)",
+        "canonical": "--glass-rim on macOS"
+      },
+      "glass-rim-dark": {
+        "role": "neutral",
+        "displayName": "Glass Rim (dark)",
+        "canonical": "--glass-rim on macOS"
+      },
+      "glass-sheen-light": {
+        "role": "neutral",
+        "displayName": "Glass Sheen (light)",
+        "canonical": "--glass-sheen on macOS"
+      },
+      "glass-sheen-dark": {
+        "role": "neutral",
+        "displayName": "Glass Sheen (dark)",
+        "canonical": "--glass-sheen on macOS"
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section page title (all sections except Dictate)."
+      },
+      "hero": {
+        "displayName": "Hero",
+        "purpose": "Dictate status line."
+      },
+      "question": {
+        "displayName": "Question",
+        "purpose": "Duck bubble heading, model card name, drop pond heading."
+      },
+      "row-title": {
+        "displayName": "Row Title",
+        "purpose": "Setting row label."
+      },
+      "tab": {
+        "displayName": "Tab",
+        "purpose": "Section tabs and menu dropdown triggers."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Answer chips, page subtitle, alert text; key caps at 600."
+      },
+      "description": {
+        "displayName": "Description",
+        "purpose": "Row description under the title at 65% ink, clamped to two lines."
+      }
+    },
+    "shadows": [
+      {
+        "name": "glass-shadow",
+        "value": "0 1px 2px rgb(0 0 0 / 0.04), 0 6px 20px light-dark(rgb(0 0 0 / 0.05), rgb(0 0 0 / 0.22))",
+        "purpose": "Bubbles, cards, model cards on macOS; none elsewhere."
+      },
+      {
+        "name": "glass-rim-sheen",
+        "value": "inset 0 1px 0 var(--glass-sheen), 0 0 0 0.5px var(--glass-rim)",
+        "purpose": "Every glass surface."
+      },
+      {
+        "name": "control-lift",
+        "value": "0 1px 2px rgb(0 0 0 / 0.05)",
+        "purpose": "Glass controls; key caps use 0.08."
+      },
+      {
+        "name": "pop",
+        "value": "inset 0 1px 0 var(--glass-sheen), 0 12px 32px rgb(0 0 0 / 0.18); backdrop-filter: blur(24px) saturate(1.8)",
+        "purpose": "Menus, tooltips, toasts, dialogs."
+      },
+      {
+        "name": "accent-rim-active",
+        "value": "inset 0 0 0 1.5px color-mix(in srgb, var(--color-background-ui) 70%, transparent)",
+        "purpose": "Active model card."
+      },
+      {
+        "name": "accent-rim-featured",
+        "value": "inset 0 0 0 1px color-mix(in srgb, var(--color-background-ui) 30%, transparent)",
+        "purpose": "Featured model card."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-paddle",
+        "value": "cubic-bezier(0.32, 0.72, 0, 1)",
+        "purpose": "Spring-like ease for what travels (chip press/lift, 260ms)."
+      },
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Short ease-out for what appears (bubbles 420ms, page 240ms, colour 200ms)."
+      },
+      {
+        "name": "duck-say",
+        "value": "420ms var(--ease-out); from opacity 0.25, translateY(8px) scale(0.985); stagger 60/120/180ms",
+        "purpose": "Bubbles settle in in sequence."
+      },
+      {
+        "name": "duck-bob",
+        "value": "1100ms ease-in-out infinite; 50% translateY(-2px) rotate(-4deg)",
+        "purpose": "Hero duck while recording."
+      },
+      {
+        "name": "meter",
+        "value": "height 120ms ease-out, opacity 200ms ease-out",
+        "purpose": "Quack meter bars follow mic level."
+      }
+    ],
+    "breakpoints": []
+  },
+  "components": [
+    {
+      "name": "Duck Bubble",
+      "kind": "card",
+      "refersTo": "duck-bubble",
+      "description": "A settings group: duck avatar beside a glass speech bubble; heading is the question, rows are answers.",
+      "html": "<section class=\"ds-say\"><span class=\"ds-avatar\"><svg width=\"15\" height=\"15\" viewBox=\"0 0 24 24\" fill=\"currentColor\"><circle cx=\"9\" cy=\"8\" r=\"5\"/><path d=\"M13 7h6l-3 3z\"/><ellipse cx=\"12\" cy=\"16\" rx=\"9\" ry=\"6\"/></svg></span><div class=\"ds-bubble\"><header class=\"ds-q\"><h2>How do you want to call me?</h2></header><div class=\"ds-row\"><div><h3>Shortcut</h3><p>Hold to talk, release to paste.</p></div><kbd class=\"ds-key\">⌥ Space</kbd></div><div class=\"ds-row\"><div><h3>Push to talk</h3><p>Record only while the keys are held.</p></div><span class=\"ds-switch\"></span></div></div></section>",
+      "css": ".ds-say{display:flex;align-items:flex-start;gap:10px;font-family:ui-sans-serif,system-ui,sans-serif;color:var(--color-text,#ece7dd)} .ds-avatar{display:grid;place-items:center;width:28px;height:28px;flex:none;margin-top:6px;border-radius:999px;color:color-mix(in oklab,#ff6600 60%,white);background:rgb(255 255 255 / 0.07);box-shadow:inset 0 1px 0 rgb(255 255 255 / 0.14),0 0 0 0.5px rgb(255 255 255 / 0.1)} .ds-bubble{flex:1;min-width:0;background:rgb(255 255 255 / 0.07);border-radius:6px 18px 18px 18px;box-shadow:inset 0 1px 0 rgb(255 255 255 / 0.14),0 0 0 0.5px rgb(255 255 255 / 0.1),0 1px 2px rgb(0 0 0 / 0.04),0 6px 20px rgb(0 0 0 / 0.22)} .ds-q{padding:12px 14px 4px} .ds-q h2{margin:0;font-size:13.5px;font-weight:600;line-height:20px} .ds-row{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:44px;padding:8px 14px;border-top:1px solid rgb(255 255 255 / 0.08)} .ds-row:first-of-type{border-top:0} .ds-row h3{margin:0;font-size:13px;font-weight:500;line-height:20px} .ds-row p{margin:0;font-size:11.5px;line-height:16px;opacity:.65} .ds-key{min-width:26px;padding:0 7px;border-radius:7px;font:inherit;font-size:12px;font-weight:600;line-height:22px;background:rgb(255 255 255 / 0.1);box-shadow:inset 0 1px 0 rgb(255 255 255 / 0.14),0 0 0 0.5px rgb(255 255 255 / 0.1),0 1px 2px rgb(0 0 0 / 0.08)} .ds-switch{width:32px;height:19px;border-radius:999px;background:#ff6600;position:relative} .ds-switch::after{content:'';position:absolute;right:2px;top:2px;width:15px;height:15px;border-radius:999px;background:#fff}"
+    },
+    {
+      "name": "Answer Chips",
+      "kind": "chip",
+      "refersTo": "answer-chip",
+      "description": "A short fixed choice as capsules; the chosen one in accent fill.",
+      "html": "<div class=\"ds-chips\"><button class=\"ds-chip\">System</button><button class=\"ds-chip is-chosen\">Light</button><button class=\"ds-chip\">Dark</button></div>",
+      "css": ".ds-chips{display:flex;gap:6px;font-family:ui-sans-serif,system-ui,sans-serif} .ds-chip{height:26px;padding:0 11px;border:0;border-radius:999px;font:inherit;font-size:12px;font-weight:500;color:var(--color-text,#ece7dd);background:rgb(255 255 255 / 0.1);box-shadow:inset 0 1px 0 rgb(255 255 255 / 0.14),0 0 0 0.5px rgb(255 255 255 / 0.1);cursor:pointer;transition:background-color 200ms cubic-bezier(0.22,1,0.36,1),color 200ms cubic-bezier(0.22,1,0.36,1),transform 260ms cubic-bezier(0.32,0.72,0,1)} .ds-chip:hover{transform:translateY(-1px)} .ds-chip:active{transform:scale(0.96)} .ds-chip:focus-visible{outline:2px solid color-mix(in srgb,color-mix(in oklab,#ff6600 60%,white) 75%,transparent);outline-offset:2px} .ds-chip.is-chosen{color:#fff;background:#ff6600;box-shadow:inset 0 1px 0 rgb(255 255 255 / 0.3)}"
+    },
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Capsule in accent fill for the one main action.",
+      "html": "<button class=\"ds-btn-primary\">Choose a file</button>",
+      "css": ".ds-btn-primary{font-family:ui-sans-serif,system-ui,sans-serif;font-size:14px;font-weight:500;padding:5px 16px;border-radius:999px;border:1px solid #ff6600;color:#fff;background:#ff6600;cursor:pointer;transition:background-color .15s,border-color .15s} .ds-btn-primary:hover{background:rgb(255 102 0 / 0.8);border-color:rgb(255 102 0 / 0.8)} .ds-btn-primary:focus-visible{outline:2px solid color-mix(in srgb,color-mix(in oklab,#ff6600 60%,white) 75%,transparent);outline-offset:2px}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Capsule on glass control.",
+      "html": "<button class=\"ds-btn-secondary\">Open folder</button>",
+      "css": ".ds-btn-secondary{font-family:ui-sans-serif,system-ui,sans-serif;font-size:14px;font-weight:500;padding:5px 16px;border-radius:999px;border:0.5px solid rgb(255 255 255 / 0.1);color:var(--color-text,#ece7dd);background:rgb(255 255 255 / 0.1);box-shadow:inset 0 1px 0 rgb(255 255 255 / 0.14),0 1px 2px rgb(0 0 0 / 0.05);cursor:pointer;transition:background-color .15s,border-color .15s} .ds-btn-secondary:hover{background:rgb(255 102 0 / 0.3);border-color:#ff6600} .ds-btn-secondary:focus-visible{outline:2px solid color-mix(in srgb,color-mix(in oklab,#ff6600 60%,white) 75%,transparent);outline-offset:2px}"
+    },
+    {
+      "name": "Section Tabs",
+      "kind": "nav",
+      "refersTo": "section-tabs",
+      "description": "Glisse segmented control centred in the title bar; the lens glides on a spring.",
+      "html": "<nav class=\"ds-tabs\"><span class=\"ds-lens\"></span><button class=\"is-on\">Dictate</button><button>Files</button><button>History</button><button>Models</button><button>App</button><button>About</button></nav>",
+      "css": ".ds-tabs{position:relative;display:inline-flex;padding:2px;border-radius:999px;background:rgb(255 255 255 / 0.1);box-shadow:inset 0 1px 0 rgb(255 255 255 / 0.14),0 0 0 0.5px rgb(255 255 255 / 0.1);font-family:ui-sans-serif,system-ui,sans-serif} .ds-tabs button{position:relative;width:78px;height:30px;border:0;background:none;font:inherit;font-size:12.5px;font-weight:500;color:var(--color-text,#ece7dd);cursor:pointer} .ds-lens{position:absolute;left:2px;top:2px;width:78px;height:30px;border-radius:999px;background:rgb(255 255 255 / 0.16);box-shadow:inset 0 1px 0 rgb(255 255 255 / 0.2);transition:transform 420ms cubic-bezier(0.32,0.72,0,1)} .ds-tabs button:focus-visible{outline:2px solid color-mix(in srgb,color-mix(in oklab,#ff6600 60%,white) 75%,transparent);outline-offset:2px}"
+    },
+    {
+      "name": "Dictate Hero",
+      "kind": "custom",
+      "refersTo": "duck-avatar",
+      "description": "Status row: duck, ready line with key cap and model, quack meter.",
+      "html": "<div class=\"ds-hero\"><svg width=\"36\" height=\"36\" viewBox=\"0 0 24 24\" fill=\"currentColor\" class=\"ds-hduck\"><circle cx=\"9\" cy=\"8\" r=\"5\"/><path d=\"M13 7h6l-3 3z\"/><ellipse cx=\"12\" cy=\"16\" rx=\"9\" ry=\"6\"/></svg><div class=\"ds-htext\"><h1>Ready to quack</h1><p>Hold <kbd>⌥ Space</kbd> · Parakeet V3</p></div><div class=\"ds-meter\"><i style=\"height:5px\"></i><i style=\"height:9px\"></i><i style=\"height:13px\"></i><i style=\"height:9px\"></i><i style=\"height:5px\"></i></div></div>",
+      "css": ".ds-hero{display:flex;align-items:center;gap:16px;padding:12px 4px 4px;font-family:ui-sans-serif,system-ui,sans-serif;color:var(--color-text,#ece7dd)} .ds-hduck{color:color-mix(in oklab,#ff6600 60%,white);flex:none} .ds-htext{flex:1;min-width:0} .ds-htext h1{margin:0;font-size:15px;font-weight:600;line-height:20px} .ds-htext p{margin:0;font-size:12px;line-height:20px;opacity:.7} .ds-htext kbd{display:inline-block;margin-inline:.3em;padding:0 7px;border-radius:7px;font:inherit;font-size:12px;font-weight:600;line-height:22px;background:rgb(255 255 255 / 0.1);box-shadow:inset 0 1px 0 rgb(255 255 255 / 0.14),0 0 0 0.5px rgb(255 255 255 / 0.1)} .ds-meter{display:flex;align-items:center;gap:3px;height:26px} .ds-meter i{width:3px;border-radius:2px;background:color-mix(in oklab,#ff6600 60%,white);opacity:.55;transition:height 120ms ease-out,opacity 200ms ease-out} .ds-hero:hover .ds-meter i{opacity:1}"
+    },
+    {
+      "name": "Model Card",
+      "kind": "card",
+      "refersTo": "model-card",
+      "description": "Glass pane; the active model wears an inset accent rim.",
+      "html": "<div class=\"ds-model is-active\" tabindex=\"0\"><strong>Parakeet V3</strong><p>Fast, accurate, 25 European languages.</p></div>",
+      "css": ".ds-model{display:flex;flex-direction:column;gap:4px;padding:12px 16px;border-radius:16px;font-family:ui-sans-serif,system-ui,sans-serif;color:var(--color-text,#ece7dd);background:rgb(255 255 255 / 0.07);box-shadow:inset 0 1px 0 rgb(255 255 255 / 0.14),0 0 0 0.5px rgb(255 255 255 / 0.1),0 6px 20px rgb(0 0 0 / 0.22);cursor:pointer;transition:transform 200ms,box-shadow 200ms} .ds-model strong{font-size:13.5px;font-weight:600} .ds-model p{margin:0;font-size:12px;line-height:16px;opacity:.65} .ds-model:hover{transform:translateY(-1px)} .ds-model:active{transform:scale(0.99)} .ds-model.is-active{box-shadow:inset 0 0 0 1.5px rgb(255 102 0 / 0.7),inset 0 1px 0 rgb(255 255 255 / 0.14),0 6px 20px rgb(0 0 0 / 0.22)} .ds-model:focus-visible{outline:2px solid color-mix(in srgb,color-mix(in oklab,#ff6600 60%,white) 75%,transparent);outline-offset:2px}"
+    },
+    {
+      "name": "Drop Pond",
+      "kind": "custom",
+      "refersTo": "model-card",
+      "description": "Files drop target; lights up in the accent while a file hovers.",
+      "html": "<div class=\"ds-pond\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4\"/><polyline points=\"17 8 12 3 7 8\"/><line x1=\"12\" y1=\"3\" x2=\"12\" y2=\"15\"/></svg><p class=\"ds-pond-h\">Drop an audio file</p><p class=\"ds-pond-b\">Voice notes, memos and meetings stay on this Mac.</p></div>",
+      "css": ".ds-pond{padding:20px 16px;text-align:center;border-radius:14px;font-family:ui-sans-serif,system-ui,sans-serif;color:var(--color-text,#ece7dd);transition:background-color 200ms cubic-bezier(0.22,1,0.36,1),box-shadow 200ms cubic-bezier(0.22,1,0.36,1)} .ds-pond svg{color:color-mix(in oklab,#ff6600 60%,white)} .ds-pond-h{margin:8px 0 0;font-size:13.5px;font-weight:600} .ds-pond-b{margin:4px 0 0;font-size:12px;line-height:16px;opacity:.65} .ds-pond:hover{background:rgb(255 102 0 / 0.1);box-shadow:inset 0 0 0 1.5px rgb(255 102 0 / 0.6)}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Duck Speaks",
+    "overview": "The main window is macOS system glass (`NSGlassEffectView` on macOS 26, vibrancy before it) with a 52px title bar holding the traffic lights and a centred Glisse segmented control. Every settings group is a question the duck asks: a 28px duck avatar beside a translucent speech bubble, the bubble's heading is the question and its rows are the answers. Density is a native macOS settings pane: 13px rows, 11.5px descriptions under the label, controls on the trailing edge.\n\nDepth comes from the window's own glass, not from painted backgrounds: on macOS the page is transparent and every surface is a translucent layer lit by a white top rim. Off macOS the same tokens fall back to flat, opaque surfaces on the palette background. Personality lives in the duck, its speech bubbles and the quack meter; everything else stays plain system UI.",
+    "keyCharacteristics": [
+      "System glass ground; surfaces are translucent panes with a 0.5px rim and a 1px inset top sheen.",
+      "One accent, Quacky orange, fixed; text and icons in the accent go through accent ink.",
+      "SF system type throughout, small and precise (11.5 to 17px).",
+      "Short fixed choices are answer chips, not menus.",
+      "Motion is a spring for what travels and a short ease-out for what appears."
+    ],
+    "rules": [
+      {
+        "name": "The Ink-Not-Fill Rule",
+        "body": "Accent as text or icon always uses accent ink; fills, rings and borders keep `#ff6600` exactly. Raw `--color-logo-primary` on text is a defect.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Voice Rule",
+        "body": "Orange marks selection, chosen answers, switches and the meter. Status colours (red, yellow, green at 10% washes) appear only in alerts.",
+        "section": "colors"
+      },
+      {
+        "name": "The Description-Under Rule",
+        "body": "A row explains itself in an 11.5px line under its title, never behind an info icon.",
+        "section": "typography"
+      },
+      {
+        "name": "The Pane-Not-Border Rule",
+        "body": "Emphasis on a glass pane is an inset accent rim (1.5px active, 1px featured), never a thick border.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** put every new settings group in a `SettingsGroup` bubble phrased as the duck's question.",
+      "**Do** render short fixed enums (theme, sound, ducking speed, overlay) as answer chips; device lists and other open or long lists use the menu dropdown.",
+      "**Do** route accent text and icons through `--accent-ink` (`text-accent-ink` or `.text-logo-primary`).",
+      "**Do** build surfaces from `--glass-*` tokens so the non-macOS fallback stays flat and correct.",
+      "**Do** honour `prefers-reduced-motion`: bubble, page and hero animations switch off."
+    ],
+    "donts": [
+      "**Don't** paint an opaque background on the macOS window; the page is transparent over system glass.",
+      "**Don't** reintroduce a sidebar of tiled grey rows or an info-icon tooltip for row descriptions.",
+      "**Don't** add a second accent or let users recolour it; the accent is fixed `#ff6600`.",
+      "**Don't** use thick borders for emphasis on glass panes; use the inset accent rim."
+    ]
+  }
+}
