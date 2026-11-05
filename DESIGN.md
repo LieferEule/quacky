@@ -254,6 +254,8 @@ Glass card, 16px radius, 12px by 16px padding, name at question size, descriptio
 
 Files' drop target, 14px radius, quiet at rest; while a file hovers the window it takes a 10% orange wash and a 1.5px inset rim at 60% (200ms ease-out).
 
+While a file runs, the drop target gives way to the brood: the pixel duck waddles in from the right, leaves webbed prints behind, hops onto a small sheet of text (40×22px) with its wing fluttering and breathes there, and the sheet shrinks with the reported progress on long files. At the end the duck leaves to the left, the sheet is squeezed away in three pushes, and an egg springs up and bounces where it was. The egg then flies in a curve down to the left into its row, bouncing twice as it lands. Clicking it wobbles the egg, a zigzag crack appears, the top half stays ajar like a lid, and the text grows out of the gap.
+
 ### Alert
 
 Inline note, 14px by 10px padding, 16px lucide icon, 12px text. Inside a bubble an info note has no background, only an accent icon and 70% text; error/warning/success use 10% status washes.

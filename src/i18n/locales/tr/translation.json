@@ -732,6 +732,7 @@
     "queued_one": "One more file after this.",
     "queued_other": "{{count}} more files after this.",
     "copyAll": "Copy all",
+    "hatch": "Click the egg to hatch the text",
     "clearList": "Clear list",
     "resultsTitle": "Here's what I heard",
     "copiedToClipboard": "Text is on the clipboard"

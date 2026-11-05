@@ -119,6 +119,7 @@ pub async fn transcribe_file(
             let samples = crate::file_import::decode_to_16k_mono(&file_path)?;
 
             let tm = app_for_work.state::<Arc<TranscriptionManager>>();
+            let _file_run = tm.file_run();
             // The file override wins where it is set; otherwise files follow the
             // dictation model. Loading a different one evicts the current model,
             // so the next dictation reloads — the cost of the choice.

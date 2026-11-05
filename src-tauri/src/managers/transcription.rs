@@ -10,7 +10,7 @@ use log::{debug, error, info, warn};
 use serde::{Deserialize, Serialize};
 use specta::Type;
 use std::panic::{catch_unwind, AssertUnwindSafe};
-use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU64, AtomicUsize, Ordering};
 use std::sync::{mpsc, Arc, Condvar, Mutex, MutexGuard, OnceLock};
 use std::thread;
 use std::time::{Duration, Instant, SystemTime};
@@ -224,6 +224,22 @@ impl Drop for StreamWorkerGuard {
     }
 }
 
+pub struct FileRunGuard {
+    file_runs: Arc<AtomicUsize>,
+}
+
+impl Drop for FileRunGuard {
+    fn drop(&mut self) {
+        self.file_runs.fetch_sub(1, Ordering::AcqRel);
+    }
+}
+
+/// A file transcription may load its own model, and that model would otherwise
+/// stay for the next dictation, which then has no live text if it cannot stream.
+fn holds_foreign_model(loaded: Option<&str>, selected: &str, file_running: bool) -> bool {
+    !file_running && !selected.is_empty() && loaded.is_some_and(|model| model != selected)
+}
+
 #[derive(Clone)]
 pub struct TranscriptionManager {
     engine: Arc<Mutex<Option<LoadedEngine>>>,
@@ -236,6 +252,8 @@ pub struct TranscriptionManager {
     is_loading: Arc<Mutex<bool>>,
     loading_condvar: Arc<Condvar>,
     reload_model_on_next_use: Arc<AtomicBool>,
+    /// File transcriptions in progress; see [`FileRunGuard`].
+    file_runs: Arc<AtomicUsize>,
     /// Routes real-time audio frames to the active streaming worker; see
     /// [`StreamRouter`]. Shared with the audio recorder so per-frame feeds skip
     /// Tauri state and the manager lock.
@@ -440,6 +458,7 @@ impl TranscriptionManager {
             is_loading: Arc::new(Mutex::new(false)),
             loading_condvar: Arc::new(Condvar::new()),
             reload_model_on_next_use: Arc::new(AtomicBool::new(false)),
+            file_runs: Arc::new(AtomicUsize::new(0)),
             router: Arc::new(StreamRouter::new()),
             stream_active: Arc::new(AtomicBool::new(false)),
             next_stream_worker_id: Arc::new(AtomicU64::new(1)),
@@ -865,6 +884,15 @@ impl TranscriptionManager {
         Ok(())
     }
 
+    /// Marks a file transcription as running until the guard drops, so a dictation
+    /// started meanwhile leaves the file's model in place.
+    pub fn file_run(&self) -> FileRunGuard {
+        self.file_runs.fetch_add(1, Ordering::AcqRel);
+        FileRunGuard {
+            file_runs: Arc::clone(&self.file_runs),
+        }
+    }
+
     /// Kicks off the model loading in a background thread if it's not already loaded
     pub fn initiate_model_load(&self) {
         let mut is_loading = self.is_loading.lock().unwrap();
@@ -873,7 +901,12 @@ impl TranscriptionManager {
         }
 
         let reload_pending = self.reload_model_on_next_use.load(Ordering::Acquire);
-        if !reload_pending && self.is_model_loaded() {
+        let wrong_model = holds_foreign_model(
+            self.get_current_model().as_deref(),
+            &get_settings(&self.app_handle).selected_model,
+            self.file_runs.load(Ordering::Acquire) > 0,
+        );
+        if !reload_pending && !wrong_model && self.is_model_loaded() {
             return;
         }
 
@@ -2152,6 +2185,15 @@ pub fn get_available_accelerators() -> AvailableAccelerators {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn dictation_takes_its_model_back_unless_a_file_still_needs_the_other() {
+        assert!(holds_foreign_model(Some("file"), "dictation", false));
+        assert!(!holds_foreign_model(Some("file"), "dictation", true));
+        assert!(!holds_foreign_model(Some("dictation"), "dictation", false));
+        assert!(!holds_foreign_model(None, "dictation", false));
+        assert!(!holds_foreign_model(Some("file"), "", false));
+    }
 
     fn languages(codes: &[&str]) -> Vec<String> {
         codes.iter().map(|code| (*code).to_string()).collect()

@@ -13,12 +13,18 @@ import {
   Check,
   Copy,
   FileAudio,
-  Loader2,
   Upload,
   X,
   ChevronDown,
 } from "lucide-react";
 import { Button } from "../../ui/Button";
+import {
+  BroodStage,
+  Egg,
+  EGG_HEIGHT,
+  FlyingEgg,
+  useBroodPhase,
+} from "./DuckBrood";
 import { DragDropToggle } from "../DragDropToggle";
 import { SettingsGroup } from "../../ui/SettingsGroup";
 import { useSettings } from "../../../hooks/useSettings";
@@ -145,6 +151,7 @@ export const TranscribeSettings: React.FC = () => {
   const enqueue = useFileQueueStore((state) => state.enqueue);
   const cancel = useFileQueueStore((state) => state.cancel);
   const clearFinished = useFileQueueStore((state) => state.clearFinished);
+  const hatch = useFileQueueStore((state) => state.hatch);
 
   const [dragging, setDragging] = useState(false);
   const [modelListOpen, setModelListOpen] = useState(false);
@@ -158,6 +165,27 @@ export const TranscribeSettings: React.FC = () => {
   );
   const running = !!current;
   useTicker(running);
+
+  const stageEgg = useRef<HTMLDivElement>(null);
+  const [flight, setFlight] = useState<{ id: number; from: DOMRect } | null>(
+    null,
+  );
+  const broodPhase = useBroodPhase(running, () => {
+    const from = stageEgg.current?.getBoundingClientRect();
+    if (from && newest) setFlight({ id: newest.id, from });
+  });
+  // A cancelled run may leave no result, so count rather than assume one.
+  const settled = useRef(finished.length);
+  if (running) settled.current = finished.length;
+  // While the duck is still on the stage, a new result is the egg it is about
+  // to lay; the egg joins the list once the duck has left.
+  const layingNew =
+    !running && broodPhase !== "away" && finished.length > settled.current;
+  const shown = layingNew ? finished.slice(0, -1) : finished;
+  const newest = finished[finished.length - 1];
+  const laysEgg = layingNew && newest.status === "done" && !!newest.text.trim();
+  /** Eggs cracked while this tab is open; older ones just stay open. */
+  const freshlyHatched = useRef(new Set<number>());
 
   useEffect(() => {
     void initialize();
@@ -269,61 +297,72 @@ export const TranscribeSettings: React.FC = () => {
     <div className="space-y-4">
       <SettingsGroup title={t("shell.questions.listenFile")}>
         <div className="p-3 text-left">
-          {current ? (
-            <div className="flex items-start gap-4">
-              <Loader2 className="w-6 h-6 shrink-0 mt-0.5 text-logo-primary animate-spin" />
-              <div className="flex-1 min-w-0">
-                <div className="flex items-start gap-3">
-                  <p className="text-sm font-medium text-text truncate flex-1 min-w-0">
-                    {current.fileName}
-                  </p>
-                  {/* Stopping is a request, not an abandonment: the run finishes
-                      its current chunk and hands back everything so far. */}
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    onClick={cancel}
-                    disabled={cancelling}
-                    className="flex items-center gap-1 shrink-0"
-                  >
-                    <X className="w-3 h-3" />
-                    {cancelling
-                      ? t("transcribe.cancelling")
-                      : t("transcribe.cancel")}
-                  </Button>
-                </div>
-                <p className="text-sm text-text/60 mt-1">
-                  {cancelling
-                    ? t("transcribe.cancellingHint")
-                    : t("transcribe.workingHint")}
-                  {waiting > 0 &&
-                    ` ${t("transcribe.queued", { count: waiting })}`}
-                </p>
-
-                {progress && progress.secondsTotal > 0 && (
-                  <div className="mt-3 space-y-1.5">
-                    <div className="h-1.5 rounded-full bg-mid-gray/20 overflow-hidden">
-                      <div
-                        className="h-full bg-logo-primary transition-[width] duration-500"
-                        style={{
-                          width: `${Math.min(100, (progress.secondsDone / progress.secondsTotal) * 100)}%`,
-                        }}
-                      />
-                    </div>
-                    <p className="text-xs text-mid-gray tabular-nums">
-                      {t("transcribe.progress", {
-                        done: formatDuration(progress.secondsDone),
-                        total: formatDuration(progress.secondsTotal),
-                      })}
-                      {remaining !== null &&
-                        ` · ${t("transcribe.remaining", {
-                          time: formatDuration(remaining),
-                        })}`}
+          {broodPhase !== "away" ? (
+            <>
+              <BroodStage
+                phase={broodPhase}
+                laysEgg={laysEgg}
+                eggRef={stageEgg}
+                done={
+                  progress && progress.secondsTotal > 0
+                    ? progress.secondsDone / progress.secondsTotal
+                    : 0
+                }
+              />
+              {current && (
+                <div className="min-w-0 mt-1">
+                  <div className="flex items-start gap-3">
+                    <p className="text-sm font-medium text-text truncate flex-1 min-w-0">
+                      {current.fileName}
                     </p>
+                    {/* Stopping is a request, not an abandonment: the run finishes
+                      its current chunk and hands back everything so far. */}
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={cancel}
+                      disabled={cancelling}
+                      className="flex items-center gap-1 shrink-0"
+                    >
+                      <X className="w-3 h-3" />
+                      {cancelling
+                        ? t("transcribe.cancelling")
+                        : t("transcribe.cancel")}
+                    </Button>
                   </div>
-                )}
-              </div>
-            </div>
+                  <p className="text-sm text-text/60 mt-1">
+                    {cancelling
+                      ? t("transcribe.cancellingHint")
+                      : t("transcribe.workingHint")}
+                    {waiting > 0 &&
+                      ` ${t("transcribe.queued", { count: waiting })}`}
+                  </p>
+
+                  {progress && progress.secondsTotal > 0 && (
+                    <div className="mt-3 space-y-1.5">
+                      <div className="h-1.5 rounded-full bg-mid-gray/20 overflow-hidden">
+                        <div
+                          className="h-full bg-logo-primary transition-[width] duration-500"
+                          style={{
+                            width: `${Math.min(100, (progress.secondsDone / progress.secondsTotal) * 100)}%`,
+                          }}
+                        />
+                      </div>
+                      <p className="text-xs text-mid-gray tabular-nums">
+                        {t("transcribe.progress", {
+                          done: formatDuration(progress.secondsDone),
+                          total: formatDuration(progress.secondsTotal),
+                        })}
+                        {remaining !== null &&
+                          ` · ${t("transcribe.remaining", {
+                            time: formatDuration(remaining),
+                          })}`}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
           ) : (
             <div
               className={`drop-pond px-4 py-5 text-center ${
@@ -355,31 +394,31 @@ export const TranscribeSettings: React.FC = () => {
         </div>
       </SettingsGroup>
 
-      {finished.length > 0 && (
+      {shown.length > 0 && (
         <SettingsGroup
           title={
-            finished.length > 1
+            shown.length > 1
               ? t("transcribe.resultsTitle")
-              : finished[0].status === "error"
+              : shown[0].status === "error"
                 ? t("transcribe.errorTitle")
-                : finished[0].complete
+                : shown[0].complete
                   ? t("transcribe.resultTitle")
                   : t("transcribe.partialTitle")
           }
         >
-          {finished.length > 1 && (
+          {shown.length > 1 && (
             <div className="flex justify-end gap-2 px-3.5 pb-2.5">
               {!running && (
                 <Button variant="ghost" size="sm" onClick={clearFinished}>
                   {t("transcribe.clearList")}
                 </Button>
               )}
-              {transcriptsAsText(finished) && (
+              {transcriptsAsText(shown) && (
                 <Button
                   variant="secondary"
                   size="sm"
                   onClick={() =>
-                    void handleCopy("all", transcriptsAsText(finished))
+                    void handleCopy("all", transcriptsAsText(shown))
                   }
                   className="flex items-center gap-1"
                 >
@@ -395,17 +434,52 @@ export const TranscribeSettings: React.FC = () => {
               )}
             </div>
           )}
-          {finished.map((item) => (
+          {shown.map((item) => (
             <div key={item.id} className="px-3.5 py-3 text-left space-y-2">
               <div className="flex items-center gap-2">
                 {item.status === "error" ? (
                   <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
-                ) : (
+                ) : !item.text.trim() ? (
                   <FileAudio className="w-4 h-4 shrink-0 text-logo-primary" />
+                ) : item.hatched ? (
+                  <Egg
+                    height={EGG_HEIGHT}
+                    cracked
+                    className={`egg-hatched ${
+                      freshlyHatched.current.has(item.id) ? "is-fresh" : ""
+                    }`}
+                  />
+                ) : (
+                  <button
+                    type="button"
+                    data-egg={item.id}
+                    className="egg-button"
+                    aria-label={`${t("transcribe.hatch")}: ${item.fileName}`}
+                    onClick={() => {
+                      freshlyHatched.current.add(item.id);
+                      hatch(item.id);
+                    }}
+                  >
+                    <Egg
+                      height={EGG_HEIGHT}
+                      className={
+                        flight?.id === item.id ? "invisible" : "egg-laid"
+                      }
+                    />
+                  </button>
                 )}
-                <p className="text-[13px] font-medium text-text truncate flex-1 min-w-0">
-                  {item.fileName}
-                </p>
+                <div className="flex-1 min-w-0">
+                  <p className="text-[13px] font-medium text-text truncate">
+                    {item.fileName}
+                  </p>
+                  {item.status === "done" &&
+                    item.text.trim() &&
+                    !item.hatched && (
+                      <p className="text-[11.5px] leading-4 text-text/60">
+                        {t("transcribe.hatch")}
+                      </p>
+                    )}
+                </div>
                 {item.status === "done" && item.text.trim() && (
                   <Button
                     variant="secondary"
@@ -437,24 +511,32 @@ export const TranscribeSettings: React.FC = () => {
                       {t("transcribe.partialNote")}
                     </p>
                   )}
-                  {item.text.trim() ? (
-                    <p
-                      className={`text-[13px] text-text/90 whitespace-pre-wrap overflow-y-auto leading-relaxed select-text ${
-                        finished.length > 1 ? "max-h-40" : "max-h-96"
-                      }`}
-                    >
-                      {item.text}
-                    </p>
-                  ) : (
+                  {!item.text.trim() ? (
                     <p className="text-[12px] text-text/65">
                       {t("transcribe.empty")}
                     </p>
+                  ) : (
+                    item.hatched && (
+                      <div
+                        className={`hatched-text ${
+                          freshlyHatched.current.has(item.id) ? "is-fresh" : ""
+                        }`}
+                      >
+                        <p
+                          className={`min-h-0 text-[13px] text-text/90 whitespace-pre-wrap overflow-y-auto leading-relaxed select-text ${
+                            shown.length > 1 ? "max-h-40" : "max-h-96"
+                          }`}
+                        >
+                          {item.text}
+                        </p>
+                      </div>
+                    )
                   )}
                 </>
               ) : null}
             </div>
           ))}
-          {finished.some((item) => item.status === "done") && (
+          {shown.some((item) => item.status === "done") && (
             <p className="px-3.5 py-2.5 text-[11.5px] leading-4 text-text/65">
               {t("transcribe.savedToHistory")}
             </p>
@@ -518,6 +600,15 @@ export const TranscribeSettings: React.FC = () => {
       <SettingsGroup title={t("shell.questions.dropFiles")}>
         <DragDropToggle grouped={true} />
       </SettingsGroup>
+
+      {flight && (
+        <FlyingEgg
+          key={flight.id}
+          from={flight.from}
+          target={() => document.querySelector(`[data-egg="${flight.id}"]`)}
+          onLanded={() => setFlight(null)}
+        />
+      )}
     </div>
   );
 };

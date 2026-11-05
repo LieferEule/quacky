@@ -20,7 +20,7 @@ export type QueueItem = {
   path: string;
 } & (
   | { status: "queued" | "running" }
-  | { status: "done"; text: string; complete: boolean }
+  | { status: "done"; text: string; complete: boolean; hatched?: boolean }
   /** `message` is the backend's error; none means a non-audio file. */
   | { status: "error"; message?: string }
 );
@@ -42,6 +42,8 @@ interface FileQueueState {
   cancel: () => void;
   /** Forget finished files; anything still queued or running stays. */
   clearFinished: () => void;
+  /** Crack a finished file's egg, for good: it stays open across tab switches. */
+  hatch: (id: number) => void;
 }
 
 const fileNameOf = (path: string) => path.split(/[\\/]/).pop() || path;
@@ -195,6 +197,15 @@ export const useFileQueueStore = create<FileQueueState>()((set, get) => {
       set((state) => ({
         items: state.items.filter(
           (item) => item.status === "queued" || item.status === "running",
+        ),
+      })),
+
+    hatch: (id) =>
+      set((state) => ({
+        items: state.items.map((item) =>
+          item.id === id && item.status === "done"
+            ? { ...item, hatched: true }
+            : item,
         ),
       })),
   };

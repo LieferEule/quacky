@@ -732,6 +732,7 @@
     "queued_one": "Danach kommt noch eine Datei.",
     "queued_other": "Danach kommen noch {{count}} Dateien.",
     "copyAll": "Alle kopieren",
+    "hatch": "Aufs Ei klicken, dann schlüpft der Text",
     "clearList": "Liste leeren",
     "resultsTitle": "Das habe ich gehört",
     "copiedToClipboard": "Text liegt in der Zwischenablage"

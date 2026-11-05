@@ -82,25 +82,26 @@ src/
 
 ## Fork-specific features
 
-| Feature                                                     | Where                                                                                                             |
-| ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Drop an audio file on the overlay or the main window        | `file_import.rs`, `commands/transcription.rs::transcribe_file`, `src/overlay/RecordingOverlay.tsx`, `src/App.tsx` |
-| Pick an audio file from _General_                           | `TranscribeFileButton.tsx`                                                                                        |
-| Opus (WhatsApp voice notes) decoding                        | `file_import.rs` — `audiopus` + `ogg`; rodio/Symphonia has no Opus codec                                          |
-| ALAC (Apple Lossless) decoding                              | `symphonia` dependency in `src-tauri/Cargo.toml` — see _Decoding_                                                 |
-| Long audio transcribed in chunks                            | `managers/transcription.rs::split_for_transcription`                                                              |
-| Overlay "copied" confirmation with re-copy                  | overlay `done` state, `commands::copy_last_transcript`                                                            |
-| Shortcuts to copy / insert the last transcript              | `last_transcript.rs`, `actions.rs` (`copy_last_transcript`, `insert_last_transcript`)                             |
-| Shortcuts can be switched off                               | empty `current_binding`, `shortcut::is_disabled`                                                                  |
-| File transcription that stays in the app                    | `TranscribeSettings.tsx`, `transcribe_file(.., deliver: false)`                                                   |
-| Several files at once, in a queue                           | `src/stores/fileQueueStore.ts`, `TranscribeSettings.tsx`                                                          |
-| Finder right-click "Transcribe with Quacky"                 | `opened_files.rs`, `Info.plist` (`NSServices`), `macos/de.lproj/ServicesMenu.strings`                             |
-| Quack sound theme (CC0, Freesound 515408)                   | `scripts/gen_quack_sounds.py`, `resources/quack_*.wav`                                                            |
-| Waddling menu-bar duck while recording                      | `tray.rs::start_waddle`, `scripts/gen_tray_icons.py`                                                              |
-| History distinguishes microphone vs file                    | `managers/history.rs::source_from_file_name`                                                                      |
-| Voice actions (API / Codex CLI / Claude CLI)                | `actions.rs` — backend only; the AI tab was removed, so it is off unless a store already had it on                |
-| Audio ducking instead of hard mute, at a configurable speed | `managers/audio.rs`, `settings.rs::DuckingSpeed`                                                                  |
-| Double tap latches hands-free recording                     | `transcription_coordinator.rs::classify_ptt_event`, `settings.double_tap_latch` / `double_tap_window_ms`          |
+| Feature                                                     | Where                                                                                                                   |
+| ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Drop an audio file on the overlay or the main window        | `file_import.rs`, `commands/transcription.rs::transcribe_file`, `src/overlay/RecordingOverlay.tsx`, `src/App.tsx`       |
+| Pick an audio file from _General_                           | `TranscribeFileButton.tsx`                                                                                              |
+| Opus (WhatsApp voice notes) decoding                        | `file_import.rs` — `audiopus` + `ogg`; rodio/Symphonia has no Opus codec                                                |
+| ALAC (Apple Lossless) decoding                              | `symphonia` dependency in `src-tauri/Cargo.toml` — see _Decoding_                                                       |
+| Long audio transcribed in chunks                            | `managers/transcription.rs::split_for_transcription`                                                                    |
+| Overlay "copied" confirmation with re-copy                  | overlay `done` state, `commands::copy_last_transcript`                                                                  |
+| Shortcuts to copy / insert the last transcript              | `last_transcript.rs`, `actions.rs` (`copy_last_transcript`, `insert_last_transcript`)                                   |
+| Shortcuts can be switched off                               | empty `current_binding`, `shortcut::is_disabled`                                                                        |
+| File transcription that stays in the app                    | `TranscribeSettings.tsx`, `transcribe_file(.., deliver: false)`                                                         |
+| Several files at once, in a queue                           | `src/stores/fileQueueStore.ts`, `TranscribeSettings.tsx`                                                                |
+| Finder right-click "Transcribe with Quacky"                 | `opened_files.rs`, `Info.plist` (`NSServices`), `macos/de.lproj/ServicesMenu.strings`                                   |
+| Duck broods on the text, the result is an egg to hatch      | `settings/transcribe/DuckBrood.tsx`, `TranscribeSettings.tsx`, `fileQueueStore.hatch`, `brood-*` / `egg-*` in `App.css` |
+| Quack sound theme (CC0, Freesound 515408)                   | `scripts/gen_quack_sounds.py`, `resources/quack_*.wav`                                                                  |
+| Waddling menu-bar duck while recording                      | `tray.rs::start_waddle`, `scripts/gen_tray_icons.py`                                                                    |
+| History distinguishes microphone vs file                    | `managers/history.rs::source_from_file_name`                                                                            |
+| Voice actions (API / Codex CLI / Claude CLI)                | `actions.rs` — backend only; the AI tab was removed, so it is off unless a store already had it on                      |
+| Audio ducking instead of hard mute, at a configurable speed | `managers/audio.rs`, `settings.rs::DuckingSpeed`                                                                        |
+| Double tap latches hands-free recording                     | `transcription_coordinator.rs::classify_ptt_event`, `settings.double_tap_latch` / `double_tap_window_ms`                |
 
 `transcribe_file` is deliberately **not** gated on `drag_drop_enabled`: the drop
 sites check the setting themselves, and clicking the picker is consent enough.
@@ -182,6 +183,23 @@ it works, a drop on another tab joins the queue instead of starting a second run
 because two chunked runs would share one cancel flag and partial buffer. Import
 WAVs are named in milliseconds: a queue finishes short files within one second,
 and whole seconds made the later file overwrite the earlier one's recording.
+
+**The duck outlasts the transcription.** `useBroodPhase` plays arrival (1 s) and
+laying (1.7 s) in full even when a voice note is done sooner, so the newest result
+stays out of the list until the duck has left, at most about 2.7 s. Those durations
+exist twice: in `DuckBrood.tsx` and in `brood-arrive` / `brood-leave`. `FlyingEgg`
+then carries the egg to its row, measuring the target after the stage has swapped
+for the drop zone, and the row's own egg stays hidden until it lands. Copying works
+on an unhatched egg; the print positions in `DuckBrood.tsx` follow the duck's
+keyframes by hand; no egg is laid for an error, an empty transcript or a cancel
+that kept nothing.
+
+**A file's model must not outlive the file.** `transcribe_file` may load
+`file_transcription_model`, evicting the dictation model. `initiate_model_load`
+therefore reloads `selected_model` when something else is loaded, except while
+`file_run()` says a file is still running. Without this the dictation after a file
+stays on a model that may not stream, and live text silently disappears although
+the right model is selected.
 
 **The Finder service only works from a registered bundle.** macOS routes it to the
 `.app` by bundle identifier, so a dev binary never receives it, and `NSPortName`
@@ -325,7 +343,7 @@ skips the build. It does **not** touch Rust — run those checks yourself from
 `src-tauri/`:
 
 ```bash
-cargo test         # 170 tests at 0.4.0
+cargo test         # 171 tests at 0.4.3
 cargo check
 cargo fmt -- --check
 ```

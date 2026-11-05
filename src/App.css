@@ -319,7 +319,11 @@
 @media (prefers-reduced-motion: reduce) {
   .duck-say,
   .section-page,
-  .hero-duck {
+  .hero-duck,
+  .brood *,
+  .egg,
+  .egg *,
+  .hatched-text {
     animation: none !important;
   }
 }
@@ -448,4 +452,463 @@
   background: color-mix(in srgb, var(--color-background-ui) 10%, transparent);
   box-shadow: inset 0 0 0 1.5px
     color-mix(in srgb, var(--color-background-ui) 60%, transparent);
+}
+
+/* The Files tab while a file runs: the text, the duck brooding on it, and at
+   the end the egg it has become. `useBroodPhase` times the phases against
+   `brood-arrive` (1s) and `brood-leave` (1.7s). */
+.brood {
+  --brood-sink: calc(var(--brood-done, 0) * 0.45);
+  position: relative;
+  height: 68px;
+  overflow: hidden;
+  color: var(--accent-ink);
+}
+
+/* `scale` and `translate` carry the progress, `transform` the keyframes, so
+   neither overwrites the other. */
+.brood-paper {
+  position: absolute;
+  left: calc(50% - 20px);
+  bottom: 4px;
+  width: 40px;
+  height: 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  padding-inline: 7px;
+  border-radius: 3px;
+  background: light-dark(#fff, rgb(255 255 255 / 0.14));
+  box-shadow:
+    0 0 0 0.5px var(--glass-rim),
+    0 1px 3px rgb(0 0 0 / 0.12);
+  scale: calc(1 - var(--brood-sink));
+  transform-origin: 50% 100%;
+  transition: scale 600ms var(--ease-out);
+}
+
+.brood-paper i {
+  display: block;
+  height: 1.5px;
+  border-radius: 1px;
+  background: var(--color-text);
+  opacity: 0.32;
+  transform-origin: left;
+  animation: brood-write 2.4s var(--ease-out) infinite;
+}
+
+.brood-paper i:nth-child(2) {
+  width: 76%;
+  animation-delay: 300ms;
+}
+
+.brood-paper i:nth-child(3) {
+  width: 90%;
+  animation-delay: 600ms;
+}
+
+.brood[data-phase="laying"] .brood-paper {
+  opacity: 0;
+  animation: brood-paper-out 1.7s linear;
+}
+
+@keyframes brood-write {
+  0% {
+    transform: scaleX(0);
+  }
+  45%,
+  100% {
+    transform: scaleX(1);
+  }
+}
+
+/* Squeezed in three visible pushes, into the egg's size and then away. */
+@keyframes brood-paper-out {
+  0%,
+  20% {
+    opacity: 1;
+    transform: none;
+  }
+  27% {
+    opacity: 1;
+    transform: scale(0.8, 0.9) rotate(-3deg);
+  }
+  32% {
+    opacity: 1;
+    transform: scale(0.84, 0.86) rotate(2deg);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(0.56, 0.68) rotate(4deg);
+  }
+  46% {
+    opacity: 1;
+    transform: scale(0.6, 0.62) rotate(-3deg);
+  }
+  56% {
+    opacity: 1;
+    transform: scale(0.3, 0.4) rotate(-6deg);
+  }
+  60%,
+  100% {
+    opacity: 0;
+    transform: scale(0.16);
+  }
+}
+
+/* Sits overlapping the top of the paper; 22px further down is the ground. */
+.brood-duck {
+  position: absolute;
+  left: calc(50% - 17px);
+  bottom: 22px;
+  line-height: 0;
+  translate: 0 calc(22px * var(--brood-sink));
+  transition: translate 600ms var(--ease-out);
+}
+
+.brood[data-phase="arriving"] .brood-duck {
+  animation: brood-arrive 1s linear both;
+}
+
+.brood[data-phase="laying"] .brood-duck {
+  animation: brood-leave 1.7s linear both;
+}
+
+.brood[data-phase="arriving"] .brood-duck-body,
+.brood[data-phase="laying"] .brood-duck-body {
+  transform-origin: 50% 100%;
+  animation: brood-waddle 240ms ease-in-out infinite alternate;
+}
+
+.brood[data-phase="sitting"] .brood-duck-body {
+  transform-origin: 50% 100%;
+  animation: brood-settle 4.8s ease-in-out infinite;
+}
+
+@keyframes brood-arrive {
+  0% {
+    transform: translate(120px, 22px);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  65% {
+    transform: translate(44px, 22px);
+  }
+  84% {
+    transform: translate(18px, -8px);
+  }
+  100% {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* Off the paper first, so it can be seen shrinking, then out of the frame. */
+@keyframes brood-leave {
+  0%,
+  4% {
+    transform: none;
+    opacity: 1;
+  }
+  12% {
+    transform: translate(-18px, -10px);
+  }
+  20% {
+    transform: translate(-44px, 22px);
+    opacity: 1;
+  }
+  52%,
+  100% {
+    transform: translate(-150px, 22px);
+    opacity: 0;
+  }
+}
+
+/* Only out while the duck is in the air or landing. */
+.brood-wing {
+  position: absolute;
+  left: 19px;
+  top: 7px;
+  width: 13px;
+  height: 9px;
+  fill: currentColor;
+  opacity: 0;
+  transform-origin: 8% 92%;
+}
+
+.brood[data-phase="arriving"] .brood-wing {
+  animation:
+    brood-flap 90ms linear infinite alternate,
+    brood-wing-in 1s linear both;
+}
+
+.brood[data-phase="sitting"] .brood-wing {
+  animation:
+    brood-flap 90ms linear infinite alternate,
+    brood-wing-land 480ms linear both;
+}
+
+.brood[data-phase="laying"] .brood-wing {
+  animation:
+    brood-flap 90ms linear infinite alternate,
+    brood-wing-off 1.7s linear both;
+}
+
+@keyframes brood-flap {
+  from {
+    transform: rotate(36deg) scaleY(0.7);
+  }
+  to {
+    transform: rotate(-20deg);
+  }
+}
+
+@keyframes brood-wing-in {
+  0%,
+  62% {
+    opacity: 0;
+  }
+  66%,
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes brood-wing-land {
+  0%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes brood-wing-off {
+  0%,
+  2% {
+    opacity: 0;
+  }
+  4%,
+  22% {
+    opacity: 1;
+  }
+  25%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.brood-print {
+  position: absolute;
+  width: 8px;
+  height: 7px;
+  fill: currentColor;
+  opacity: 0;
+  animation: brood-print 900ms var(--ease-out) both;
+}
+
+@keyframes brood-print {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  18% {
+    opacity: 0.6;
+    transform: scale(1.35);
+  }
+  30%,
+  65% {
+    opacity: 0.5;
+    transform: none;
+  }
+  100% {
+    opacity: 0;
+    transform: none;
+  }
+}
+
+@keyframes brood-waddle {
+  from {
+    transform: rotate(-6deg);
+  }
+  to {
+    transform: rotate(6deg);
+  }
+}
+
+/* Breathing, then a shimmy to get comfortable. */
+@keyframes brood-settle {
+  0%,
+  20%,
+  40%,
+  60%,
+  100% {
+    transform: none;
+  }
+  10%,
+  30%,
+  50% {
+    transform: scale(1.03, 0.96);
+  }
+  72% {
+    transform: rotate(-4deg);
+  }
+  78% {
+    transform: rotate(4deg);
+  }
+  84% {
+    transform: rotate(-3deg);
+  }
+  90% {
+    transform: rotate(2deg);
+  }
+}
+
+.egg {
+  --egg-shell: light-dark(#fff3dd, #fdeccd);
+  flex: none;
+  overflow: visible;
+  color: var(--accent-ink);
+}
+
+.brood-egg {
+  position: absolute;
+  left: calc(50% - 10.5px);
+  bottom: 4px;
+  line-height: 0;
+  transform-origin: 50% 100%;
+  animation: brood-egg-in 1.7s linear both;
+}
+
+/* Springs up where the paper vanished and bounces itself out. */
+@keyframes brood-egg-in {
+  0%,
+  56% {
+    transform: scale(0);
+  }
+  66% {
+    transform: translateY(-24px) scale(1.04, 1.08);
+  }
+  76% {
+    transform: scale(1.18, 0.8);
+  }
+  84% {
+    transform: translateY(-10px);
+  }
+  90% {
+    transform: scale(1.08, 0.92);
+  }
+  95% {
+    transform: translateY(-3px);
+  }
+  100% {
+    transform: none;
+  }
+}
+
+.flying-egg {
+  position: fixed;
+  z-index: 50;
+  line-height: 0;
+  pointer-events: none;
+}
+
+.egg-button {
+  flex: none;
+  display: block;
+  line-height: 0;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.egg-laid {
+  transform-origin: 50% 100%;
+  animation: egg-pop 420ms var(--ease-out) backwards;
+  transition: transform 160ms var(--ease-out);
+}
+
+.egg-button:hover .egg-laid {
+  transform: rotate(-6deg);
+}
+
+.egg-button:active .egg-laid {
+  transform: scale(0.92);
+}
+
+@keyframes egg-pop {
+  from {
+    transform: scale(0);
+  }
+  70% {
+    transform: scale(1.1, 0.95);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* Cracked open for good: the top half sits ajar like a lid, and the text comes
+   out of the gap. */
+.egg-hatched .egg-top {
+  transform-box: fill-box;
+  transform-origin: 90% 100%;
+  transform: translate(1px, -2.5px) rotate(16deg);
+}
+
+.egg-hatched.is-fresh {
+  transform-origin: 50% 100%;
+  animation: egg-crack 280ms linear;
+}
+
+.egg-hatched.is-fresh .egg-top {
+  animation: egg-top-open 460ms var(--ease-out) 220ms backwards;
+}
+
+@keyframes egg-crack {
+  25% {
+    transform: rotate(-9deg);
+  }
+  50% {
+    transform: rotate(8deg);
+  }
+  75% {
+    transform: rotate(-5deg);
+  }
+}
+
+@keyframes egg-top-open {
+  from {
+    transform: none;
+  }
+  60% {
+    transform: translate(1.5px, -4px) rotate(26deg);
+  }
+}
+
+/* Grows out of the egg, whose gap sits above and at the start of this block. */
+.hatched-text {
+  display: grid;
+  grid-template-rows: 1fr;
+  transform-origin: 14px -22px;
+}
+
+.hatched-text.is-fresh {
+  animation: hatched-text-out 560ms var(--ease-out) 260ms backwards;
+}
+
+@keyframes hatched-text-out {
+  from {
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transform: scale(0.06);
+  }
+  65% {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transform: scale(1.02);
+  }
 }
