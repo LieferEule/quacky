@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { listen } from "@tauri-apps/api/event";
-import QuackyMark from "../../icons/QuackyMark";
+import QuackyDuck from "../../icons/QuackyDuck";
 import { useSettings } from "../../../hooks/useSettings";
 import { useOsType } from "../../../hooks/useOsType";
 import { formatKeyCombination } from "../../../lib/utils/keyboard";
@@ -71,7 +71,7 @@ export const DictateStatus: React.FC = () => {
       data-state={state}
       aria-live="polite"
     >
-      <QuackyMark size={36} className="hero-duck text-accent-ink" />
+      <QuackyDuck size={36} className="hero-duck" />
       <div className="min-w-0 flex-1">
         <h1 className="text-[15px] font-semibold leading-5">{title}</h1>
         <p className="text-[12px] leading-5 text-text/70 truncate">

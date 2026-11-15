@@ -1,5 +1,5 @@
 import React from "react";
-import QuackyMark from "./QuackyMark";
+import QuackyDuck from "./QuackyDuck";
 
 const BRAND_NAME = "Quacky";
 
@@ -21,7 +21,7 @@ const QuackyLogo: React.FC<QuackyLogoProps> = ({
     role="img"
     aria-label={BRAND_NAME}
   >
-    <QuackyMark className="h-[1.35em] w-[1.35em] text-logo-primary" />
+    <QuackyDuck className="h-[1.35em] w-[1.35em]" />
     <span
       className="text-[0.96em] font-semibold leading-none tracking-[-0.045em] text-text"
       style={{

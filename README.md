@@ -119,6 +119,8 @@ which forked from [Handy](https://github.com/cjpais/Handy) by CJ Pais.
 Copyright and contribution history from both remain intact.
 
 The Quacky name, duck mark and wordmark are this fork's own and reuse neither
-project's artwork. The duck lives in `src/components/icons/QuackyMark.tsx` and
-`src-tauri/icons/app-icon.svg`; the tray icons under `src-tauri/resources/` are
-rendered from it by `scripts/gen_tray_icons.py`.
+project's artwork. The duck lives in `src/components/icons/QuackyMark.tsx`
+(one colour) and `QuackyDuck.tsx` (in its colours). The app icon is drawn by
+`scripts/gen_app_icon.py` into `src-tauri/icons/app-icon.svg` and the bundle
+sizes; the tray icons under `src-tauri/resources/` are rendered from that SVG by
+`scripts/gen_tray_icons.py`.

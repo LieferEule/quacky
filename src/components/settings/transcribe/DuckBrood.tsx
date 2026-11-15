@@ -1,6 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import QuackyMark from "../../icons/QuackyMark";
+import QuackyDuck from "../../icons/QuackyDuck";
 
 export type BroodPhase = "away" | "arriving" | "sitting" | "laying";
 
@@ -198,7 +198,7 @@ export const BroodStage: React.FC<{
         </div>
       )}
       <div className="brood-duck">
-        <QuackyMark size={34} className="brood-duck-body" />
+        <QuackyDuck size={34} className="brood-duck-body" />
         <svg
           viewBox="0 0 12 8"
           className="brood-wing"

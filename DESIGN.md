@@ -10,8 +10,10 @@ colors:
   roast-ink: "#1a1512"
   warm-bone: "#ece7dd"
   reed-gray: "#808080"
-  duck-stroke-light: "#2a1408"
-  duck-stroke-dark: "#ffce9e"
+  duck-line: "#2973db"
+  duck-fill: "#ffffff"
+  duck-bill: "#ff8c26"
+  duck-print: "#6b9edb"
   glass-card-light: "rgb(255 255 255 / 0.72)"
   glass-card-dark: "rgb(255 255 255 / 0.07)"
   glass-control-light: "rgb(255 255 255 / 0.82)"
@@ -152,7 +154,7 @@ A warm neutral pair (paper by day, near-black pond by night) under glass, with o
 ### Primary
 
 - **Quacky Orange** (`quacky-orange`): fills only. Chosen answer chips, primary buttons, Glisse switch and slider fill (`--lg-on`, `--lg-fill`), the active model card's inner rim (70% mix), the drop pond's hover wash (10%) and rim (60%), text selection (28%).
-- **Accent Ink** (`accent-ink-light` / `accent-ink-dark`, via `light-dark()`): the accent as text, icons and marks. Deepened 10% toward black on light ground, lifted 40% toward white on dark glass. Duck avatar, hero duck, quack meter bars, `.text-logo-primary`, focus ring (75%).
+- **Accent Ink** (`accent-ink-light` / `accent-ink-dark`, via `light-dark()`): the accent as text, icons and marks. Deepened 10% toward black on light ground, lifted 40% toward white on dark glass. Quack meter bars, `.text-logo-primary`, focus ring (75%).
 
 ### Neutral
 
@@ -160,7 +162,10 @@ A warm neutral pair (paper by day, near-black pond by night) under glass, with o
 - **Roast Ink** / **Warm Bone**: body text in light / dark. Secondary text is the same ink at 65% (descriptions, subtitles), 70% for the hero subline.
 - **Reed Gray**: the base of the non-macOS glass fallbacks (control 10%, rim 20%, hairline 16%).
 - **Glass card / control / pop / rim / sheen** (light and dark pairs above): the macOS translucent material set. Row dividers use `--glass-hair` (`rgb(0 0 0 / 0.07)` light, `rgb(255 255 255 / 0.08)` dark).
-- **Duck Stroke** (light / dark): the mark's outline only.
+
+### The Duck ("Pfütze", shared with Puddle)
+
+- **Duck Line** `#2973db`, **Duck Fill** white, **Duck Bill** `#ff8c26`, **Duck Print** `#6b9edb` (`--duck-*`): the duck as a character (`QuackyDuck`) wears its own colours, the same on light and dark, and does not follow the accent. Water-blue lines, white inside, orange bill, legs and feet (the cells between the legs too). Used for the duck avatar, the hero duck, the wordmark, the brooding duck and its wing, its footprints and the egg's outline. The one-colour `QuackyMark` stays for places that follow the text colour; the tray icons stay monochrome templates.
 
 ### Named Rules
 
@@ -215,7 +220,7 @@ Soft and continuous. Speech bubbles are 18px with a 6px tail corner at top-left,
 
 ### Speech Bubble and Duck Avatar
 
-The signature. A `section` with a 28px circular glass avatar (15px duck mark in accent ink, 6px top offset) and a bubble holding the question header (14px by 12px padding) and rows separated by glass hairlines. Bubbles settle in on `duck-say` (420ms ease-out, from 0.25 opacity, 8px down, 0.985 scale), staggered 60/120/180ms.
+The signature. A `section` with a 28px circular glass avatar (15px coloured duck, 6px top offset) and a bubble holding the question header (14px by 12px padding) and rows separated by glass hairlines. Bubbles settle in on `duck-say` (420ms ease-out, from 0.25 opacity, 8px down, 0.985 scale), staggered 60/120/180ms.
 
 ### Navigation
 
@@ -244,7 +249,7 @@ Shortcuts shown as macOS glyphs (⌘ ⌥ ⌃ ⇧) in a 22px glass key: min 26px 
 
 ### Dictate Hero and Quack Meter
 
-A 36px duck in accent ink, the hero line, a subline with the key cap and the model, and a five-bar meter on the trailing edge (3px bars, 3px gap, 26px tall, accent ink). At rest the bars hold a still wave (5/9/13/9/5px, 55% opacity); while recording each bar is `4px + 20px * level` at full opacity, and the duck bobs (1100ms). Transcribing tilts the duck -6deg.
+A 36px coloured duck, the hero line, a subline with the key cap and the model, and a five-bar meter on the trailing edge (3px bars, 3px gap, 26px tall, accent ink). At rest the bars hold a still wave (5/9/13/9/5px, 55% opacity); while recording each bar is `4px + 20px * level` at full opacity, and the duck bobs (1100ms). Transcribing tilts the duck -6deg.
 
 ### Model Card
 

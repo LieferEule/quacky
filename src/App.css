@@ -93,6 +93,13 @@
  */
 :root {
   color-scheme: light dark;
+  /* The duck's own colours ("Pfütze", shared with Puddle), the same on light
+     and dark: water-blue lines, white inside, orange bill and feet, muted
+     blue footprints. They do not follow the accent. */
+  --duck-line: #2973db;
+  --duck-fill: #fff;
+  --duck-bill: #ff8c26;
+  --duck-print: #6b9edb;
   --glass-card: var(--color-background);
   --glass-control: color-mix(in srgb, var(--color-mid-gray) 10%, transparent);
   --glass-pop: var(--color-background);
@@ -634,7 +641,7 @@
   top: 7px;
   width: 13px;
   height: 9px;
-  fill: currentColor;
+  fill: var(--duck-line);
   opacity: 0;
   transform-origin: 8% 92%;
 }
@@ -706,7 +713,7 @@
   position: absolute;
   width: 8px;
   height: 7px;
-  fill: currentColor;
+  fill: var(--duck-print);
   opacity: 0;
   animation: brood-print 900ms var(--ease-out) both;
 }
@@ -717,12 +724,12 @@
     transform: scale(0);
   }
   18% {
-    opacity: 0.6;
+    opacity: 0.9;
     transform: scale(1.35);
   }
   30%,
   65% {
-    opacity: 0.5;
+    opacity: 0.75;
     transform: none;
   }
   100% {
@@ -772,7 +779,7 @@
   --egg-shell: light-dark(#fff3dd, #fdeccd);
   flex: none;
   overflow: visible;
-  color: var(--accent-ink);
+  color: var(--duck-line);
 }
 
 .brood-egg {

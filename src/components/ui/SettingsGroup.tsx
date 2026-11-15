@@ -1,5 +1,5 @@
 import React from "react";
-import QuackyMark from "../icons/QuackyMark";
+import QuackyDuck from "../icons/QuackyDuck";
 
 interface SettingsGroupProps {
   title?: string;
@@ -19,7 +19,7 @@ export const SettingsGroup: React.FC<SettingsGroupProps> = ({
   return (
     <section className="duck-say flex items-start gap-2.5">
       <span className="duck-avatar" aria-hidden="true">
-        <QuackyMark size={15} />
+        <QuackyDuck size={15} />
       </span>
       <div className="duck-bubble min-w-0 flex-1">
         {title && (
