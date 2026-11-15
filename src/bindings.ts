@@ -1086,7 +1086,7 @@ audio_ducking_speed?: DuckingSpeed; append_trailing_space?: boolean; app_languag
 file_transcription_model?: string | null; 
 /**
  * User-picked accent color as a `#rrggbb` hex string. `None` keeps the
- * built-in Quacky orange. Overrides `--color-logo-primary` /
+ * built-in Pfütze blue. Overrides `--color-logo-primary` /
  * `--color-background-ui` at runtime (see `lib/utils/theme.ts`).
  */
 accent_color?: string | null; experimental_enabled?: boolean; lazy_stream_close?: boolean; keyboard_implementation?: KeyboardImplementation; show_tray_icon?: boolean; paste_delay_ms?: number; paste_delay_after_ms?: number; typing_tool?: TypingTool; external_script_path?: string | null; custom_filler_words?: string[] | null; transcribe_accelerator?: TranscribeAcceleratorSetting; ort_accelerator?: OrtAcceleratorSetting; transcribe_gpu_device?: number; extra_recording_buffer_ms?: number; vad_enabled?: boolean; 

@@ -40,9 +40,9 @@ GRID = [
     "...##oooooo##########ooooo##..",
     ".....##ooooooooooooooooo##....",
     ".......#################......",
-    "...........##oooo##...........",
-    ".....########oo####...........",
-    ".............######...........",
+    "...........##....##...........",
+    "...........##....##...........",
+    ".......######..######.........",
 ]
 
 LINE = "#2973DB"
@@ -70,7 +70,8 @@ def part(row, col):
 
 
 # The puddle she stands in, in pixel steps: (first col, width) per half row.
-# It starts behind her last row, so the feet are in the water.
+# It starts behind her last row, so the feet are in the water. The legs match
+# QuackyDuck's standing pose, not the original mark.
 PUDDLE_Y = DY + 15 * CH
 PUDDLE = [(5, 16), (2, 22), (1, 24), (2, 22), (5, 16)]
 PUDDLE_ROW = CH // 2

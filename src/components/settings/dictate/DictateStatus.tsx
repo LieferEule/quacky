@@ -9,6 +9,13 @@ import { formatKeyCombination } from "../../../lib/utils/keyboard";
 type RecordingState = "idle" | "recording" | "transcribing";
 
 const METER_BARS = 5;
+// Which of the 16 level buckets each bar shows: the loudest, lowest one in the
+// middle, falling off to both sides like the bars' resting wave.
+const METER_BUCKETS = [3, 1, 0, 2, 4];
+// As in the recording overlay (RecordingOverlay.tsx).
+const METER_GAIN = 2.25;
+const METER_ATTACK = 0.62;
+const METER_RELEASE = 0.18;
 
 /**
  * The top of Dictate: whether Quacky is ready, how to start it, and the quack
@@ -30,15 +37,23 @@ export const DictateStatus: React.FC = () => {
     );
     // Levels go straight to the bars' style, not through React state: ten
     // updates a second would otherwise re-render the whole row each time.
+    const smoothed = Array<number>(METER_BARS).fill(0);
     const unlistenLevel = listen<number[]>("mic-level", (event) => {
       const bars = meterRef.current?.children;
       if (!bars) return;
       const levels = event.payload;
       for (let i = 0; i < bars.length; i++) {
-        const level = levels[Math.floor((i / bars.length) * levels.length)];
+        // A voice lives in the lowest buckets; the overlay reads the same ones
+        // with the same gain.
+        const target = Math.min(
+          1,
+          (levels[METER_BUCKETS[i]] ?? 0) * METER_GAIN,
+        );
+        const response = target > smoothed[i] ? METER_ATTACK : METER_RELEASE;
+        smoothed[i] += (target - smoothed[i]) * response;
         (bars[i] as HTMLElement).style.setProperty(
           "--level",
-          String(Math.min(1, level ?? 0)),
+          smoothed[i].toFixed(3),
         );
       }
     });

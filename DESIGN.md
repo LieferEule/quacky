@@ -2,9 +2,9 @@
 name: Quacky
 description: Local speech-to-text for macOS; a Liquid Glass settings window where the duck asks and you answer.
 colors:
-  quacky-orange: "#ff6600"
-  accent-ink-light: "color-mix(in oklab, #ff6600 90%, black)"
-  accent-ink-dark: "color-mix(in oklab, #ff6600 60%, white)"
+  pfuetze-blue: "#2973db"
+  accent-ink-light: "color-mix(in oklab, #2973db 90%, black)"
+  accent-ink-dark: "color-mix(in oklab, #2973db 60%, white)"
   daylight-paper: "#faf8f4"
   pond-night: "#0c0e0d"
   roast-ink: "#1a1512"
@@ -97,11 +97,11 @@ components:
     padding: "0 11px"
     height: "26px"
   answer-chip-chosen:
-    backgroundColor: "{colors.quacky-orange}"
+    backgroundColor: "{colors.pfuetze-blue}"
     textColor: "#ffffff"
     rounded: "{rounded.capsule}"
   button-primary:
-    backgroundColor: "{colors.quacky-orange}"
+    backgroundColor: "{colors.pfuetze-blue}"
     textColor: "#ffffff"
     rounded: "{rounded.capsule}"
     padding: "5px 16px"
@@ -142,18 +142,18 @@ Depth comes from the window's own glass, not from painted backgrounds: on macOS 
 **Key Characteristics:**
 
 - System glass ground; surfaces are translucent panes with a 0.5px rim and a 1px inset top sheen.
-- One accent, Quacky orange, fixed; text and icons in the accent go through accent ink.
+- One accent, Pfütze blue (the duck's line colour, shared with Puddle), fixed; text and icons in the accent go through accent ink.
 - SF system type throughout, small and precise (11.5 to 17px).
 - Short fixed choices are answer chips, not menus.
 - Motion is a spring for what travels and a short ease-out for what appears.
 
 ## Colors
 
-A warm neutral pair (paper by day, near-black pond by night) under glass, with one orange voice.
+A warm neutral pair (paper by day, near-black pond by night) under glass, with one blue voice.
 
 ### Primary
 
-- **Quacky Orange** (`quacky-orange`): fills only. Chosen answer chips, primary buttons, Glisse switch and slider fill (`--lg-on`, `--lg-fill`), the active model card's inner rim (70% mix), the drop pond's hover wash (10%) and rim (60%), text selection (28%).
+- **Pfütze Blue** (`pfuetze-blue`): fills only. Was Quacky orange until 0.4.6; orange now lives only on the duck's bill and feet. Chosen answer chips, primary buttons, Glisse switch and slider fill (`--lg-on`, `--lg-fill`), the active model card's inner rim (70% mix), the drop pond's hover wash (10%) and rim (60%), text selection (28%).
 - **Accent Ink** (`accent-ink-light` / `accent-ink-dark`, via `light-dark()`): the accent as text, icons and marks. Deepened 10% toward black on light ground, lifted 40% toward white on dark glass. Quack meter bars, `.text-logo-primary`, focus ring (75%).
 
 ### Neutral
@@ -165,13 +165,13 @@ A warm neutral pair (paper by day, near-black pond by night) under glass, with o
 
 ### The Duck ("Pfütze", shared with Puddle)
 
-- **Duck Line** `#2973db`, **Duck Fill** white, **Duck Bill** `#ff8c26`, **Duck Print** `#6b9edb` (`--duck-*`): the duck as a character (`QuackyDuck`) wears its own colours, the same on light and dark, and does not follow the accent. Water-blue lines, white inside, orange bill, legs and feet (the cells between the legs too). Used for the duck avatar, the hero duck, the wordmark, the brooding duck and its wing, its footprints and the egg's outline. The one-colour `QuackyMark` stays for places that follow the text colour; the tray icons stay monochrome templates.
+- **Duck Line** `#2973db`, **Duck Fill** white, **Duck Bill** `#ff8c26`, **Duck Print** `#6b9edb` (`--duck-*`): the duck as a character (`QuackyDuck`) wears its own colours, the same on light and dark, and does not follow the accent. Water-blue lines, white inside, orange bill and two separate legs with the feet pointing ahead. Used for the duck avatar, the hero duck, the wordmark, the brooding duck and its wing, and its footprints. The egg is a plain cream hen's egg (`--egg-*`): tan rim, a glint top left, shade bottom right, soft brown speckles and a darker crack. The one-colour `QuackyMark` stays for places that follow the text colour; the tray icons stay monochrome templates.
 
 ### Named Rules
 
-**The Ink-Not-Fill Rule.** Accent as text or icon always uses accent ink; fills, rings and borders keep `#ff6600` exactly. Raw `--color-logo-primary` on text is a defect.
+**The Ink-Not-Fill Rule.** Accent as text or icon always uses accent ink; fills, rings and borders keep `#2973db` exactly. Raw `--color-logo-primary` on text is a defect.
 
-**The One Voice Rule.** Orange marks selection, chosen answers, switches and the meter. Status colours (red, yellow, green at 10% washes) appear only in alerts.
+**The One Voice Rule.** Blue marks selection, chosen answers, switches and the meter. Status colours (red, yellow, green at 10% washes) appear only in alerts.
 
 ## Typography
 
@@ -228,13 +228,13 @@ Glisse `SegmentedControl` centred in the title bar, 78 by 30px tabs, 12.5px/500.
 
 ### Answer Chips
 
-`Dropdown variant="chips"` for short fixed enums: right-aligned capsules, 26px tall, 6px gap, glass control with sheen and rim. Hover lifts 1px, press scales to 0.96 on the paddle spring (260ms). Chosen: orange fill, white text, inner top highlight `rgb(255 255 255 / 0.3)`. Arrow keys move the choice. Disabled at 50%.
+`Dropdown variant="chips"` for short fixed enums: right-aligned capsules, 26px tall, 6px gap, glass control with sheen and rim. Hover lifts 1px, press scales to 0.96 on the paddle spring (260ms). Chosen: blue fill, white text, inner top highlight `rgb(255 255 255 / 0.3)`. Arrow keys move the choice. Disabled at 50%.
 
 ### Buttons
 
 - **Shape:** capsule, 1px border.
-- **Primary:** orange fill, white text, 5px by 16px, 14px text; hover 80% orange.
-- **Secondary:** glass control; hover adds 30% orange wash and orange border.
+- **Primary:** blue fill, white text, 5px by 16px, 14px text; hover 80% blue.
+- **Secondary:** glass control; hover adds 30% blue wash and blue border.
 - **Ghost / Danger / Danger-ghost:** transparent or red, for destructive and tertiary actions.
 
 ### Inputs / Fields
@@ -253,13 +253,13 @@ A 36px coloured duck, the hero line, a subline with the key cap and the model, a
 
 ### Model Card
 
-Glass card, 16px radius, 12px by 16px padding, name at question size, description 12px at 65%. Active wears a 1.5px inset orange rim at 70%; featured a 1px rim at 30%. Clickable cards lift 1px on hover and press to 0.99.
+Glass card, 16px radius, 12px by 16px padding, name at question size, description 12px at 65%. Active wears a 1.5px inset blue rim at 70%; featured a 1px rim at 30%. Clickable cards lift 1px on hover and press to 0.99.
 
 ### Drop Pond
 
-Files' drop target, 14px radius, quiet at rest; while a file hovers the window it takes a 10% orange wash and a 1.5px inset rim at 60% (200ms ease-out).
+Files' drop target, 14px radius, quiet at rest; while a file hovers the window it takes a 10% blue wash and a 1.5px inset rim at 60% (200ms ease-out).
 
-While a file runs, the drop target gives way to the brood: the pixel duck waddles in from the right, leaves webbed prints behind, hops onto a small sheet of text (40×22px) with its wing fluttering and breathes there, and the sheet shrinks with the reported progress on long files. At the end the duck leaves to the left, the sheet is squeezed away in three pushes, and an egg springs up and bounces where it was. The egg then flies in a curve down to the left into its row, bouncing twice as it lands. Clicking it wobbles the egg, a zigzag crack appears, the top half stays ajar like a lid, and the text grows out of the gap.
+While a file runs, the drop target gives way to the brood: the pixel duck walks in from the right, stepping foot to foot in two pixel frames (no tilting), leaves webbed prints behind, hops onto a small sheet of text (40×22px) with its wing fluttering and breathes there, and the sheet shrinks with the reported progress on long files. At the end the duck leaves to the left, the sheet is squeezed away in three pushes, and an egg springs up and bounces where it was. The egg then flies in a curve down to the left into its row, bouncing twice as it lands. Clicking it wobbles the egg, a zigzag crack appears, the top half stays ajar like a lid, and the text grows out of the gap.
 
 ### Alert
 
@@ -279,5 +279,5 @@ Inline note, 14px by 10px padding, 16px lucide icon, 12px text. Inside a bubble 
 
 - **Don't** paint an opaque background on the macOS window; the page is transparent over system glass.
 - **Don't** reintroduce a sidebar of tiled grey rows or an info-icon tooltip for row descriptions.
-- **Don't** add a second accent or let users recolour it; the accent is fixed `#ff6600`.
+- **Don't** add a second accent or let users recolour it; the accent is fixed `#2973db`.
 - **Don't** use thick borders for emphasis on glass panes; use the inset accent rim.

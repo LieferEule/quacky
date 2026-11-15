@@ -91,6 +91,19 @@ const EGG_CELLS = EGG_ROWS.flatMap(([first, width], y) =>
   }),
 );
 const SPECKLES = new Set(["4,5", "7,3", "8,9", "3,10", "6,12"]);
+// Light from the top left: a glint there, the shell darker towards the
+// bottom right.
+const GLINT = new Set(["3,3", "3,4", "2,5", "2,6"]);
+const inShade = (x: number, y: number) => x - 6 + (y - 8) * 0.7 > 2.6;
+
+const shellColour = (x: number, y: number) =>
+  GLINT.has(`${x},${y}`)
+    ? "var(--egg-glint)"
+    : SPECKLES.has(`${x},${y}`)
+      ? "var(--egg-speckle)"
+      : inShade(x, y)
+        ? "var(--egg-shade)"
+        : "var(--egg-shell)";
 
 const eggCells = (top: boolean, cracked: boolean) =>
   EGG_CELLS.filter((cell) => cell.top === top).map(({ x, y, edge, crack }) => (
@@ -101,11 +114,11 @@ const eggCells = (top: boolean, cracked: boolean) =>
       width="1"
       height="1"
       fill={
-        edge || (cracked && crack)
-          ? "currentColor"
-          : SPECKLES.has(`${x},${y}`)
-            ? "var(--color-background-ui)"
-            : "var(--egg-shell)"
+        cracked && crack
+          ? "var(--egg-crack)"
+          : edge
+            ? "var(--egg-edge)"
+            : shellColour(x, y)
       }
     />
   ));
@@ -198,7 +211,11 @@ export const BroodStage: React.FC<{
         </div>
       )}
       <div className="brood-duck">
-        <QuackyDuck size={34} className="brood-duck-body" />
+        <QuackyDuck
+          size={34}
+          className="brood-duck-body"
+          walking={phase === "arriving" || phase === "laying"}
+        />
         <svg
           viewBox="0 0 12 8"
           className="brood-wing"

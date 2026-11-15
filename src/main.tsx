@@ -13,7 +13,7 @@ document.documentElement.dataset.platform = platform();
 
 // Apply the last-known theme synchronously before render to avoid a flash of
 // the wrong palette, then reconcile with the persisted settings. The accent is
-// always Quacky orange (theme.css); it is no longer user-pickable.
+// always Pfütze blue (theme.css); it is no longer user-pickable.
 applyTheme(getStoredTheme());
 syncThemeFromSettings();
 

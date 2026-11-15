@@ -324,6 +324,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .duck-step-other {
+    display: none;
+  }
+
   .duck-say,
   .section-page,
   .hero-duck,
@@ -582,12 +586,6 @@
   animation: brood-leave 1.7s linear both;
 }
 
-.brood[data-phase="arriving"] .brood-duck-body,
-.brood[data-phase="laying"] .brood-duck-body {
-  transform-origin: 50% 100%;
-  animation: brood-waddle 240ms ease-in-out infinite alternate;
-}
-
 .brood[data-phase="sitting"] .brood-duck-body {
   transform-origin: 50% 100%;
   animation: brood-settle 4.8s ease-in-out infinite;
@@ -738,12 +736,23 @@
   }
 }
 
-@keyframes brood-waddle {
-  from {
-    transform: rotate(-6deg);
+/* A walking duck (QuackyDuck `walking`) shows one step, then the other, as
+   pixel frames: no tilting, so the edges stay on whole pixels. */
+.duck-step {
+  animation: duck-step 240ms step-end infinite;
+}
+
+.duck-step-other {
+  animation-delay: -120ms;
+}
+
+@keyframes duck-step {
+  0% {
+    opacity: 1;
   }
-  to {
-    transform: rotate(6deg);
+  50%,
+  100% {
+    opacity: 0;
   }
 }
 
@@ -776,10 +785,15 @@
 }
 
 .egg {
-  --egg-shell: light-dark(#fff3dd, #fdeccd);
+  /* A plain hen's-egg cream with a tan rim, the same on light and dark. */
+  --egg-shell: #f8efe1;
+  --egg-shade: #ecdcc3;
+  --egg-glint: #fffdf8;
+  --egg-edge: #c8aa82;
+  --egg-speckle: #d4b48c;
+  --egg-crack: #8e6c4a;
   flex: none;
   overflow: visible;
-  color: var(--duck-line);
 }
 
 .brood-egg {

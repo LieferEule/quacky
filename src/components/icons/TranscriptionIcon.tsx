@@ -10,7 +10,7 @@ interface TranscriptionIconProps {
 const TranscriptionIcon: React.FC<TranscriptionIconProps> = ({
   width = 24,
   height = 24,
-  color = "#ff6600",
+  color = "#2973db",
   className = "",
 }) => {
   return (

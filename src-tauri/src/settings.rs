@@ -531,7 +531,7 @@ pub struct AppSettings {
     #[serde(default)]
     pub file_transcription_model: Option<String>,
     /// User-picked accent color as a `#rrggbb` hex string. `None` keeps the
-    /// built-in Quacky orange. Overrides `--color-logo-primary` /
+    /// built-in Pfütze blue. Overrides `--color-logo-primary` /
     /// `--color-background-ui` at runtime (see `lib/utils/theme.ts`).
     #[serde(default)]
     pub accent_color: Option<String>,

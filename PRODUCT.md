@@ -58,8 +58,9 @@ recording UI while it runs.
   or identity.
 - The duck mark (`src-tauri/icons/app-icon.svg`,
   `src/components/icons/QuackyMark.tsx`) and the pixel-duck tray icons.
-- Accent Quacky orange `#ff6600`, fixed. It is not user-changeable since
-  0.4.2.
+- Accent Pfütze blue `#2973db` (the duck's line colour, shared with Puddle),
+  fixed since 0.4.6; before that Quacky orange `#ff6600`. It is not
+  user-changeable since 0.4.2.
 - Voice is playful, with duck wit where it fits ("Quacky is listening",
   "Nothing quacked yet"). Everything else stays clear and short, and the
   jokes never get in the way of an instruction.

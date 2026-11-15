@@ -8,7 +8,7 @@
      so the surface stays opaque enough to read over anything. */
   --s-surface: color-mix(in srgb, var(--color-background) 84%, transparent);
   --s-sheen: rgb(255 255 255 / 0.9);
-  /* Accent = Crowbar orange; flips automatically via --color-logo-primary. */
+  /* Accent = Pfütze blue; flips automatically via --color-logo-primary. */
   --s-accent: var(--color-logo-primary);
   --s-accent-soft: color-mix(
     in srgb,
@@ -39,7 +39,7 @@
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Accent uses the brighter logo orange in dark mode for clear contrast. */
+    /* Accent uses the logo blue a touch stronger in dark mode for clear contrast. */
     --s-accent-soft: color-mix(
       in srgb,
       var(--color-logo-primary) 20%,
