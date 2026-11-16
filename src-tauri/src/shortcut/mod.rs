@@ -1324,6 +1324,43 @@ pub fn change_voice_action_context_setting(app: AppHandle, context: String) -> R
 
 #[tauri::command]
 #[specta::specta]
+pub fn update_text_replacements(
+    app: AppHandle,
+    replacements: Vec<settings::TextReplacement>,
+) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.text_replacements = replacements
+        .into_iter()
+        .map(|r| settings::TextReplacement {
+            from: r.from.trim().to_string(),
+            to: r.to,
+        })
+        .filter(|r| !r.from.is_empty())
+        .collect();
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn change_voice_commands_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.voice_commands_enabled = enabled;
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
+pub fn change_self_correction_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
+    let mut settings = settings::get_settings(&app);
+    settings.self_correction_enabled = enabled;
+    settings::write_settings(&app, settings);
+    Ok(())
+}
+
+#[tauri::command]
+#[specta::specta]
 pub fn change_append_trailing_space_setting(app: AppHandle, enabled: bool) -> Result<(), String> {
     let mut settings = settings::get_settings(&app);
     settings.append_trailing_space = enabled;

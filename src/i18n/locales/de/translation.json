@@ -5,7 +5,9 @@
     "unloadModel": "Modell entladen",
     "model": "Modell",
     "quit": "Beenden",
-    "cancel": "Abbrechen"
+    "cancel": "Abbrechen",
+    "installUpdate": "Update auf {version} installieren",
+    "installingUpdate": "Update auf {version} wird installiert …"
   },
   "sidebar": {
     "navigation": "Bereiche"
@@ -634,6 +636,33 @@
         "label": "Neuerungen anzeigen",
         "description": "Versionshinweise nach Quacky-Updates anzeigen"
       }
+    },
+    "dictationTools": {
+      "voiceCommands": {
+        "label": "Sprachbefehle",
+        "description": "Bei „neue Zeile“ und „neuer Absatz“ breche ich um. „Abschicken“ am Schluss drückt {{key}}, „lösch das“ allein nimmt dein letztes Diktat zurück."
+      },
+      "replacements": {
+        "title": "Ersetzungen",
+        "description": "Du sagst das Stichwort, ich schreibe den Text. Aus „meine Mail“ wird zum Beispiel deine Adresse.",
+        "from": "Du sagst",
+        "to": "Ich schreibe",
+        "add": "Hinzufügen",
+        "remove": "{{from}} entfernen",
+        "duplicate": "„{{from}}“ hab ich schon.",
+        "tooLong": "Höchstens {{max}} Zeichen.",
+        "emptyHint": "Leer lassen löscht das Wort.",
+        "save": "Speichern",
+        "edit": "{{from}} bearbeiten",
+        "deleted": "fällt weg",
+        "cancel": "Abbrechen"
+      },
+      "selfCorrection": {
+        "label": "Selbstkorrekturen glätten",
+        "description": "Aus „Donnerstag, nein, Freitag“ wird „Freitag“. Läuft mit Apple Intelligence auf deinem Mac, nichts geht raus.",
+        "unavailable": "Dafür brauche ich Apple Intelligence. Schalt es unter „Apple Intelligence & Siri“ ein, Siri muss dieselbe Sprache haben wie dein Mac.",
+        "openSettings": "Einstellungen öffnen"
+      }
     }
   },
   "footer": {
@@ -820,7 +849,8 @@
       "aiApi": "Mit welcher KI soll ich reden?",
       "aiPrompt": "Wie soll die KI deinen Text glätten?",
       "whoAmI": "Wer bin ich?",
-      "thanks": "Wem verdanke ich das alles?"
+      "thanks": "Wem verdanke ich das alles?",
+      "textTools": "Was soll ich mit deinen Worten machen?"
     },
     "customSound": "Eigene WAV …",
     "quackSound": "Quak"

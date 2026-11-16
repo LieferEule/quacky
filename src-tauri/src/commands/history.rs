@@ -74,9 +74,7 @@ pub async fn delete_history_entry(
 /// Deletes every entry that is not saved, with its recording.
 #[tauri::command]
 #[specta::specta]
-pub async fn clear_history(
-    history_manager: State<'_, Arc<HistoryManager>>,
-) -> Result<u32, String> {
+pub async fn clear_history(history_manager: State<'_, Arc<HistoryManager>>) -> Result<u32, String> {
     history_manager
         .clear_unsaved()
         .map(|n| n as u32)

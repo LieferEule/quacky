@@ -427,6 +427,30 @@ async changeAppendTrailingSpaceSetting(enabled: boolean) : Promise<Result<null, 
     else return { status: "error", error: e  as any };
 }
 },
+async updateTextReplacements(replacements: TextReplacement[]) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("update_text_replacements", { replacements }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async changeVoiceCommandsSetting(enabled: boolean) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_voice_commands_setting", { enabled }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+async changeSelfCorrectionSetting(enabled: boolean) : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("change_self_correction_setting", { enabled }) };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async changeLazyStreamCloseSetting(enabled: boolean) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("change_lazy_stream_close_setting", { enabled }) };
@@ -682,15 +706,6 @@ async initializeShortcuts() : Promise<Result<null, string>> {
  */
 async copyLastTranscript() : Promise<void> {
     await TAURI_INVOKE("copy_last_transcript");
-},
-async setOverlayGlass(x: number, y: number, width: number, height: number, radius: number, opacity: number, outline: number[]) : Promise<void> {
-    await TAURI_INVOKE("set_overlay_glass", { x, y, width, height, radius, opacity, outline });
-},
-/**
- * The pointer entered or left the overlay card (holds the done pill).
- */
-async overlayHover(hovering: boolean) : Promise<void> {
-    await TAURI_INVOKE("overlay_hover", { hovering });
 },
 async getAvailableModels() : Promise<Result<ModelInfo[], string>> {
     try {
@@ -1027,6 +1042,20 @@ async isLaptop() : Promise<Result<boolean, string>> {
     if(e instanceof Error) throw e;
     else return { status: "error", error: e  as any };
 }
+},
+/**
+ * Where the recording overlay's card is, so the native glass behind it can
+ * follow (window_glass::overlay_card). CSS pixels from the window's top left.
+ * Sync, so Tauri runs it on the main thread, which AppKit needs.
+ */
+async setOverlayGlass(x: number, y: number, width: number, height: number, radius: number, opacity: number, outline: number[]) : Promise<void> {
+    await TAURI_INVOKE("set_overlay_glass", { x, y, width, height, radius, opacity, outline });
+},
+/**
+ * The pointer entered or left the overlay card (holds the done pill).
+ */
+async overlayHover(hovering: boolean) : Promise<void> {
+    await TAURI_INVOKE("overlay_hover", { hovering });
 }
 }
 
@@ -1120,7 +1149,20 @@ overlay_style?: OverlayStyle;
  * Allow transcribing an audio file dragged onto the recording overlay.
  * Opt-in — defaults to off.
  */
-drag_drop_enabled?: boolean }
+drag_drop_enabled?: boolean; 
+/**
+ * Fixed replacements for dictation ("meine Mail" -> the address).
+ */
+text_replacements?: TextReplacement[]; 
+/**
+ * Spoken commands in dictation: new line, new paragraph, send, delete that.
+ */
+voice_commands_enabled?: boolean; 
+/**
+ * Fix spoken self-corrections ("Thursday, no, Friday") with the on-device
+ * Apple Intelligence model. Off by default; nothing leaves the Mac.
+ */
+self_correction_enabled?: boolean }
 export type AudioDevice = { index: string; name: string; is_default: boolean }
 export type AutoSubmitKey = "enter" | "ctrl_enter" | "cmd_enter"
 export type AvailableAccelerators = { transcribe: string[]; ort: string[]; gpu_devices: GpuDeviceOption[] }
@@ -1257,6 +1299,10 @@ export type StreamTextEvent = { committed: string; tentative: string }
  * Semantic kind of "working" phase, used to localize the spinner label.
  */
 export type StreamWorkKind = "transcribing" | "polishing"
+/**
+ * A fixed find-and-replace applied to dictated text: say `from`, get `to`.
+ */
+export type TextReplacement = { from: string; to: string }
 /**
  * UI appearance mode. `System` follows the OS `prefers-color-scheme`; `Light`
  * and `Dark` force one of the two palettes Handy already ships.

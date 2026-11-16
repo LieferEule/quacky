@@ -5,7 +5,8 @@ use crate::settings::{get_settings, AutoSubmitKey, ClipboardHandling, PasteMetho
 use enigo::{Direction, Enigo, Key, Keyboard};
 use log::info;
 use std::process::Command;
-use std::time::Duration;
+use std::sync::Mutex;
+use std::time::{Duration, Instant};
 use tauri::{AppHandle, Manager};
 use tauri_plugin_clipboard_manager::ClipboardExt;
 
@@ -636,7 +637,69 @@ fn should_send_auto_submit(auto_submit: bool, paste_method: PasteMethod) -> bool
     auto_submit && paste_method != PasteMethod::None
 }
 
+/// What Quacky typed last, so "lösch das" can take exactly that back. Only
+/// recent and only while nothing was sent: after the send key it is gone.
+static LAST_INSERTED: Mutex<Option<(usize, Instant)>> = Mutex::new(None);
+
+/// How long "lösch das" can still reach the last dictation.
+const DELETE_LAST_WINDOW: Duration = Duration::from_secs(120);
+
+fn remember_inserted(chars: Option<usize>) {
+    if let Ok(mut last) = LAST_INSERTED.lock() {
+        *last = chars.filter(|n| *n > 0).map(|n| (n, Instant::now()));
+    }
+}
+
+fn enigo_for(app_handle: &AppHandle) -> Result<std::sync::MutexGuard<'_, Enigo>, String> {
+    let enigo_state = app_handle
+        .try_state::<EnigoState>()
+        .ok_or("Enigo state not initialized")?;
+    enigo_state
+        .inner()
+        .0
+        .lock()
+        .map_err(|e| format!("Failed to lock Enigo: {}", e))
+}
+
+/// Remove the last dictation Quacky inserted with Backspace. Returns false
+/// when there is nothing recent to remove (and does nothing then).
+pub fn delete_last_inserted(app_handle: &AppHandle) -> Result<bool, String> {
+    let taken = LAST_INSERTED
+        .lock()
+        .map_err(|e| format!("Failed to lock last insert: {}", e))?
+        .take();
+    let Some((chars, at)) = taken else {
+        return Ok(false);
+    };
+    if at.elapsed() > DELETE_LAST_WINDOW {
+        return Ok(false);
+    }
+    let mut enigo = enigo_for(app_handle)?;
+    for _ in 0..chars {
+        enigo
+            .key(Key::Backspace, Direction::Click)
+            .map_err(|e| format!("Failed to press Backspace: {}", e))?;
+    }
+    info!("Deleted the last dictation ({} characters)", chars);
+    Ok(true)
+}
+
+/// Press the configured send key on its own ("abschicken" with no text).
+pub fn send_submit_key(app_handle: &AppHandle) -> Result<(), String> {
+    let settings = get_settings(app_handle);
+    let mut enigo = enigo_for(app_handle)?;
+    send_return_key(&mut enigo, settings.auto_submit_key)?;
+    remember_inserted(None);
+    Ok(())
+}
+
 pub fn paste(text: String, app_handle: AppHandle) -> Result<(), String> {
+    paste_dictation(text, app_handle, false)
+}
+
+/// Paste like [`paste`], and press the send key afterwards when `submit` is
+/// set even if auto-submit is off (the spoken "abschicken").
+pub fn paste_dictation(text: String, app_handle: AppHandle, submit: bool) -> Result<(), String> {
     let settings = get_settings(&app_handle);
     let paste_method = settings.paste_method;
     let paste_delay_ms = settings.paste_delay_ms;
@@ -696,10 +759,14 @@ pub fn paste(text: String, app_handle: AppHandle) -> Result<(), String> {
         }
     }
 
-    if should_send_auto_submit(settings.auto_submit, paste_method) {
+    let submitted = should_send_auto_submit(settings.auto_submit || submit, paste_method);
+    if submitted {
         std::thread::sleep(Duration::from_millis(50));
         send_return_key(&mut enigo, settings.auto_submit_key)?;
     }
+    // Typed into the field and still there: remember it for "lösch das".
+    let typed = paste_method != PasteMethod::None && paste_method != PasteMethod::ExternalScript;
+    remember_inserted((typed && !submitted).then(|| text.chars().count()));
 
     // After pasting, optionally copy to clipboard based on settings
     if settings.clipboard_handling == ClipboardHandling::CopyToClipboard {

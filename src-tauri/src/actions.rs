@@ -2,6 +2,7 @@
 use crate::apple_intelligence;
 use crate::audio_feedback::{play_feedback_sound, play_feedback_sound_blocking, SoundType};
 use crate::audio_toolkit::{is_microphone_access_denied, is_no_input_device_error, VadPolicy};
+use crate::dictation_tools::{self, Spoken};
 use crate::managers::audio::AudioRecordingManager;
 use crate::managers::history::{HistoryManager, HistorySource};
 use crate::managers::model::ModelManager;
@@ -799,6 +800,78 @@ fn resolve_effective_language(app: &AppHandle, settings: &AppSettings) -> String
     }
 }
 
+/// The rule-based dictation tools, plus the optional on-device self-correction.
+/// Commands come first so the model never sees "neue Zeile" or "abschicken",
+/// replacements last so it never touches an inserted address.
+async fn apply_dictation_tools(app: &AppHandle, text: &str) -> Spoken {
+    let settings = get_settings(app);
+    let spoken = if settings.voice_commands_enabled {
+        dictation_tools::parse_commands(text)
+    } else {
+        Spoken::Text {
+            text: text.to_string(),
+            submit: false,
+        }
+    };
+    let Spoken::Text { mut text, submit } = spoken else {
+        return Spoken::DeleteLast;
+    };
+
+    if settings.self_correction_enabled && dictation_tools::has_correction_cue(&text) {
+        let original = text.clone();
+        let corrected =
+            tauri::async_runtime::spawn_blocking(move || self_correct_on_device(&original)).await;
+        match corrected {
+            Ok(Some(corrected)) if dictation_tools::accept_correction(&text, &corrected) => {
+                debug!("Self-correction applied");
+                text = corrected;
+            }
+            Ok(Some(_)) => debug!("Self-correction rejected by the length guard"),
+            Ok(None) => {}
+            Err(e) => error!("Self-correction task failed: {}", e),
+        }
+    }
+
+    if !settings.text_replacements.is_empty() {
+        text = dictation_tools::apply_replacements(&text, &settings.text_replacements);
+    }
+
+    Spoken::Text { text, submit }
+}
+
+const SELF_CORRECTION_PROMPT: &str = "You clean up dictated text. The speaker sometimes corrects \
+themselves mid-sentence (for example \"am Donnerstag, nein, Freitag\" or \"at three, I mean four\"). \
+Remove the part they took back and the correction words, keep the corrected version. \
+Change nothing else: same language, same words, same punctuation, same line breaks. \
+Do not answer, translate, summarise or rephrase. If there is no self-correction, return the text unchanged.";
+
+/// Ask the Apple Intelligence model on this Mac. `None` when it is not there
+/// or fails; the dictation then goes out as spoken.
+fn self_correct_on_device(text: &str) -> Option<String> {
+    #[cfg(all(target_os = "macos", target_arch = "aarch64"))]
+    {
+        if !apple_intelligence::check_apple_intelligence_availability() {
+            debug!("Self-correction skipped: Apple Intelligence is not available");
+            return None;
+        }
+        match apple_intelligence::process_text_with_system_prompt(SELF_CORRECTION_PROMPT, text, 0) {
+            Ok(result) => {
+                let result = strip_invisible_chars(&result).trim().to_string();
+                (!result.is_empty()).then_some(result)
+            }
+            Err(e) => {
+                error!("Self-correction failed: {}", e);
+                None
+            }
+        }
+    }
+    #[cfg(not(all(target_os = "macos", target_arch = "aarch64")))]
+    {
+        let _ = text;
+        None
+    }
+}
+
 pub(crate) async fn process_transcription_output(
     app: &AppHandle,
     transcription: &str,
@@ -1249,6 +1322,27 @@ impl ShortcutAction for TranscribeAction {
                                 return;
                             }
 
+                            // Spoken commands, self-corrections and replacements:
+                            // plain dictation only, never voice actions or files.
+                            let mut processed = processed;
+                            let mut submit = false;
+                            let mut delete_last = false;
+                            if mode == TranscribeMode::Plain {
+                                match apply_dictation_tools(&ah, &processed.final_text).await {
+                                    Spoken::DeleteLast => {
+                                        delete_last = true;
+                                        processed.final_text = String::new();
+                                    }
+                                    Spoken::Text { text, submit: s } => {
+                                        submit = s;
+                                        if text != processed.final_text {
+                                            processed.post_processed_text = Some(text.clone());
+                                            processed.final_text = text;
+                                        }
+                                    }
+                                }
+                            }
+
                             // Save to history if WAV was saved
                             if wav_saved {
                                 if let Err(err) = hm.save_entry(
@@ -1264,7 +1358,27 @@ impl ShortcutAction for TranscribeAction {
                                 }
                             }
 
-                            if processed.final_text.is_empty() {
+                            if delete_last || (processed.final_text.is_empty() && submit) {
+                                // "lösch das" / a bare "abschicken": keys only, no text.
+                                let ah_clone = ah.clone();
+                                ah.run_on_main_thread(move || {
+                                    let result = if delete_last {
+                                        utils::delete_last_inserted(&ah_clone).map(|_| ())
+                                    } else {
+                                        utils::send_submit_key(&ah_clone)
+                                    };
+                                    if let Err(e) = result {
+                                        error!("Dictation command failed: {}", e);
+                                    }
+                                    utils::hide_recording_overlay(&ah_clone);
+                                    change_tray_icon(&ah_clone, TrayIconState::Idle);
+                                })
+                                .unwrap_or_else(|e| {
+                                    error!("Failed to run command on main thread: {:?}", e);
+                                    utils::hide_recording_overlay(&ah);
+                                    change_tray_icon(&ah, TrayIconState::Idle);
+                                });
+                            } else if processed.final_text.is_empty() {
                                 utils::hide_recording_overlay(&ah);
                                 change_tray_icon(&ah, TrayIconState::Idle);
                             } else {
@@ -1281,7 +1395,11 @@ impl ShortcutAction for TranscribeAction {
                                     }
 
                                     let notch_text = final_text.clone();
-                                    match utils::paste(final_text, ah_clone.clone()) {
+                                    match utils::paste_dictation(
+                                        final_text,
+                                        ah_clone.clone(),
+                                        submit,
+                                    ) {
                                         Ok(()) => {
                                             debug!(
                                                 "Text pasted successfully in {:?}",

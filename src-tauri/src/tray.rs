@@ -307,6 +307,34 @@ pub fn update_tray_menu(app: &AppHandle, locale: Option<&str>) {
     )
     .expect("failed to create unload model item");
 
+    // A found update sits at the top of the menu until it is installed.
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
+    let update_i = match crate::updates::state() {
+        crate::updates::UpdateState::None => None,
+        crate::updates::UpdateState::Available(v) => Some(
+            MenuItem::with_id(
+                app,
+                "install_update",
+                strings.install_update.replace("{version}", &v),
+                true,
+                None::<&str>,
+            )
+            .expect("failed to create update item"),
+        ),
+        crate::updates::UpdateState::Installing(v) => Some(
+            MenuItem::with_id(
+                app,
+                "install_update",
+                strings.installing_update.replace("{version}", &v),
+                false,
+                None::<&str>,
+            )
+            .expect("failed to create update item"),
+        ),
+    };
+    #[cfg(any(target_os = "android", target_os = "ios"))]
+    let update_i: Option<MenuItem<tauri::Wry>> = None;
+
     let menu = match state {
         TrayIconState::Recording | TrayIconState::Transcribing => {
             let cancel_i = MenuItem::with_id(app, "cancel", &strings.cancel, true, None::<&str>)
@@ -327,22 +355,29 @@ pub fn update_tray_menu(app: &AppHandle, locale: Option<&str>) {
             )
             .expect("failed to create menu")
         }
-        TrayIconState::Idle => Menu::with_items(
-            app,
-            &[
-                &version_i,
-                &separator(),
-                &copy_last_transcript_i,
-                &separator(),
-                &model_submenu,
-                &unload_model_i,
-                &separator(),
-                &settings_i,
-                &separator(),
-                &quit_i,
-            ],
-        )
-        .expect("failed to create menu"),
+        TrayIconState::Idle => {
+            let menu = Menu::with_items(
+                app,
+                &[
+                    &version_i,
+                    &separator(),
+                    &copy_last_transcript_i,
+                    &separator(),
+                    &model_submenu,
+                    &unload_model_i,
+                    &separator(),
+                    &settings_i,
+                    &separator(),
+                    &quit_i,
+                ],
+            )
+            .expect("failed to create menu");
+            if let Some(item) = &update_i {
+                let _ = menu.insert(item, 1);
+                let _ = menu.insert(&separator(), 1);
+            }
+            menu
+        }
     };
 
     let tray = app.state::<TrayIcon>();

@@ -76,5 +76,13 @@
         "template": "nsis/installer.nsi"
       }
     }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDZGOTBDNjRBRjQ2MUUyRTEKUldUaDRtSDBTc2FRYjJxSkdWR2cwdFRVK2VjK2c2TG82dnJlUisweW0ybi9RcUNJVDMwZHRXWkoK",
+      "endpoints": [
+        "https://github.com/LieferEule/quacky-releases/releases/latest/download/latest.json"
+      ]
+    }
   }
 }

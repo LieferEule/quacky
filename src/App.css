@@ -323,6 +323,62 @@
   opacity: 1;
 }
 
+/* A saved replacement arrives instead of popping in. */
+.replacement-row {
+  transition: background-color 200ms var(--ease-out);
+}
+
+.replacement-row[data-new="true"] {
+  animation: row-in 180ms var(--ease-out) backwards;
+  background-color: color-mix(
+    in srgb,
+    var(--color-logo-primary) 12%,
+    transparent
+  );
+}
+
+/* Clicking a row edits it, so it answers the pointer. */
+.replacement-row:hover,
+.replacement-row:focus-within {
+  background-color: color-mix(in srgb, var(--color-text) 5%, transparent);
+}
+
+.replacement-row[data-editing="true"] {
+  background-color: color-mix(
+    in srgb,
+    var(--color-logo-primary) 10%,
+    transparent
+  );
+}
+
+@keyframes row-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+/* An existing entry the user just tried to add again. */
+.replacement-row[data-flash="true"] {
+  background-color: color-mix(
+    in srgb,
+    var(--color-logo-primary, #2973db) 12%,
+    transparent
+  );
+}
+
+/* Quick saves never flash a spinner; slow ones still show one. */
+.toggle-spinner {
+  opacity: 0;
+  animation: spinner-in 120ms ease-out 300ms forwards;
+}
+
+@keyframes spinner-in {
+  to {
+    opacity: 1;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .duck-step-other {
     display: none;
@@ -334,7 +390,8 @@
   .brood *,
   .egg,
   .egg *,
-  .hatched-text {
+  .hatched-text,
+  .replacement-row {
     animation: none !important;
   }
 }

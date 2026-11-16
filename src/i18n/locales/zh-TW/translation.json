@@ -5,7 +5,9 @@
     "unloadModel": "卸載模型",
     "model": "模型",
     "quit": "結束",
-    "cancel": "取消"
+    "cancel": "取消",
+    "installUpdate": "Install Update {version}",
+    "installingUpdate": "Installing Update {version}…"
   },
   "sidebar": {
     "navigation": "Sections"
@@ -480,7 +482,15 @@
       "transcribing": "轉錄中...",
       "transcriptionFailed": "轉錄失敗。您可以使用重試圖示重新轉錄。",
       "partial": "Partial",
-      "partialHint": "This run stopped before the end of the audio. The text covers only part of the recording."
+      "partialHint": "This run stopped before the end of the audio. The text covers only part of the recording.",
+      "clear": {
+        "title": "Clear history",
+        "description": "Deletes all entries and recordings. Saved ones stay.",
+        "button": "Clear",
+        "confirm": "Really clear?",
+        "done": "History cleared",
+        "error": "Couldn't clear the history."
+      }
     },
     "debug": {
       "title": "偵錯",
@@ -625,6 +635,33 @@
       "whatsNewUpdates": {
         "label": "顯示新功能",
         "description": "Quacky 更新後顯示版本資訊"
+      }
+    },
+    "dictationTools": {
+      "voiceCommands": {
+        "label": "Voice commands",
+        "description": "On “new line” and “new paragraph” I break the line. “Send it” at the end presses {{key}}; “delete that” on its own takes back your last dictation."
+      },
+      "replacements": {
+        "title": "Replacements",
+        "description": "Say the trigger, I type the text. “My email” can become your address.",
+        "from": "You say",
+        "to": "I type",
+        "add": "Add",
+        "remove": "Remove {{from}}",
+        "duplicate": "I already have “{{from}}”.",
+        "tooLong": "{{max}} characters at most.",
+        "emptyHint": "Leave it empty to delete the word.",
+        "save": "Save",
+        "edit": "Edit {{from}}",
+        "deleted": "is dropped",
+        "cancel": "Cancel"
+      },
+      "selfCorrection": {
+        "label": "Smooth out self-corrections",
+        "description": "“Thursday, no, Friday” becomes “Friday”. Runs on your Mac with Apple Intelligence, nothing leaves it.",
+        "unavailable": "I need Apple Intelligence for this. Turn it on under “Apple Intelligence & Siri”; Siri has to use the same language as your Mac.",
+        "openSettings": "Open Settings"
       }
     }
   },
@@ -812,7 +849,8 @@
       "aiApi": "Which AI should I talk to?",
       "aiPrompt": "How should the AI tidy your text?",
       "whoAmI": "Who am I?",
-      "thanks": "Who do I owe all this to?"
+      "thanks": "Who do I owe all this to?",
+      "textTools": "What should I do with your words?"
     },
     "customSound": "Custom WAV…",
     "quackSound": "Quack"

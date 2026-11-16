@@ -7,6 +7,7 @@ mod catalog;
 pub mod cli;
 mod clipboard;
 mod commands;
+mod dictation_tools;
 mod file_import;
 mod helpers;
 mod input;
@@ -23,6 +24,8 @@ mod signal_handle;
 mod transcription_coordinator;
 mod tray;
 mod tray_i18n;
+#[cfg(not(any(target_os = "android", target_os = "ios")))]
+mod updates;
 mod utils;
 #[cfg(target_os = "macos")]
 mod window_glass;
@@ -305,6 +308,10 @@ fn initialize_core_logic(app_handle: &AppHandle) {
             "quit" => {
                 app.exit(0);
             }
+            #[cfg(not(any(target_os = "android", target_os = "ios")))]
+            "install_update" => {
+                updates::install(app);
+            }
             id if id.starts_with("model_select:") => {
                 let model_id = id.strip_prefix("model_select:").unwrap().to_string();
                 let current_model = settings::get_settings(app).selected_model;
@@ -332,6 +339,10 @@ fn initialize_core_logic(app_handle: &AppHandle) {
 
     // Initialize tray menu with idle state
     utils::update_tray_menu(app_handle, None);
+
+    // Look for updates in the background (only while the setting is on).
+    #[cfg(not(any(target_os = "android", target_os = "ios")))]
+    updates::start(app_handle);
 
     // Apply show_tray_icon setting
     let settings = settings::get_settings(app_handle);
@@ -600,6 +611,9 @@ pub fn run(cli_args: CliArgs) {
             shortcut::change_voice_action_include_clipboard_setting,
             shortcut::change_voice_action_context_setting,
             shortcut::change_append_trailing_space_setting,
+            shortcut::update_text_replacements,
+            shortcut::change_voice_commands_setting,
+            shortcut::change_self_correction_setting,
             shortcut::change_lazy_stream_close_setting,
             shortcut::change_vad_enabled_setting,
             shortcut::change_app_language_setting,
@@ -774,6 +788,7 @@ pub fn run(cli_args: CliArgs) {
     }
 
     builder
+        .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_os::init())
@@ -927,8 +942,8 @@ pub fn run(cli_args: CliArgs) {
             // But if permission onboarding is required, always show the window.
             // A first launch always shows the window: starting hidden is on by
             // default, and nobody has picked a model yet.
-            let should_hide = (settings.start_hidden && settings.onboarding_completed)
-                || cli_args.start_hidden;
+            let should_hide =
+                (settings.start_hidden && settings.onboarding_completed) || cli_args.start_hidden;
             let should_force_show = should_force_show_permissions_window(&app_handle);
 
             // If start_hidden but tray is disabled, we must show the window

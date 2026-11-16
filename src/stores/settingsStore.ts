@@ -6,6 +6,7 @@ import type {
   AudioDevice,
   TranscribeAcceleratorSetting,
   OrtAcceleratorSetting,
+  TextReplacement,
 } from "@/bindings";
 import { commands } from "@/bindings";
 
@@ -155,6 +156,12 @@ const settingUpdaters: {
     commands.changeVoiceActionContextSetting(value as string),
   append_trailing_space: (value) =>
     commands.changeAppendTrailingSpaceSetting(value as boolean),
+  text_replacements: (value) =>
+    commands.updateTextReplacements(value as TextReplacement[]),
+  voice_commands_enabled: (value) =>
+    commands.changeVoiceCommandsSetting(value as boolean),
+  self_correction_enabled: (value) =>
+    commands.changeSelfCorrectionSetting(value as boolean),
   drag_drop_enabled: (value) =>
     commands.changeDragDropEnabledSetting(value as boolean),
   log_level: (value) => commands.setLogLevel(value as any),

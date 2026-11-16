@@ -76,6 +76,32 @@ Development certificate instead; its signature stays the same across builds:
 bun run tauri build --bundles app --config '{"bundle":{"macOS":{"signingIdentity":"<certificate SHA-1 from security find-identity -v -p codesigning>"}}}'
 ```
 
+## Releases and auto-update
+
+Installed copies look for updates in the public feed repo
+[`LieferEule/quacky-releases`](https://github.com/LieferEule/quacky-releases)
+(`latest.json` of its latest release), a little after launch and every six
+hours, while "check for updates" is on. A newer version shows up as an entry
+in the duck's menu-bar menu and is only installed when that entry is clicked.
+
+Updates are signed with the key in `~/.tauri/quacky-updater.key` (public half
+in `plugins.updater.pubkey` in `tauri.conf.json`). Keep a backup of that file
+outside the repo and outside the vault: without it, no installed copy will
+accept another update.
+
+To cut a release, bump the version in `package.json`, `src-tauri/tauri.conf.json`
+and `src-tauri/Cargo.toml` (+ `Cargo.lock`), commit, push, then:
+
+```bash
+scripts/release.sh 0.4.9 notes.md
+```
+
+It builds the commit in a clean worktree (ad-hoc signed, with updater
+artifacts), and creates the release in both repos: the DMG in the code repo,
+and DMG, update archive, signature and `latest.json` in the feed repo.
+Because public builds are ad-hoc signed, macOS drops the Accessibility grant
+after every update, as it does after a manual install.
+
 ## Model catalog
 
 `src-tauri/src/catalog/catalog.json` is compiled into the binary and there is no

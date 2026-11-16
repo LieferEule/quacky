@@ -8,6 +8,12 @@ interface SettingContainerProps {
   grouped?: boolean;
   layout?: "horizontal" | "stacked";
   disabled?: boolean;
+  /** Keep the description whole and readable while disabled (it explains
+   *  how to enable the row) and show `footer` under it. */
+  hintWhenDisabled?: boolean;
+  footer?: React.ReactNode;
+  /** Show the whole description instead of clamping it to two lines. */
+  wrapDescription?: boolean;
 }
 
 /**
@@ -21,19 +27,25 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
   grouped = false,
   layout = "horizontal",
   disabled = false,
+  hintWhenDisabled = false,
+  footer,
+  wrapDescription = false,
 }) => {
   const frame = grouped ? "" : "glass-card";
   const label = (
-    <div className={`min-w-0 ${disabled ? "opacity-45" : ""}`}>
+    <div
+      className={`min-w-0 transition-opacity duration-200 ease-[var(--ease-out)] ${disabled && !hintWhenDisabled ? "opacity-45" : ""}`}
+    >
       <h3 className="text-[13px] font-medium leading-5">{title}</h3>
       {description && (
         <p
-          className="text-[11.5px] leading-4 text-text/65 line-clamp-2"
+          className={`text-[11.5px] leading-4 text-text/65 ${wrapDescription || (disabled && hintWhenDisabled) ? "" : "line-clamp-2"}`}
           title={description}
         >
           {description}
         </p>
       )}
+      {footer}
     </div>
   );
 

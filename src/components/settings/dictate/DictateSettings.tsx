@@ -19,6 +19,8 @@ import { TypingToolSetting } from "../TypingTool";
 import { ClipboardHandlingSetting } from "../ClipboardHandling";
 import { AutoSubmit } from "../AutoSubmit";
 import { AppendTrailingSpace } from "../AppendTrailingSpace";
+import { TextReplacements } from "../TextReplacements";
+import { VoiceCommands, SelfCorrection } from "../DictationToggles";
 import { ModelSettingsCard } from "./ModelSettingsCard";
 import { DictateStatus } from "./DictateStatus";
 
@@ -73,6 +75,12 @@ export const DictateSettings: React.FC = () => {
         <AutoCopyClipboard grouped={true} />
         <AutoSubmit grouped={true} />
         <AppendTrailingSpace grouped={true} />
+      </SettingsGroup>
+
+      <SettingsGroup title={t("shell.questions.textTools")}>
+        <VoiceCommands grouped={true} />
+        <TextReplacements grouped={true} />
+        <SelfCorrection grouped={true} />
       </SettingsGroup>
     </>
   );

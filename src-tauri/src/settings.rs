@@ -86,6 +86,13 @@ pub struct ShortcutBinding {
     pub current_binding: String,
 }
 
+/// A fixed find-and-replace applied to dictated text: say `from`, get `to`.
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, Type)]
+pub struct TextReplacement {
+    pub from: String,
+    pub to: String,
+}
+
 #[derive(Serialize, Deserialize, Debug, Clone, Type)]
 pub struct LLMPrompt {
     pub id: String,
@@ -572,6 +579,20 @@ pub struct AppSettings {
     /// Opt-in — defaults to off.
     #[serde(default)]
     pub drag_drop_enabled: bool,
+    /// Fixed replacements for dictation ("meine Mail" -> the address).
+    #[serde(default)]
+    pub text_replacements: Vec<TextReplacement>,
+    /// Spoken commands in dictation: new line, new paragraph, send, delete that.
+    #[serde(default = "default_true")]
+    pub voice_commands_enabled: bool,
+    /// Fix spoken self-corrections ("Thursday, no, Friday") with the on-device
+    /// Apple Intelligence model. Off by default; nothing leaves the Mac.
+    #[serde(default)]
+    pub self_correction_enabled: bool,
+}
+
+fn default_true() -> bool {
+    true
 }
 
 fn default_model() -> String {
@@ -1091,6 +1112,9 @@ pub fn get_default_settings() -> AppSettings {
         vad_enabled: default_vad_enabled(),
         overlay_style: default_overlay_style(),
         drag_drop_enabled: true,
+        text_replacements: Vec::new(),
+        voice_commands_enabled: true,
+        self_correction_enabled: false,
     }
 }
 
