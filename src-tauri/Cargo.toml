@@ -1,6 +1,6 @@
 [package]
 name = "quacky"
-version = "0.4.8"
+version = "0.4.9"
 description = "Private, local-first speech transcription"
 authors = [
   "Jamie Andrew",

@@ -60,6 +60,62 @@ async fn tokio_sleep(d: Duration) {
     tokio::time::sleep(d).await;
 }
 
+/// Settings → "Jetzt suchen": check right away and say what came out.
+/// `Ok(None)` means up to date.
+#[tauri::command]
+#[specta::specta]
+pub async fn check_update_now(app: AppHandle) -> Result<Option<String>, String> {
+    if let UpdateState::Installing(v) = state() {
+        return Ok(Some(v));
+    }
+    let update = app
+        .updater()
+        .map_err(|e| e.to_string())?
+        .check()
+        .await
+        .map_err(|e| e.to_string())?;
+    match update {
+        Some(update) => {
+            let version = update.version.clone();
+            if let Ok(mut p) = PENDING.lock() {
+                *p = Some(update);
+            }
+            set_state(&app, UpdateState::Available(version.clone()));
+            Ok(Some(version))
+        }
+        None => {
+            if let Ok(mut p) = PENDING.lock() {
+                *p = None;
+            }
+            if state() != UpdateState::None {
+                set_state(&app, UpdateState::None);
+            }
+            Ok(None)
+        }
+    }
+}
+
+/// An update found earlier (by the background check), if any.
+#[tauri::command]
+#[specta::specta]
+pub fn pending_update_version() -> Option<String> {
+    match state() {
+        UpdateState::Available(v) | UpdateState::Installing(v) => Some(v),
+        UpdateState::None => None,
+    }
+}
+
+/// Settings → "Installieren": same as the tray entry.
+#[tauri::command]
+#[specta::specta]
+pub fn install_update_now(app: AppHandle) -> Result<(), String> {
+    if PENDING.lock().map(|p| p.is_none()).unwrap_or(true) {
+        return Err("no update pending".into());
+    }
+    install(&app);
+    Ok(())
+}
+
 async fn check(app: &AppHandle) {
     if matches!(state(), UpdateState::Installing(_)) {
         return;

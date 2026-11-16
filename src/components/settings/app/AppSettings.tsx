@@ -9,6 +9,8 @@ import { AppLanguageSelector } from "../AppLanguageSelector";
 import { ThemeSelector } from "../ThemeSelector";
 import { AppDataDirectory } from "../AppDataDirectory";
 import { LogDirectory } from "../debug";
+import { UpdateNow } from "../UpdateNow";
+import { UpdateChecksToggle } from "../UpdateChecksToggle";
 
 export const AppSettings: React.FC = () => {
   const { t } = useTranslation();
@@ -25,6 +27,11 @@ export const AppSettings: React.FC = () => {
         <AutostartToggle grouped={true} />
         <ShowTrayIcon grouped={true} />
         <ShowOverlay grouped={true} />
+      </SettingsGroup>
+
+      <SettingsGroup title={t("shell.questions.updates")}>
+        <UpdateNow grouped={true} />
+        <UpdateChecksToggle grouped={true} />
       </SettingsGroup>
 
       <SettingsGroup title={t("shell.questions.folders")}>

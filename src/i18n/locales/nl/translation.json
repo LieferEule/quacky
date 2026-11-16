@@ -514,8 +514,8 @@
         "empty": "Wachten op logboeken... Meldingen verschijnen hier zodra de app ze genereert."
       },
       "updateChecks": {
-        "label": "Controleren op updates",
-        "description": "Automatisch controleren op nieuwe versies van Quacky"
+        "label": "Check for updates automatically",
+        "description": "I look at launch and every 6 hours. A found update also shows in the duck menu."
       },
       "whatsNewPreview": {
         "title": "Voorbeeld van release-notes",
@@ -663,6 +663,17 @@
         "unavailable": "I need Apple Intelligence for this. Turn it on under “Apple Intelligence & Siri”; Siri has to use the same language as your Mac.",
         "openSettings": "Open Settings"
       }
+    },
+    "updates": {
+      "title": "Version",
+      "idle": "You have Quacky {{version}}.",
+      "checking": "Looking …",
+      "current": "Quacky {{version}} is the latest version.",
+      "available": "Version {{version}} is out. I restart after installing.",
+      "installing": "Downloading and installing {{version}} …",
+      "failed": "I can't reach the updates right now. Try again later.",
+      "check": "Check now",
+      "install": "Install"
     }
   },
   "footer": {
@@ -850,7 +861,8 @@
       "aiPrompt": "How should the AI tidy your text?",
       "whoAmI": "Who am I?",
       "thanks": "Who do I owe all this to?",
-      "textTools": "What should I do with your words?"
+      "textTools": "What should I do with your words?",
+      "updates": "Am I up to date?"
     },
     "customSound": "Custom WAV…",
     "quackSound": "Quack"

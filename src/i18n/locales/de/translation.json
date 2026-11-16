@@ -514,8 +514,8 @@
         "empty": "Warte auf Logs … Einträge erscheinen hier, sobald die App sie ausgibt."
       },
       "updateChecks": {
-        "label": "Nach Updates suchen",
-        "description": "Automatisch nach neuen Versionen von Quacky suchen"
+        "label": "Automatisch nach Updates suchen",
+        "description": "Ich schaue beim Start und alle 6 Stunden nach. Ein Update steht dann auch im Enten-Menü oben."
       },
       "soundTheme": {
         "label": "Sound-Thema",
@@ -663,6 +663,17 @@
         "unavailable": "Dafür brauche ich Apple Intelligence. Schalt es unter „Apple Intelligence & Siri“ ein, Siri muss dieselbe Sprache haben wie dein Mac.",
         "openSettings": "Einstellungen öffnen"
       }
+    },
+    "updates": {
+      "title": "Version",
+      "idle": "Du hast Quacky {{version}}.",
+      "checking": "Ich schaue nach …",
+      "current": "Quacky {{version}} ist die neueste Version.",
+      "available": "Version {{version}} ist da. Nach dem Installieren starte ich neu.",
+      "installing": "Ich lade und installiere {{version}} …",
+      "failed": "Ich komme gerade nicht an die Updates. Versuch es später nochmal.",
+      "check": "Jetzt suchen",
+      "install": "Installieren"
     }
   },
   "footer": {
@@ -850,7 +861,8 @@
       "aiPrompt": "Wie soll die KI deinen Text glätten?",
       "whoAmI": "Wer bin ich?",
       "thanks": "Wem verdanke ich das alles?",
-      "textTools": "Was soll ich mit deinen Worten machen?"
+      "textTools": "Was soll ich mit deinen Worten machen?",
+      "updates": "Bin ich auf dem neuesten Stand?"
     },
     "customSound": "Eigene WAV …",
     "quackSound": "Quak"

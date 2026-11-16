@@ -451,6 +451,35 @@ async changeSelfCorrectionSetting(enabled: boolean) : Promise<Result<null, strin
     else return { status: "error", error: e  as any };
 }
 },
+/**
+ * Settings → "Jetzt suchen": check right away and say what came out.
+ * `Ok(None)` means up to date.
+ */
+async checkUpdateNow() : Promise<Result<string | null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("check_update_now") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
+/**
+ * An update found earlier (by the background check), if any.
+ */
+async pendingUpdateVersion() : Promise<string | null> {
+    return await TAURI_INVOKE("pending_update_version");
+},
+/**
+ * Settings → "Installieren": same as the tray entry.
+ */
+async installUpdateNow() : Promise<Result<null, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("install_update_now") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async changeLazyStreamCloseSetting(enabled: boolean) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("change_lazy_stream_close_setting", { enabled }) };
