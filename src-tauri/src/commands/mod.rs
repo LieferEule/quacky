@@ -193,3 +193,29 @@ pub fn initialize_shortcuts(app: AppHandle) -> Result<(), String> {
 pub fn copy_last_transcript(app: AppHandle) {
     crate::tray::copy_last_transcript(&app);
 }
+
+/// Where the recording overlay's card is, so the native glass behind it can
+/// follow (window_glass::overlay_card). CSS pixels from the window's top left.
+/// Sync, so Tauri runs it on the main thread, which AppKit needs.
+#[tauri::command]
+#[specta::specta]
+#[allow(unused_variables)]
+pub fn set_overlay_glass(
+    window: tauri::WebviewWindow,
+    x: f64,
+    y: f64,
+    width: f64,
+    height: f64,
+    radius: f64,
+    opacity: f64,
+) {
+    #[cfg(target_os = "macos")]
+    crate::window_glass::overlay_card(&window, (x, y, width, height), radius, opacity);
+}
+
+/// The pointer entered or left the overlay card (holds the done pill).
+#[tauri::command]
+#[specta::specta]
+pub fn overlay_hover(app: tauri::AppHandle, hovering: bool) {
+    crate::overlay::overlay_hover(&app, hovering);
+}

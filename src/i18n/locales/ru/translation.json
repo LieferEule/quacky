@@ -696,7 +696,10 @@
     "processing": "Обработка...",
     "voiceTranscribing": "Расшифровываю запрос...",
     "voiceProcessing": "Думаю и пишу...",
-    "voiceDone": "Ответ ИИ вставлен"
+    "voiceDone": "Ответ ИИ вставлен",
+    "pasted": "Pasted",
+    "cancel": "Cancel",
+    "handsFreeHint": "Fn to stop"
   },
   "whatsNew": {
     "title": "Новое в Quacky v{{version}}"

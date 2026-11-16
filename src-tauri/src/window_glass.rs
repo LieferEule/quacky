@@ -11,11 +11,13 @@
 //! overlay, hence the per-window `setAppearance`.
 
 use crate::settings::Theme;
-use objc2::{runtime::AnyClass, MainThreadMarker, MainThreadOnly};
+use objc2::{rc::Retained, runtime::AnyClass, MainThreadMarker, MainThreadOnly};
 use objc2_app_kit::{
     NSAppearance, NSAppearanceCustomization, NSAppearanceNameAqua, NSAppearanceNameDarkAqua,
     NSAutoresizingMaskOptions, NSGlassEffectView, NSWindow, NSWindowOrderingMode,
 };
+use objc2_foundation::{NSPoint, NSRect, NSSize};
+use std::cell::RefCell;
 use tauri::window::{Effect, EffectState, EffectsBuilder};
 use tauri::WebviewWindow;
 
@@ -64,4 +66,49 @@ fn ns_window(window: &WebviewWindow) -> Option<&NSWindow> {
         .ns_window()
         .ok()
         .map(|ptr| unsafe { &*(ptr as *const NSWindow) })
+}
+
+thread_local! {
+    /// The glass behind the recording overlay's card. Main thread only.
+    static OVERLAY_GLASS: RefCell<Option<Retained<NSGlassEffectView>>> = const { RefCell::new(None) };
+}
+
+/// Glass behind the recording overlay's card. The overlay window is larger
+/// than the card and the card changes size (pill, Live panel), so the page
+/// reports where the card is, in CSS pixels from the top left, and the glass
+/// follows it. `opacity` 0 hides it. Older macOS without NSGlassEffectView
+/// keeps the card's own CSS surface.
+pub fn overlay_card(
+    window: &WebviewWindow,
+    frame: (f64, f64, f64, f64),
+    radius: f64,
+    opacity: f64,
+) {
+    if AnyClass::get(c"NSGlassEffectView").is_none() {
+        return;
+    }
+    let (Some(mtm), Some(ns_window)) = (MainThreadMarker::new(), ns_window(window)) else {
+        return;
+    };
+    let Some(content) = ns_window.contentView() else {
+        return;
+    };
+    let height = content.bounds().size.height;
+    let (x, y, w, h) = frame;
+    let rect = NSRect::new(NSPoint::new(x, height - y - h), NSSize::new(w, h));
+    OVERLAY_GLASS.with(|cell| {
+        let mut cell = cell.borrow_mut();
+        let glass = cell.get_or_insert_with(|| {
+            let glass = NSGlassEffectView::initWithFrame(NSGlassEffectView::alloc(mtm), rect);
+            content.addSubview_positioned_relativeTo(&glass, NSWindowOrderingMode::Below, None);
+            glass
+        });
+        glass.setFrame(rect);
+        glass.setCornerRadius(radius);
+        // A slightly eased alpha: the glass leads the fade-in a touch, but on
+        // the way out it reaches zero together with the card, never lingering
+        // as an empty pane.
+        glass.setAlphaValue(opacity.clamp(0.0, 1.0));
+        glass.setHidden(opacity <= 0.01 || w < 1.0 || h < 1.0);
+    });
 }

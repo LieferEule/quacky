@@ -261,6 +261,15 @@ Files' drop target, 14px radius, quiet at rest; while a file hovers the window i
 
 While a file runs, the drop target gives way to the brood: the pixel duck walks in from the right, stepping foot to foot in two pixel frames (no tilting), leaves webbed prints behind, hops onto a small sheet of text (40×22px) with its wing fluttering and breathes there, and the sheet shrinks with the reported progress on long files. At the end the duck leaves to the left, the sheet is squeezed away in three pushes, and an egg springs up and bounces where it was. The egg then flies in a curve down to the left into its row, bouncing twice as it lands. Clicking it wobbles the egg, a zigzag crack appears, the top half stays ajar like a lid, and the text grows out of the gap.
 
+### Recording Pill
+
+The overlay at the bottom (or top) of the screen while dictating. On macOS it sits on real Liquid Glass: a native `NSGlassEffectView` follows the card's rect, radius and opacity every frame, and in dark mode the card adds only a breath of tint (`rgb(22 22 26 / 0.16)`) with a soft text shadow. One shape family: 44px rows, 22px radius in every form, 28px round buttons.
+
+- **Listening:** a side-view water strip fills the pill: flat when silent, a gentle sine wobble with the voice, a rare bubble. A hands-free latch shows a small lock; the water pulls back to make room.
+- **Live:** the pill opens like a water bubble: it swells up about 14%, spreads with a soft spring, wobbles once and settles (640ms, volume-preserving, the body squashes but the text and buttons do not). Inside: only the text (16px, tentative words lighter) and a timer bottom left; no water, no divider.
+- **Transcribing:** the timer passes upward and "Transkribiere…" rises in; in the small pill only the water calms.
+- **Done:** the panel draws together like a drop and lands as a 192px pill: check left, the outcome centred ("Eingefügt", "Kopiert", "Gespeichert"), copy right. Resting on it holds it; it fades out after 3.5s.
+
 ### Alert
 
 Inline note, 14px by 10px padding, 16px lucide icon, 12px text. Inside a bubble an info note has no background, only an accent icon and 70% text; error/warning/success use 10% status washes.

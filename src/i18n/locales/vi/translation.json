@@ -696,7 +696,10 @@
     "processing": "Đang xử lý...",
     "voiceTranscribing": "Đang chép lại yêu cầu...",
     "voiceProcessing": "Đang suy nghĩ và viết...",
-    "voiceDone": "Đã dán phản hồi AI"
+    "voiceDone": "Đã dán phản hồi AI",
+    "pasted": "Pasted",
+    "cancel": "Cancel",
+    "handsFreeHint": "Fn to stop"
   },
   "whatsNew": {
     "title": "Điểm mới trong Quacky v{{version}}"

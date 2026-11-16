@@ -696,7 +696,10 @@
     "processing": "İşleniyor...",
     "voiceTranscribing": "İstek yazıya dökülüyor...",
     "voiceProcessing": "Düşünüyor ve yazıyor...",
-    "voiceDone": "Yapay zekâ yanıtı yapıştırıldı"
+    "voiceDone": "Yapay zekâ yanıtı yapıştırıldı",
+    "pasted": "Pasted",
+    "cancel": "Cancel",
+    "handsFreeHint": "Fn to stop"
   },
   "whatsNew": {
     "title": "Quacky v{{version}} yenilikleri"

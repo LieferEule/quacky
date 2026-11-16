@@ -699,7 +699,10 @@
     "processing": "प्रशोधन गरिँदैछ...",
     "voiceTranscribing": "अनुरोध ट्रान्सक्राइब हुँदैछ...",
     "voiceProcessing": "सोच्दै र लेख्दैछ...",
-    "voiceDone": "AI को जवाफ टाँसियो"
+    "voiceDone": "AI को जवाफ टाँसियो",
+    "pasted": "Pasted",
+    "cancel": "Cancel",
+    "handsFreeHint": "Fn to stop"
   },
   "transcribe": {
     "heading": "Transcribe an audio file",

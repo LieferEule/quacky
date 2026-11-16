@@ -699,7 +699,10 @@
     "processing": "Verwerken...",
     "voiceTranscribing": "Opdracht transcriberen...",
     "voiceProcessing": "Denken en schrijven...",
-    "voiceDone": "AI-antwoord geplakt"
+    "voiceDone": "AI-antwoord geplakt",
+    "pasted": "Pasted",
+    "cancel": "Cancel",
+    "handsFreeHint": "Fn to stop"
   },
   "transcribe": {
     "heading": "Transcribe an audio file",

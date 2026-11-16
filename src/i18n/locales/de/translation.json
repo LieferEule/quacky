@@ -686,17 +686,20 @@
     }
   },
   "overlay": {
-    "transcribing": "Transkribiere...",
-    "processing": "Verarbeite...",
-    "voiceTranscribing": "Transkribiere Anweisung...",
-    "voiceProcessing": "Denke & schreibe...",
+    "transcribing": "Transkribiere…",
+    "processing": "Verarbeite…",
+    "voiceTranscribing": "Transkribiere Anweisung…",
+    "voiceProcessing": "Denke & schreibe…",
     "voiceDone": "KI-Antwort eingefügt",
-    "done": "Fertig",
+    "done": "Gespeichert",
     "copied": "Kopiert",
     "copyAgain": "Erneut kopieren",
     "dropFile": "Datei ablegen",
     "dropHint": "Audiodatei hier ablegen zum Transkribieren",
-    "handsFree": "Freihändige Aufnahme"
+    "handsFree": "Freihändige Aufnahme",
+    "pasted": "Eingefügt",
+    "cancel": "Abbrechen",
+    "handsFreeHint": "Fn zum Beenden"
   },
   "whatsNew": {
     "title": "Neu in Quacky v{{version}}"

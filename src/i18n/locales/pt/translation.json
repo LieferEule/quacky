@@ -696,7 +696,10 @@
     "processing": "Processando...",
     "voiceTranscribing": "Transcrevendo pedido...",
     "voiceProcessing": "Pensando e escrevendo...",
-    "voiceDone": "Resposta da IA colada"
+    "voiceDone": "Resposta da IA colada",
+    "pasted": "Pasted",
+    "cancel": "Cancel",
+    "handsFreeHint": "Fn to stop"
   },
   "whatsNew": {
     "title": "Novidades no Quacky v{{version}}"

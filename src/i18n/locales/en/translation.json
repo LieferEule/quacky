@@ -689,17 +689,20 @@
     }
   },
   "overlay": {
-    "transcribing": "Transcribing...",
-    "processing": "Processing...",
-    "voiceTranscribing": "Transcribing request...",
-    "voiceProcessing": "Thinking & writing...",
+    "transcribing": "Transcribing…",
+    "processing": "Processing…",
+    "voiceTranscribing": "Transcribing request…",
+    "voiceProcessing": "Thinking & writing…",
     "voiceDone": "AI response pasted",
-    "done": "Done",
+    "done": "Saved",
     "copied": "Copied",
     "copyAgain": "Copy again",
     "dropFile": "Drop file",
     "dropHint": "Drop an audio file here to transcribe it",
-    "handsFree": "Hands-free recording"
+    "handsFree": "Hands-free recording",
+    "pasted": "Pasted",
+    "cancel": "Cancel",
+    "handsFreeHint": "Fn to stop"
   },
   "transcribe": {
     "heading": "Transcribe audio files",

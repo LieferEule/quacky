@@ -40,15 +40,17 @@ tauri_panel! {
 // where the card sits — only OVERLAY_TOP_OFFSET / OVERLAY_BOTTOM_OFFSET do. Keep
 // these in sync with the CSS card geometry.
 //
-// Compact overlay (Minimal / transcribing / processing): the 40h pill animates
-// width from 172 (--ov-rest-w) to 216 (--ov-work-w) and expands from center, so
-// the window must fit the widest state plus a little slack.
-const OVERLAY_WIDTH: f64 = 256.0;
-const OVERLAY_HEIGHT: f64 = 46.0;
+// Compact overlay (Minimal / transcribing / processing): the 46h pill (44 row +
+// border) animates width from 200 (--ov-rest-w) to 232 (--ov-work-w) and
+// expands from center, so the window must fit the widest state plus slack.
+const OVERLAY_WIDTH: f64 = 272.0;
+const OVERLAY_HEIGHT: f64 = 60.0;
 
-// Actual is 394x118, just a little extra
-const OVERLAY_STREAM_WIDTH: f64 = 400.0;
-const OVERLAY_STREAM_HEIGHT: f64 = 120.0;
+// Live panel: 410 wide, 44 row + 72 text + 26 padding + 2 border = 144 tall.
+// Extra room: the panel springs a few pixels past its size and swells a
+// little while it opens (the bubble), and must never be clipped.
+const OVERLAY_STREAM_WIDTH: f64 = 448.0;
+const OVERLAY_STREAM_HEIGHT: f64 = 164.0;
 
 /// Overlay window size (logical) for a given UI state.
 fn overlay_dimensions(state: &str) -> (f64, f64) {
@@ -71,6 +73,10 @@ const MAIN_EMIT_THROTTLE_MS: u64 = 100;
 // started within the delay window is never hidden by the stale timer.
 static OVERLAY_GEN: AtomicU64 = AtomicU64::new(0);
 const DONE_OVERLAY_MS: u64 = 3500;
+/// After the pointer leaves a done pill it was resting on, how long it stays.
+const DONE_AFTER_HOVER_MS: u64 = 1500;
+/// True while the done pill is the current overlay; hovering it holds it.
+static DONE_SHOWN: AtomicBool = AtomicBool::new(false);
 
 #[derive(Clone, serde::Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -373,8 +379,11 @@ pub fn create_recording_overlay(app_handle: &AppHandle) {
             .style_mask(StyleMask::empty().borderless().nonactivating_panel())
             .with_window(|w| w.decorations(false).transparent(true).focusable(false))
             .collection_behavior(
+                // Stationary: the pill stays put while switching Spaces
+                // instead of vanishing and popping back.
                 CollectionBehavior::new()
                     .can_join_all_spaces()
+                    .stationary()
                     .full_screen_auxiliary(),
             )
             .build()
@@ -392,6 +401,7 @@ pub fn create_recording_overlay(app_handle: &AppHandle) {
 fn show_overlay_state_with_mode(app_handle: &AppHandle, state: &str, mode: &str) {
     // Any state change invalidates a pending "done" auto-hide timer.
     OVERLAY_GEN.fetch_add(1, Ordering::Relaxed);
+    DONE_SHOWN.store(false, Ordering::Relaxed);
 
     // The notch app shows the recording UI while it runs; ours stays hidden.
     crate::notch::state(state, mode);
@@ -410,8 +420,17 @@ fn show_overlay_state_with_mode(app_handle: &AppHandle, state: &str, mode: &str)
     }
 
     // Size the overlay for this state (compact vs. streaming), then position it.
-    let (width, height) = overlay_dimensions(state);
+    let (mut width, mut height) = overlay_dimensions(state);
     if let Some(overlay_window) = app_handle.get_webview_window("recording_overlay") {
+        // The done pill morphs out of whatever card is on screen (the Live
+        // panel shrinks into it), so it keeps a larger window rather than
+        // cutting the panel off; the next state sizes it down again.
+        if state == "done" && overlay_window.is_visible().unwrap_or(false) {
+            if let Some((w, h)) = current_overlay_logical_size(&overlay_window) {
+                width = width.max(w);
+                height = height.max(h);
+            }
+        }
         #[cfg(target_os = "linux")]
         update_gtk_layer_shell_anchors(&overlay_window);
 
@@ -494,14 +513,33 @@ pub fn show_done_overlay(app_handle: &AppHandle) {
     if crate::notch::active() {
         return;
     }
+    DONE_SHOWN.store(true, Ordering::Relaxed);
+    schedule_done_hide(app_handle, DONE_OVERLAY_MS);
+}
+
+fn schedule_done_hide(app_handle: &AppHandle, after_ms: u64) {
     let my_gen = OVERLAY_GEN.load(Ordering::Relaxed);
     let app = app_handle.clone();
     std::thread::spawn(move || {
-        std::thread::sleep(Duration::from_millis(DONE_OVERLAY_MS));
+        std::thread::sleep(Duration::from_millis(after_ms));
         if OVERLAY_GEN.load(Ordering::Relaxed) == my_gen {
             hide_recording_overlay(&app);
         }
     });
+}
+
+/// The pointer entered or left the overlay card. Resting on the done pill
+/// holds it (so "copy again" can be reached); leaving it lets it go shortly
+/// after. Does nothing in any other state.
+pub fn overlay_hover(app_handle: &AppHandle, hovering: bool) {
+    if !DONE_SHOWN.load(Ordering::Relaxed) {
+        return;
+    }
+    // Bumping the generation cancels the pending auto-hide.
+    OVERLAY_GEN.fetch_add(1, Ordering::Relaxed);
+    if !hovering {
+        schedule_done_hide(app_handle, DONE_AFTER_HOVER_MS);
+    }
 }
 
 /// Updates the overlay window position based on current settings
@@ -529,6 +567,7 @@ pub fn hide_recording_overlay(app_handle: &AppHandle) {
     // remember our value so the delayed hide below can bail if a newer overlay
     // state is shown in the meantime.
     let my_gen = OVERLAY_GEN.fetch_add(1, Ordering::Relaxed) + 1;
+    DONE_SHOWN.store(false, Ordering::Relaxed);
     crate::notch::hide();
     // Always hide the overlay regardless of settings - if setting was changed while recording,
     // we still want to hide it properly

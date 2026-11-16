@@ -696,7 +696,10 @@
     "processing": "Zpracovávám...",
     "voiceTranscribing": "Přepisuji požadavek...",
     "voiceProcessing": "Přemýšlím a píšu...",
-    "voiceDone": "Odpověď AI vložena"
+    "voiceDone": "Odpověď AI vložena",
+    "pasted": "Pasted",
+    "cancel": "Cancel",
+    "handsFreeHint": "Fn to stop"
   },
   "whatsNew": {
     "title": "Novinky v Quacky v{{version}}"

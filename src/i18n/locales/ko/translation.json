@@ -696,7 +696,10 @@
     "processing": "처리 중...",
     "voiceTranscribing": "요청을 받아쓰는 중...",
     "voiceProcessing": "생각하고 작성하는 중...",
-    "voiceDone": "AI 응답을 붙여넣었습니다"
+    "voiceDone": "AI 응답을 붙여넣었습니다",
+    "pasted": "Pasted",
+    "cancel": "Cancel",
+    "handsFreeHint": "Fn to stop"
   },
   "whatsNew": {
     "title": "Quacky v{{version}}의 새 소식"

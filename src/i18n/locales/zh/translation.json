@@ -696,7 +696,10 @@
     "processing": "处理中...",
     "voiceTranscribing": "正在转录指令...",
     "voiceProcessing": "正在思考并撰写...",
-    "voiceDone": "已粘贴 AI 回复"
+    "voiceDone": "已粘贴 AI 回复",
+    "pasted": "Pasted",
+    "cancel": "Cancel",
+    "handsFreeHint": "Fn to stop"
   },
   "whatsNew": {
     "title": "Quacky v{{version}} 新功能"

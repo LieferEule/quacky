@@ -696,7 +696,10 @@
     "processing": "処理中…",
     "voiceTranscribing": "指示を文字起こし中…",
     "voiceProcessing": "考えて執筆中…",
-    "voiceDone": "AIの回答を貼り付けました"
+    "voiceDone": "AIの回答を貼り付けました",
+    "pasted": "Pasted",
+    "cancel": "Cancel",
+    "handsFreeHint": "Fn to stop"
   },
   "whatsNew": {
     "title": "Quacky v{{version}} の新機能"

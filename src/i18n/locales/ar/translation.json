@@ -696,7 +696,10 @@
     "processing": "...جاري المعالجة",
     "voiceTranscribing": "...جاري نسخ الطلب",
     "voiceProcessing": "...أفكر وأكتب",
-    "voiceDone": "تم لصق رد الذكاء الاصطناعي"
+    "voiceDone": "تم لصق رد الذكاء الاصطناعي",
+    "pasted": "Pasted",
+    "cancel": "Cancel",
+    "handsFreeHint": "Fn to stop"
   },
   "whatsNew": {
     "title": "الجديد في Quacky v{{version}}"

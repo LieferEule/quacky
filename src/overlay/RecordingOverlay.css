@@ -28,14 +28,20 @@
      the card's max footprint (--ov-work-w for compact, --ov-open-w for Live),
      since the card is anchored flush to the screen edge in CSS. Keep overlay.rs
      in sync when these change. */
-  --ov-rest-w: 172px; /* resting compact pill (minimal, recording) -- roomy enough
-                         for the English working label before the grow starts */
-  --ov-pill-w: 184px; /* base width / Live pill before it opens or collapses */
-  --ov-work-w: 216px; /* working pill (transcribing / polishing) -- wide enough to
-                         center longer labels; shared by Live (collapsed) + minimal */
-  --ov-open-w: 392px; /* Live panel, expanded */
-  --ov-base-h: 40px; /* control-row height (.sbase) */
-  --ov-cap-max-h: 64px; /* max height of the scrolling live-text region */
+  --ov-rest-w: 200px; /* resting compact pill (recording): room for the water */
+  --ov-pill-w: 200px; /* base width / Live pill before it opens or collapses */
+  --ov-work-w: 232px; /* working and done pill; shared by Live (collapsed) + minimal */
+  --ov-open-w: 408px; /* Live panel, expanded */
+  --ov-base-h: 44px; /* control-row height (.sbase) */
+  --ov-cap-max-h: 72px; /* content box; padding adds 26px -> 3 lines */ /* max height of the scrolling live-text region */
+  /* One corner for every form: half the row height, so the pill is fully
+     round and the open panel keeps the same soft corner instead of going
+     square. Never animated, so the native glass can't drift from it. */
+  --ov-radius: 22px;
+  /* One curve and one length for every morph, so width and height land on
+     the same frame. */
+  --ov-ease: cubic-bezier(0.32, 0.72, 0, 1);
+  --ov-morph: 380ms;
 }
 @media (prefers-color-scheme: dark) {
   :root {
@@ -121,7 +127,7 @@
 /* Shared base card. Flat: theme surface + hairline border, no shadow or blur. */
 .scard {
   width: var(--ov-pill-w);
-  border-radius: 24px;
+  border-radius: var(--ov-radius);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -137,17 +143,15 @@
   border: 1px solid var(--s-border);
   box-shadow: inset 0 1px 0 var(--s-sheen);
   /* pop-in plays on mount; morph (width/radius) is a transition */
-  animation: scard-pop 460ms cubic-bezier(0.22, 1, 0.36, 1);
-  transition:
-    width 460ms cubic-bezier(0.22, 1, 0.36, 1),
-    border-radius 460ms cubic-bezier(0.22, 1, 0.36, 1);
+  animation: scard-pop 300ms cubic-bezier(0.23, 1, 0.32, 1);
+  transition: width var(--ov-morph) var(--ov-ease);
   will-change: transform, width, opacity;
 }
 @keyframes scard-pop {
   from {
     opacity: 0;
     /* Scale from the anchored edge (transform-origin) — never translate past it. */
-    transform: scale(0.92);
+    transform: scale(0.95);
   }
   to {
     opacity: 1;
@@ -156,18 +160,16 @@
 }
 .scard.leaving {
   opacity: 0;
-  transform: scale(0.96);
+  transform: scale(0.97);
   transition:
-    opacity 240ms ease,
-    transform 300ms ease;
+    opacity 160ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
 }
 .scard.open {
   width: var(--ov-open-w);
-  border-radius: 16px;
 }
 .scard.working {
   width: var(--ov-work-w);
-  border-radius: 18px;
 }
 
 /* Voice Actions are agentic work, not plain transcription. Keep the same visual
@@ -254,13 +256,18 @@
   display: grid;
   grid-template-rows: 0fr;
   opacity: 0;
+  /* Text leaves before the panel shrinks ... */
   transition:
-    grid-template-rows 440ms cubic-bezier(0.22, 1, 0.36, 1),
-    opacity 260ms ease;
+    grid-template-rows var(--ov-morph) var(--ov-ease),
+    opacity 120ms ease-out;
 }
 .scard.open .stext {
   grid-template-rows: 1fr;
   opacity: 1;
+  /* ... and arrives once the panel has room for it. */
+  transition:
+    grid-template-rows var(--ov-morph) var(--ov-ease),
+    opacity 200ms ease-out 120ms;
 }
 .stext-clip {
   overflow: hidden;
@@ -459,7 +466,7 @@
 /* done confirmation pill — built check + "copied" + re-copy button. Same width as the
    working pill so the transcribing→done change is a no-op width transition. */
 .scard.compact.cdone {
-  width: var(--ov-work-w);
+  width: 176px;
 }
 
 /* working state (transcribing / polishing) — text mark + label */
@@ -479,4 +486,1824 @@
   .sworking-icon .built-line {
     animation: none;
   }
+}
+
+/* ============================================================
+   Water and glass (0.4.7). The listening row is the water filling the pill
+   with the controls on the right; transcribing is the same water, calm. On
+   macOS the card sits on real glass (window_glass.rs follows it), so it drops
+   its own surface and border there and keeps only a faint top light.
+   ============================================================ */
+:root {
+  /* Secondary ink that holds on glass over any background. */
+  --s-ink: color-mix(in srgb, var(--color-text) 92%, transparent);
+  --s-ink-2: color-mix(in srgb, var(--color-text) 66%, transparent);
+  --s-btn: color-mix(in srgb, var(--color-text) 8%, transparent);
+  --s-btn-hover: color-mix(in srgb, var(--color-text) 16%, transparent);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --s-ink-2: color-mix(in srgb, var(--color-text) 70%, transparent);
+    --s-btn: color-mix(in srgb, var(--color-text) 12%, transparent);
+    --s-btn-hover: color-mix(in srgb, var(--color-text) 20%, transparent);
+  }
+}
+
+.swater-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 8px 0 16px;
+}
+.swater-row .sbase-r {
+  gap: 8px;
+}
+.swater {
+  display: block;
+  flex: 1;
+  min-width: 0;
+  height: 32px;
+}
+.sfill {
+  flex: 1;
+}
+
+/* Pill to panel: the water swells, thins and dissolves while the card grows
+   around it, so the panel reads as the water rising rather than a box
+   appearing. It runs once on open, then the water unmounts. */
+.swater-row {
+  position: relative;
+}
+.swater.flood {
+  position: absolute;
+  left: 16px;
+  right: 80px;
+  top: 50%;
+  margin-top: -16px;
+  pointer-events: none;
+  transform-origin: 50% 100%;
+  animation: swater-flood 420ms var(--ov-ease) forwards;
+}
+@keyframes swater-flood {
+  0% {
+    opacity: 1;
+    transform: none;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-14px) scale(1.04, 2.2);
+  }
+}
+/* The text rises out of it: up a few pixels and out of a soft blur. */
+.stext-cap p {
+  transition:
+    transform 420ms cubic-bezier(0.23, 1, 0.32, 1) 90ms,
+    filter 420ms cubic-bezier(0.23, 1, 0.32, 1) 90ms;
+}
+.scard:not(.open) .stext-cap p {
+  transform: translateY(8px);
+  filter: blur(6px);
+}
+/* The panel opens a touch slower than other morphs and settles softly, like
+   water finding its level. */
+.scard.open {
+  transition: width 520ms cubic-bezier(0.2, 0.9, 0.1, 1);
+}
+.scard.open .stext {
+  transition:
+    grid-template-rows 520ms cubic-bezier(0.2, 0.9, 0.1, 1),
+    opacity 260ms ease-out 110ms;
+}
+
+/* Timer while listening, what it's doing once it finalizes: one slot,
+   crossfaded, on the text's left edge. */
+.sslot {
+  display: grid;
+  flex: 1;
+  min-width: 0;
+}
+.sslot > * {
+  grid-area: 1 / 1;
+  align-self: center;
+  /* In after the other has left: never both at once. */
+  transition:
+    opacity 180ms ease-out 110ms,
+    transform 220ms cubic-bezier(0.23, 1, 0.32, 1) 110ms,
+    filter 180ms ease-out 110ms;
+}
+.sslot > .out {
+  opacity: 0;
+  transform: translateY(4px);
+  filter: blur(2px);
+  transition:
+    opacity 110ms ease-in,
+    transform 110ms ease-in,
+    filter 110ms ease-in;
+}
+.sslot-label {
+  font-size: 13px;
+  font-weight: 560;
+  color: color-mix(in srgb, var(--color-text) 82%, transparent);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.scard.open .stimer {
+  opacity: 1;
+}
+.scard.open .stimer:not(.out) {
+  /* Mounts already open, so it needs an entrance of its own: it arrives
+     once the water has lifted out of the way and the text is there. */
+  animation: sslot-in 200ms cubic-bezier(0.23, 1, 0.32, 1) 420ms both;
+}
+@keyframes sslot-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+    filter: blur(2px);
+  }
+}
+.scard.open .stimer.out {
+  opacity: 0;
+}
+
+/* Hands-free lock: sits just left of the close button, over the water's
+   faded tail, so it never squeezes the water. Fades and scales in when the
+   latch catches, out again when it lets go. */
+.sbase-r {
+  position: relative;
+}
+.shands-free-icon {
+  position: absolute;
+  right: calc(100% + 8px);
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  display: block;
+  color: var(--s-accent);
+  opacity: 0;
+  transform: scale(0.8);
+  pointer-events: none;
+  transition:
+    opacity 120ms ease-in,
+    transform 120ms ease-in;
+}
+.shands-free-icon svg {
+  display: block;
+  width: 14px;
+  height: 14px;
+  stroke-width: 1.8;
+}
+.shands-free-icon.on {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+  transition:
+    opacity 160ms ease-out,
+    transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+@media (prefers-color-scheme: dark) {
+  .shands-free-icon {
+    color: color-mix(in srgb, var(--s-accent) 62%, white);
+  }
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* Close / copy: a real 28px target, quiet until hovered. */
+.sx {
+  width: 28px;
+  height: 28px;
+  background: var(--s-btn);
+  color: var(--s-ink-2);
+  box-shadow: inset 0 0 0 0.5px rgb(255 255 255 / 0.1);
+  transition:
+    background-color 150ms ease,
+    color 150ms ease,
+    opacity 200ms ease,
+    transform 100ms ease-out;
+}
+.sx svg {
+  width: 11px;
+  height: 11px;
+}
+.sx:hover {
+  transform: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .sx:hover {
+    background: var(--s-btn-hover);
+    color: var(--color-text);
+  }
+}
+.sx:active {
+  transform: scale(0.94);
+}
+.sx:focus-visible {
+  outline: 2px solid var(--s-accent);
+  outline-offset: 2px;
+}
+.sx .scopied {
+  color: var(--s-accent);
+}
+
+/* Live panel: one left edge for text and controls, the timer bottom left,
+   a hairline between what you said and what you can do. */
+.stext-cap {
+  font-style: normal;
+  font-size: 16px;
+  font-weight: 450;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  color: var(--s-ink);
+  padding: 16px 16px 10px;
+}
+.ov-stage.top .stext-cap {
+  padding-top: 10px;
+  padding-bottom: 16px;
+}
+.stext-cap .tentative {
+  opacity: 0.68;
+  transition: opacity 200ms ease-out;
+}
+/* A new line grows the panel smoothly (height set from the text). */
+.stext-cap {
+  box-sizing: content-box;
+  transition: height 220ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+/* The caret carries the voice while the water is gone. */
+.scard.open .scaret {
+  opacity: calc(0.45 + 0.55 * var(--voice, 1));
+  animation: none;
+}
+.scard.open .swater-row {
+  box-shadow: inset 0 0.5px 0
+    color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+.ov-stage.top .scard.open .swater-row {
+  box-shadow: inset 0 -0.5px 0
+    color-mix(in srgb, var(--color-text) 8%, transparent);
+}
+.stimer {
+  font-family: var(--s-font);
+  font-size: 13px;
+  font-weight: 590;
+  font-variant-numeric: tabular-nums;
+  color: color-mix(in srgb, var(--color-text) 82%, transparent);
+}
+
+/* Done: the check draws itself, then says where the text went. */
+.sdone-row {
+  height: var(--ov-base-h);
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 8px 0 16px;
+}
+.sdone-row .swork-label {
+  flex: 1;
+  padding: 0;
+  text-align: start;
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+/* The result arrives once the card has narrowed: check first, then word. */
+.sdone-row {
+  animation: sdone-in 200ms ease-out 140ms both;
+}
+.sdone-row .swork-label {
+  animation: sdone-in 180ms ease-out 220ms both;
+}
+@keyframes sdone-in {
+  from {
+    opacity: 0;
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    filter: none;
+  }
+}
+/* Copy-again is secondary: just the glyph until hovered. */
+.sdone-row .sx {
+  background: transparent;
+  box-shadow: none;
+  color: color-mix(in srgb, var(--color-text) 78%, transparent);
+}
+.sdone-row .sx svg {
+  width: 14px;
+  height: 14px;
+}
+.sdone-check {
+  display: block;
+  width: 17px;
+  height: 17px;
+  color: var(--s-accent);
+  flex: none;
+}
+.sdone-check path {
+  stroke-dasharray: 20;
+  stroke-dashoffset: 20;
+  animation: sdone-draw 260ms cubic-bezier(0.23, 1, 0.32, 1) 200ms forwards;
+}
+@keyframes sdone-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+.swork-label {
+  font-size: 14px;
+  font-weight: 590;
+  letter-spacing: -0.01em;
+  color: var(--s-ink);
+}
+.sai-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Transcribing: the water slows and the close button steps back, so it
+   doesn't read as listening to silence. */
+.scard.cworking .sx,
+.scard.working .sx {
+  opacity: 0.6;
+}
+.scard.cworking .sx:hover,
+.scard.working .sx:hover {
+  opacity: 1;
+}
+
+html[data-glass="native"] .scard,
+html[data-glass="native"] .scard.voice-action {
+  background: linear-gradient(
+    to bottom,
+    rgb(255 255 255 / 0.08),
+    transparent 60%
+  );
+  border-color: transparent;
+  box-shadow:
+    inset 0 0.5px 0 rgb(255 255 255 / 0.6),
+    0 0 0 0.5px rgb(0 0 0 / 0.1);
+}
+@media (prefers-color-scheme: dark) {
+  html[data-glass="native"] .scard,
+  html[data-glass="native"] .scard.voice-action {
+    box-shadow: inset 0 0.5px 0 rgb(255 255 255 / 0.35);
+  }
+  .stext-cap,
+  .swork-label {
+    text-shadow: 0 0.5px 1px rgb(0 0 0 / 0.25);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scard,
+  .scard.leaving,
+  .stext,
+  .scard.open .stext {
+    animation: none;
+    transition: opacity 150ms ease;
+  }
+  .scaret {
+    animation: none;
+  }
+  .sdone-check path {
+    animation: none;
+    stroke-dashoffset: 0;
+  }
+  .swater.flood {
+    animation: none;
+    opacity: 0;
+  }
+  .stext-cap p,
+  .scard:not(.open) .stext-cap p {
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+  .sslot > *,
+  .shands-free-icon {
+    transition: opacity 150ms ease;
+    transform: none;
+    filter: none;
+  }
+}
+.scard.compact.cdone.voice-action {
+  width: 248px;
+}
+
+/* Live panel into the done pill: one card. The text leaves first, then the
+   panel lowers and narrows into the result. */
+.scard.cdone:not(.compact) {
+  width: 176px;
+  transition: width 380ms var(--ov-ease) 60ms;
+}
+.scard.cdone.voice-action:not(.compact) {
+  width: 248px;
+}
+.scard.cdone .stext {
+  transition:
+    opacity 110ms ease-out,
+    grid-template-rows 320ms var(--ov-ease) 60ms;
+}
+.scard.compact.cdone {
+  transition: width 320ms var(--ov-ease);
+}
+/* Dark mode: a faint inner tint under the open panel keeps text legible over
+   busy, colourful content without touching the glass. */
+@media (prefers-color-scheme: dark) {
+  html[data-glass="native"] .scard.open {
+    background:
+      linear-gradient(to bottom, rgb(255 255 255 / 0.05), transparent 40%),
+      rgb(24 24 27 / 0.32);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scard.open,
+  .scard.cdone,
+  .scard.compact.cdone {
+    transition: opacity 150ms ease;
+  }
+  .stext-cap,
+  .sdone-row,
+  .sdone-row .swork-label,
+  .sdrop-icon,
+  .scard.dragging {
+    animation: none;
+    transition: none;
+  }
+  .scard.open .scaret {
+    opacity: 1;
+  }
+}
+
+/* ---- Round 2 ---- */
+/* The hairline between text and controls arrives with the panel. */
+.swater-row {
+  transition: box-shadow 200ms ease-out 220ms;
+}
+/* The text leads the panel open. */
+.scard.open .stext {
+  transition:
+    grid-template-rows 520ms cubic-bezier(0.2, 0.9, 0.1, 1),
+    opacity 260ms ease-out 60ms;
+}
+.stext-cap:not(.overflowing) p {
+  margin: 0;
+}
+.scard.working .tentative,
+.scard.cdone .tentative {
+  opacity: 0.8;
+}
+/* Latched: the water pulls back from the lock, so it sits on clear glass. */
+.swater {
+  transition: opacity 200ms ease-out;
+}
+.swater-row.locked .swater:not(.flood) {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    #000 calc(100% - 34px),
+    transparent calc(100% - 12px)
+  );
+  mask-image: linear-gradient(
+    to right,
+    #000 calc(100% - 34px),
+    transparent calc(100% - 12px)
+  );
+}
+/* First latches: say how to stop, in place of the water, then give it back. */
+.shint {
+  position: absolute;
+  left: 16px;
+  right: 76px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 13px;
+  font-weight: 560;
+  color: color-mix(in srgb, var(--color-text) 82%, transparent);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  transition:
+    opacity 180ms ease-out 110ms,
+    filter 180ms ease-out 110ms;
+}
+.shint.out {
+  opacity: 0;
+  filter: blur(2px);
+  transition:
+    opacity 110ms ease-in,
+    filter 110ms ease-in;
+}
+.swater-row.hinting .swater {
+  opacity: 0;
+}
+/* Working keeps the resting width: only the water calms, that's the message. */
+.scard.compact.cworking:not(.voice-action):not(.cdrop),
+.scard.working:not(.voice-action) {
+  width: var(--ov-rest-w);
+}
+.scard.cworking .sx,
+.scard.working .sx {
+  opacity: 0.5;
+}
+/* Done: the new row lands on the old one, which fades out underneath. */
+.srows {
+  display: grid;
+}
+.srows > * {
+  grid-area: 1 / 1;
+  min-width: 0;
+}
+.sghost {
+  animation: sghost-out 110ms ease-out forwards;
+  pointer-events: none;
+}
+@keyframes sghost-out {
+  to {
+    opacity: 0;
+    filter: blur(2px);
+  }
+}
+.scard.cdone:not(.compact) {
+  transition: width 380ms var(--ov-ease);
+}
+.scard.cdone .stext {
+  transition:
+    opacity 90ms ease-out,
+    grid-template-rows 320ms var(--ov-ease);
+}
+.sdone-row {
+  animation: sdone-in 180ms ease-out 80ms both;
+}
+.sdone-row .swork-label {
+  animation: sdone-in 180ms ease-out 150ms both;
+}
+.sdone-row .sx {
+  animation: sdone-in 160ms ease-out 240ms both;
+}
+.sdone-check path {
+  animation-delay: 120ms;
+}
+@media (hover: hover) and (pointer: fine) {
+  .sdone-row .sx:hover {
+    background: var(--s-btn-hover);
+  }
+}
+.sdone-row .sx svg {
+  width: 13px;
+  height: 13px;
+}
+@media (prefers-color-scheme: dark) {
+  .sdone-check,
+  .scaret {
+    color: color-mix(in srgb, var(--s-accent) 62%, white);
+    background-color: currentColor;
+  }
+  .sdone-check {
+    background-color: transparent;
+  }
+  html[data-glass="native"] .scard.open {
+    background:
+      linear-gradient(to top, rgb(0 0 0 / 0.1), transparent 50%),
+      linear-gradient(to bottom, rgb(255 255 255 / 0.05), transparent 40%),
+      rgb(24 24 27 / 0.4);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scard.open .stimer:not(.out),
+  .sghost,
+  .sdone-row .sx {
+    animation: none;
+  }
+  .shint,
+  .shint.out,
+  .swater-row {
+    transition: opacity 150ms ease;
+  }
+}
+
+/* ---- Round 3 ---- */
+/* Text never animates through a blur: WebKit can leave it soft at the end.
+   Entrances use opacity and a small lift only. */
+@keyframes sdone-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes sslot-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+@keyframes sghost-out {
+  to {
+    opacity: 0;
+  }
+}
+.sslot > *,
+.sslot > .out,
+.shint,
+.shint.out,
+.shands-free-icon,
+.scard:not(.open) .stext-cap p {
+  filter: none !important;
+}
+/* Done: check on the left, the word centred in the pill, copy on the
+   right. Check and copy are pinned, so the word sits in the true middle. */
+.sdone-row {
+  position: relative;
+  justify-content: center;
+  padding: 0 40px;
+}
+.sdone-row .swork-label {
+  flex: none;
+  font-weight: 590;
+  color: var(--color-text);
+  text-align: center;
+}
+.sdone-check {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  margin-top: -8.5px;
+}
+.sdone-row .sx {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  margin-top: -14px;
+}
+/* Dark mode: every form keeps one dark body on the glass, so the pill reads
+   the same over a white page as over a dark one, and the panel doesn't turn
+   darker as it grows. */
+@media (prefers-color-scheme: dark) {
+  html[data-glass="native"] .scard,
+  html[data-glass="native"] .scard.voice-action,
+  html[data-glass="native"] .scard.open {
+    background:
+      linear-gradient(to bottom, rgb(255 255 255 / 0.06), transparent 45%),
+      rgb(24 24 27 / 0.42);
+  }
+  .sx {
+    background: color-mix(in srgb, var(--color-text) 12%, transparent);
+  }
+}
+.shint {
+  font-weight: 590;
+  color: var(--color-text);
+}
+/* The hint says it already; the lock follows once the hint leaves. */
+.swater-row.hinting .shands-free-icon {
+  opacity: 0;
+}
+/* Working: the close button steps back but still reads as a button. */
+.scard.cworking .sx,
+.scard.working .sx {
+  opacity: 0.72;
+}
+.scard {
+  transition-property: width, background;
+}
+/* The soft text shadow belongs to the panel text only; on the small labels
+   it halos over light glass. */
+.swork-label,
+.sslot-label,
+.shint {
+  text-shadow: none;
+}
+/* The old row holds while the done row arrives, then lets go. */
+@keyframes sghost-out {
+  0%,
+  40% {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.sghost {
+  animation: sghost-out 200ms ease-out forwards;
+}
+.sdone-row {
+  animation-delay: 60ms;
+}
+/* Footer content arrives together with its hairline. */
+.scard.open .stimer:not(.out) {
+  animation-delay: 220ms;
+}
+/* The flood is the whole water level rising, not a hump on the left. */
+.swater.flood {
+  left: 0;
+  right: 0;
+}
+.stext-cap {
+  transition: height 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+/* After the hint, the water comes back only once the words have gone. */
+.swater-row:not(.hinting) .swater {
+  transition: opacity 200ms ease-out 110ms;
+}
+/* Done timing: the result lands while the card is still settling. */
+.sghost {
+  animation-duration: 180ms;
+}
+.sdone-row {
+  animation-duration: 160ms;
+  animation-delay: 0ms;
+}
+.sdone-row .swork-label {
+  animation-delay: 60ms;
+}
+.sdone-check path {
+  animation-delay: 40ms;
+}
+@keyframes sghost-fade {
+  to {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sghost {
+    animation: sghost-fade 120ms linear forwards;
+  }
+}
+
+/* ---- Round 4 ---- */
+/* The ghost row lets go quickly (text first), and the word lands after it. */
+@keyframes sghost-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+.sghost {
+  animation: sghost-out 100ms linear forwards;
+}
+.sghost .sslot,
+.sghost .swork-label {
+  animation: sghost-fade 60ms linear forwards;
+}
+.sdone-row .swork-label {
+  animation-delay: 90ms;
+}
+/* Flood: the whole level rises and is gone before the text arrives. */
+@keyframes swater-flood {
+  0% {
+    opacity: 1;
+    transform: none;
+  }
+  50% {
+    opacity: 0.55;
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) scaleY(1.8);
+  }
+}
+.scard.open .stext {
+  transition:
+    grid-template-rows 520ms cubic-bezier(0.2, 0.9, 0.1, 1),
+    opacity 240ms ease-out 200ms;
+}
+/* Legibility: one stronger dark body, neutral white text in dark mode. */
+@media (prefers-color-scheme: dark) {
+  html[data-glass="native"] .scard,
+  html[data-glass="native"] .scard.voice-action,
+  html[data-glass="native"] .scard.open {
+    background:
+      linear-gradient(to bottom, rgb(255 255 255 / 0.06), transparent 45%),
+      rgb(22 22 26 / 0.54);
+  }
+  .stext-cap,
+  .sdone-row .swork-label {
+    color: #f2f2f4;
+  }
+  .shands-free-icon {
+    color: color-mix(in srgb, var(--s-accent) 45%, white);
+  }
+}
+.stext-cap .tentative {
+  opacity: 0.8;
+}
+.shands-free-icon,
+.shands-free-icon.on {
+  pointer-events: none;
+}
+.shands-free-icon svg {
+  stroke-width: 2;
+}
+/* Latched: the water ends well before the lock. */
+.swater-row.locked .swater:not(.flood) {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    #000 calc(100% - 48px),
+    transparent calc(100% - 26px)
+  );
+  mask-image: linear-gradient(
+    to right,
+    #000 calc(100% - 48px),
+    transparent calc(100% - 26px)
+  );
+}
+/* Timer and label swap on the same frame, no empty footer in between. */
+.sslot > * {
+  transition:
+    opacity 140ms ease-out,
+    transform 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+.sslot > .out {
+  transition:
+    opacity 110ms ease-in,
+    transform 110ms ease-in;
+}
+/* Done: copy reads as a button at rest, with room to the word. */
+.sdone-row {
+  padding: 0 48px;
+}
+.sdone-row .sx {
+  background: var(--s-btn);
+  color: color-mix(in srgb, var(--color-text) 85%, transparent);
+}
+.sdone-row .sx svg {
+  width: 12px;
+  height: 12px;
+}
+.scard.compact.cdone,
+.scard.cdone:not(.compact):not(.voice-action) {
+  width: 192px;
+}
+/* Round 4 motion: a calmer open curve keeps the glass and body within a
+   few pixels of each other at peak speed. */
+.scard.open {
+  transition:
+    width 420ms cubic-bezier(0.32, 0.72, 0, 1),
+    background 420ms ease;
+}
+.scard.open .stext {
+  transition:
+    grid-template-rows 420ms cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 200ms ease-out 140ms;
+}
+/* Into done: the old text is gone before the card starts to narrow. */
+.scard.cdone .stext {
+  transition:
+    opacity 60ms ease-out,
+    grid-template-rows 320ms var(--ov-ease);
+}
+.sghost {
+  animation: sghost-out 90ms ease-out forwards;
+}
+.sdone-row {
+  animation-delay: 80ms;
+}
+
+/* ---- Round 5 ---- */
+/* Dismissal must always fade: the done/open width rules are more specific
+   than .leaving and were cancelling its transition (a hard cut). */
+.scard.scard.leaving,
+.scard.scard.open.leaving,
+.scard.scard.cdone.leaving {
+  transition:
+    opacity 180ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+/* While the card grows, its body is briefly denser, so the glass edge
+   trailing a frame behind never shows as a second outline inside it. */
+@keyframes sbody-morph {
+  from {
+    background-color: rgb(22 22 26 / 0.74);
+  }
+}
+@media (prefers-color-scheme: dark) {
+  html[data-glass="native"] .scard.open,
+  html[data-glass="native"] .scard.cdone:not(.compact) {
+    animation: sbody-morph 520ms ease-out;
+  }
+}
+/* Flood: gone before the first word arrives; the lift continues unseen. */
+@keyframes swater-flood {
+  0% {
+    opacity: 1;
+    transform: none;
+  }
+  30% {
+    opacity: 0;
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) scaleY(1.8);
+  }
+}
+/* Timer <-> label: they pass vertically and never share a baseline. */
+.sslot {
+  overflow: hidden;
+}
+.sslot > * {
+  transition:
+    opacity 160ms ease-out 50ms,
+    transform 160ms cubic-bezier(0.23, 1, 0.32, 1) 50ms;
+}
+.sslot > .out {
+  transform: translateY(-5px);
+  transition:
+    opacity 90ms ease-in,
+    transform 90ms ease-in;
+}
+.sslot > :not(.out) {
+  transform: none;
+}
+.scard.open .stimer:not(.out) {
+  animation: sslot-in 220ms ease 220ms both;
+}
+.scard.open .stimer {
+  font-weight: 500;
+  color: rgb(242 242 244 / 0.7);
+}
+@media (prefers-color-scheme: light) {
+  .scard.open .stimer {
+    color: color-mix(in srgb, var(--color-text) 70%, transparent);
+  }
+}
+/* A new line never paints into the footer padding before the card grows. */
+.stext-cap {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 18px,
+    #000 calc(100% - 10px),
+    transparent calc(100% - 10px)
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 18px,
+    #000 calc(100% - 10px),
+    transparent calc(100% - 10px)
+  );
+}
+.stext-cap:not(.overflowing) {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 calc(100% - 10px),
+    transparent calc(100% - 10px)
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 calc(100% - 10px),
+    transparent calc(100% - 10px)
+  );
+}
+/* Lock: the water makes room smoothly, and the lock leaves readably. */
+@property --wend {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+.swater {
+  --wend: 0px;
+  transition:
+    opacity 200ms ease-out,
+    --wend 220ms cubic-bezier(0.23, 1, 0.32, 1);
+  -webkit-mask-image: linear-gradient(
+    to right,
+    #000 calc(100% - var(--wend) - 22px),
+    transparent calc(100% - var(--wend))
+  );
+  mask-image: linear-gradient(
+    to right,
+    #000 calc(100% - var(--wend) - 22px),
+    transparent calc(100% - var(--wend))
+  );
+}
+.swater-row.locked .swater:not(.flood) {
+  --wend: 26px;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    #000 calc(100% - var(--wend) - 22px),
+    transparent calc(100% - var(--wend))
+  );
+  mask-image: linear-gradient(
+    to right,
+    #000 calc(100% - var(--wend) - 22px),
+    transparent calc(100% - var(--wend))
+  );
+}
+.swater.flood {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+.shands-free-icon {
+  transform: scale(0.9);
+  transition:
+    opacity 140ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+/* Done: something is in the card on every frame of the narrowing. */
+.sghost {
+  animation: sghost-out 120ms ease-out forwards;
+}
+.sdone-row {
+  animation-delay: 20ms;
+}
+.sdone-check path {
+  animation-delay: 0ms;
+}
+.sdone-row .swork-label {
+  animation-delay: 50ms;
+}
+@keyframes sbtn-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+}
+.sdone-row .sx {
+  animation: sbtn-in 160ms ease-out 90ms both;
+}
+.sdone-check {
+  left: 13.5px;
+}
+/* A 40px hit area around the 28px buttons. */
+.sx {
+  position: relative;
+}
+.sdone-row .sx {
+  position: absolute;
+}
+.sx::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+}
+@media (prefers-reduced-motion: reduce) {
+  html[data-glass="native"] .scard.open,
+  html[data-glass="native"] .scard.cdone:not(.compact),
+  .sdone-row .sx {
+    animation: none;
+  }
+  .sslot > *,
+  .sslot > .out {
+    transform: none;
+    transition: opacity 120ms ease;
+  }
+}
+
+/* ---- Owner: more Liquid Glass, less dark ---- */
+/* No divider between the live text and the controls. */
+.scard.open .swater-row,
+.ov-stage.top .scard.open .swater-row {
+  box-shadow: none;
+}
+/* Dark mode: only a breath of tint, so the real glass carries the card.
+   Text keeps a soft shadow to hold over bright content behind it. */
+@media (prefers-color-scheme: dark) {
+  html[data-glass="native"] .scard,
+  html[data-glass="native"] .scard.voice-action,
+  html[data-glass="native"] .scard.open {
+    background:
+      linear-gradient(to bottom, rgb(255 255 255 / 0.07), transparent 45%),
+      rgb(22 22 26 / 0.16);
+  }
+  @keyframes sbody-morph {
+    from {
+      background-color: rgb(22 22 26 / 0.3);
+    }
+  }
+  .stext-cap,
+  .stimer,
+  .sslot-label,
+  .swork-label {
+    text-shadow:
+      0 0.5px 1px rgb(0 0 0 / 0.35),
+      0 0 6px rgb(0 0 0 / 0.18);
+  }
+}
+
+/* ---- Round 6 ---- */
+/* The panel is never empty: the caret arrives first, the water hangs on
+   until the card starts to move. */
+@keyframes scaret-in {
+  from {
+    opacity: 0;
+  }
+}
+.scard.open .scaret {
+  animation: scaret-in 120ms ease-out 60ms both;
+}
+@keyframes swater-flood {
+  0%,
+  8% {
+    opacity: 1;
+    transform: none;
+  }
+  30% {
+    opacity: 0;
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) scaleY(1.8);
+  }
+}
+.scard.open .stext {
+  transition:
+    grid-template-rows 420ms cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 160ms ease-out 140ms;
+}
+/* A new line rises into view through a soft edge instead of being cut. */
+.stext-cap {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 18px,
+    #000 calc(100% - 18px),
+    transparent calc(100% - 6px)
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 18px,
+    #000 calc(100% - 18px),
+    transparent calc(100% - 6px)
+  );
+}
+.stext-cap:not(.overflowing) {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    #000 calc(100% - 18px),
+    transparent calc(100% - 6px)
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    #000 calc(100% - 18px),
+    transparent calc(100% - 6px)
+  );
+}
+/* Done content lands once the card is nearly pill height. */
+.scard.cdone:not(.compact) {
+  overflow: hidden;
+}
+.sdone-row {
+  animation-delay: 110ms;
+}
+.sdone-check path {
+  animation-delay: 110ms;
+}
+.sdone-row .swork-label {
+  animation-delay: 140ms;
+}
+.sdone-row .sx {
+  animation: sbtn-in 160ms ease-out 190ms both;
+  background: color-mix(in srgb, var(--color-text) 16%, transparent);
+  color: color-mix(in srgb, var(--color-text) 92%, transparent);
+}
+.sdone-row .sx svg {
+  width: 13px;
+  height: 13px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .sdone-row .sx:hover {
+    background: color-mix(in srgb, var(--color-text) 24%, transparent);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scard.open .scaret {
+    animation: none;
+  }
+}
+/* Round 6 UI: the rise is visible, then gone before the text. */
+@keyframes swater-flood {
+  0% {
+    opacity: 1;
+    transform: none;
+  }
+  45% {
+    opacity: 0.35;
+    transform: translateY(-8px) scaleY(1.6);
+  }
+  60%,
+  100% {
+    opacity: 0;
+    transform: translateY(-10px) scaleY(1.8);
+  }
+}
+.scard.open .stext {
+  transition:
+    grid-template-rows 420ms cubic-bezier(0.32, 0.72, 0, 1),
+    opacity 160ms ease-out 200ms;
+}
+/* A faint rim on the card itself, so any glass edge lines up with it. */
+html[data-glass="native"] .scard {
+  box-shadow:
+    inset 0 0.5px 0 rgb(255 255 255 / 0.35),
+    inset 0 0 0 0.5px rgb(255 255 255 / 0.1);
+}
+/* Finalizing: the last words turn solid before the panel lets go. */
+.scard.working .stext-cap .tentative,
+.scard.cdone .stext-cap .tentative,
+.stext-cap .tentative {
+  transition: opacity 160ms ease-out;
+}
+/* No done content until the card is pill height; the ghost holds until the
+   check starts. */
+.sghost {
+  animation: sghost-out 140ms ease-out forwards;
+}
+.sdone-row,
+.sdone-check path {
+  animation-delay: 140ms;
+}
+.sdone-row .swork-label {
+  animation-delay: 170ms;
+}
+.sdone-row .sx {
+  animation: sbtn-in 160ms ease-out 210ms both;
+}
+.sdone-row .sx svg {
+  width: 14px;
+  height: 14px;
+}
+.scard.finalizing .stext-cap .tentative,
+.scard.cdone .stext-cap .tentative {
+  opacity: 1;
+}
+
+/* ---- Owner: the pill opens and closes like a water bubble ---- */
+/* A gentle spring: the panel spreads out, runs a few pixels past its size
+   and settles back, like water finding its edge. */
+:root {
+  --ov-spring: linear(
+    0,
+    0.22 9%,
+    0.56 20%,
+    0.84 32%,
+    1.02 45%,
+    1.034 53%,
+    1.012 66%,
+    0.997 80%,
+    1
+  );
+}
+/* Open: the drop swells upward first, then spreads; corners are rounder
+   while it moves and firm up as it lands. The glass follows the shape. */
+@keyframes sbubble-open {
+  0% {
+    transform: scale(1, 1);
+    border-radius: var(--ov-radius);
+  }
+  18% {
+    transform: scale(0.97, 1.08);
+    border-radius: 30px;
+  }
+  45% {
+    transform: scale(1.015, 0.97);
+    border-radius: 28px;
+  }
+  70% {
+    transform: scale(0.997, 1.01);
+    border-radius: 24px;
+  }
+  100% {
+    transform: none;
+    border-radius: var(--ov-radius);
+  }
+}
+.scard.open {
+  transform-origin: bottom center;
+  animation: sbubble-open 640ms cubic-bezier(0.33, 0, 0.2, 1);
+  transition:
+    width 620ms var(--ov-spring),
+    background 420ms ease;
+}
+.scard.open .stext {
+  transition:
+    grid-template-rows 620ms var(--ov-spring),
+    opacity 160ms ease-out 220ms;
+}
+/* Close into done: the panel draws together like a drop, pinches in a
+   little, and lands as the pill with a small bounce. */
+@keyframes sbubble-close {
+  0% {
+    transform: none;
+    border-radius: var(--ov-radius);
+  }
+  35% {
+    transform: scale(0.96, 1.04);
+    border-radius: 30px;
+  }
+  65% {
+    transform: scale(1.03, 0.95);
+    border-radius: 26px;
+  }
+  85% {
+    transform: scale(0.995, 1.01);
+  }
+  100% {
+    transform: none;
+    border-radius: var(--ov-radius);
+  }
+}
+.scard.cdone:not(.compact) {
+  animation: sbubble-close 560ms cubic-bezier(0.33, 0, 0.2, 1);
+  transition: width 520ms var(--ov-spring);
+}
+.scard.cdone .stext {
+  transition:
+    opacity 60ms ease-out,
+    grid-template-rows 420ms var(--ov-ease);
+}
+/* The compact pill narrowing into done gets the same little landing. */
+@keyframes sbubble-land {
+  0% {
+    transform: none;
+  }
+  45% {
+    transform: scale(1.03, 0.94);
+  }
+  75% {
+    transform: scale(0.99, 1.02);
+  }
+  100% {
+    transform: none;
+  }
+}
+.scard.compact.cdone {
+  animation: sbubble-land 420ms cubic-bezier(0.33, 0, 0.2, 1);
+  transition: width 420ms var(--ov-spring);
+}
+@media (prefers-reduced-motion: reduce) {
+  .scard.open,
+  .scard.cdone:not(.compact),
+  .scard.compact.cdone {
+    animation: none;
+    transition: opacity 150ms ease;
+  }
+}
+@media (prefers-color-scheme: dark) {
+  html[data-glass="native"] .scard.open {
+    animation:
+      sbubble-open 640ms cubic-bezier(0.33, 0, 0.2, 1),
+      sbody-morph 520ms ease-out;
+  }
+  html[data-glass="native"] .scard.cdone:not(.compact) {
+    animation:
+      sbubble-close 560ms cubic-bezier(0.33, 0, 0.2, 1),
+      sbody-morph 520ms ease-out;
+  }
+}
+@media (prefers-color-scheme: dark) and (prefers-reduced-motion: reduce) {
+  html[data-glass="native"] .scard.open,
+  html[data-glass="native"] .scard.cdone:not(.compact) {
+    animation: none;
+  }
+}
+
+/* ---- Round 6 motion ---- */
+/* The water end must animate when the lock comes (this rule outranked it). */
+.swater-row:not(.hinting) .swater {
+  transition:
+    opacity 200ms ease-out 110ms,
+    --wend 220ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+/* The panel's close button leaves with the text when done arrives. */
+.scard.cdone .swater-row .sx {
+  opacity: 0;
+  transition: opacity 60ms ease-out;
+}
+/* Flood: a few readable rising frames, gone before the text. */
+@keyframes swater-flood {
+  0% {
+    opacity: 1;
+    transform: none;
+  }
+  12% {
+    opacity: 0.7;
+    transform: translateY(-3px) scaleY(1.2);
+  }
+  32%,
+  100% {
+    opacity: 0;
+    transform: translateY(-8px) scaleY(1.6);
+  }
+}
+.swater.flood {
+  animation-timing-function: linear;
+}
+/* "Transkribiere…" rises into place; the timer leaves a little faster. */
+.sslot > .sslot-label:not(.out) {
+  animation: sslot-in 160ms cubic-bezier(0.23, 1, 0.32, 1) 40ms both;
+}
+.sslot > .out {
+  transition:
+    opacity 80ms ease-in,
+    transform 80ms ease-in;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sslot > .sslot-label:not(.out) {
+    animation: none;
+  }
+}
+
+/* ---- Bubble, take 2: big enough to see ---- */
+/* Open: the small pill first swells up like a drop filling (about a third
+   taller), then flows out wide and wobbles twice before it settles. */
+@keyframes sbubble-open {
+  0% {
+    transform: none;
+  }
+  16% {
+    transform: scale(0.92, 1.3);
+  }
+  38% {
+    transform: scale(1.045, 0.88);
+  }
+  58% {
+    transform: scale(0.985, 1.05);
+  }
+  78% {
+    transform: scale(1.006, 0.985);
+  }
+  100% {
+    transform: none;
+  }
+}
+/* Close: draws together and up, drops wide, settles. */
+@keyframes sbubble-close {
+  0% {
+    transform: none;
+  }
+  28% {
+    transform: scale(0.93, 1.14);
+  }
+  56% {
+    transform: scale(1.06, 0.88);
+  }
+  78% {
+    transform: scale(0.985, 1.04);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes sbubble-land {
+  0% {
+    transform: none;
+  }
+  40% {
+    transform: scale(1.07, 0.86);
+  }
+  70% {
+    transform: scale(0.98, 1.05);
+  }
+  100% {
+    transform: none;
+  }
+}
+.scard.open,
+html[data-glass="native"] .scard.open {
+  animation-duration: 720ms;
+}
+
+/* ---- Final round ---- */
+/* The bubble squashes the body only: the shape scales by --bx/--by and
+   every child scales back, so text and buttons stay round and sharp. */
+@property --bx {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+@property --by {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 1;
+}
+@keyframes sbubble-open {
+  0% {
+    --bx: 1;
+    --by: 1;
+  }
+  16% {
+    --bx: 0.92;
+    --by: 1.3;
+  }
+  38% {
+    --bx: 1.045;
+    --by: 0.88;
+  }
+  58% {
+    --bx: 0.985;
+    --by: 1.05;
+  }
+  78% {
+    --bx: 1.006;
+    --by: 0.985;
+  }
+  100% {
+    --bx: 1;
+    --by: 1;
+  }
+}
+@keyframes sbubble-close {
+  0% {
+    --bx: 1;
+    --by: 1;
+  }
+  28% {
+    --bx: 0.93;
+    --by: 1.14;
+  }
+  56% {
+    --bx: 1.06;
+    --by: 0.88;
+  }
+  78% {
+    --bx: 0.985;
+    --by: 1.04;
+  }
+  100% {
+    --bx: 1;
+    --by: 1;
+  }
+}
+@keyframes sbubble-land {
+  0% {
+    --bx: 1;
+    --by: 1;
+  }
+  40% {
+    --bx: 1.07;
+    --by: 0.86;
+  }
+  70% {
+    --bx: 0.98;
+    --by: 1.05;
+  }
+  100% {
+    --bx: 1;
+    --by: 1;
+  }
+}
+/* While it wobbles the glass is the only edge: the card's own rim waits. */
+@keyframes srim-wait {
+  0%,
+  85% {
+    box-shadow: none;
+  }
+}
+.scard.open,
+.scard.cdone,
+.scard.compact.cdone {
+  transform: scale(var(--bx), var(--by));
+  transform-origin: bottom center;
+}
+.scard.open > *,
+.scard.cdone > *,
+.scard.compact.cdone > * {
+  transform: scale(calc(1 / var(--bx)), calc(1 / var(--by)));
+  transform-origin: bottom center;
+}
+.scard.open,
+html[data-glass="native"] .scard.open {
+  animation:
+    sbubble-open 720ms cubic-bezier(0.33, 0, 0.2, 1),
+    srim-wait 720ms linear;
+}
+.scard.cdone:not(.compact),
+html[data-glass="native"] .scard.cdone:not(.compact) {
+  animation:
+    sbubble-close 560ms cubic-bezier(0.33, 0, 0.2, 1),
+    srim-wait 560ms linear;
+}
+.scard.compact.cdone {
+  animation: sbubble-land 420ms cubic-bezier(0.33, 0, 0.2, 1);
+}
+/* The × waits until the squash is over. */
+.scard.open .swater-row .sx {
+  animation: sbtn-in 160ms ease-out 440ms both;
+}
+/* The water is gone by the swell peak, rising, not smearing. */
+@keyframes swater-flood {
+  0% {
+    opacity: 1;
+    transform: none;
+  }
+  14%,
+  100% {
+    opacity: 0;
+    transform: translateY(-6px) scaleY(1.4);
+  }
+}
+.swater.flood {
+  transform-origin: center bottom;
+}
+.scard.open .stext {
+  transition:
+    grid-template-rows 620ms var(--ov-spring),
+    opacity 160ms ease-out 160ms;
+}
+/* "Transkribiere…" keeps its ascenders. */
+.sslot {
+  overflow: clip;
+  overflow-clip-margin: 4px;
+}
+.sslot-label {
+  overflow-x: clip;
+  overflow-y: visible;
+  line-height: 18px;
+}
+/* Close: the text stays for the draw-together, the result arrives as the
+   drop spreads, check and word together, copy right behind. */
+.scard.cdone .stext {
+  transition:
+    opacity 140ms ease-out,
+    grid-template-rows 420ms var(--ov-ease);
+}
+.sdone-row,
+.sdone-row .swork-label,
+.sdone-check path {
+  animation-delay: 260ms;
+}
+.sdone-row {
+  animation-duration: 180ms;
+  animation-timing-function: cubic-bezier(0.23, 1, 0.32, 1);
+}
+.sdone-row .sx {
+  animation: sbtn-in 160ms ease-out 300ms both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scard.open,
+  .scard.cdone,
+  .scard.compact.cdone,
+  html[data-glass="native"] .scard.open,
+  html[data-glass="native"] .scard.cdone:not(.compact) {
+    animation: none;
+    transform: none;
+  }
+  .scard.open > *,
+  .scard.cdone > *,
+  .scard.compact.cdone > * {
+    transform: none;
+  }
+  .scard.open .swater-row .sx {
+    animation: none;
+  }
+}
+
+/* ---- Final motion: a drop keeps its volume ---- */
+@keyframes sbubble-open {
+  0% {
+    --bx: 1;
+    --by: 1;
+    animation-timing-function: cubic-bezier(0.3, 0, 0.5, 1);
+  }
+  14% {
+    --bx: 0.88;
+    --by: 1.14;
+    animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1);
+  }
+  40% {
+    --bx: 1.035;
+    --by: 0.966;
+    animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1);
+  }
+  62% {
+    --bx: 0.99;
+    --by: 1.01;
+    animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1);
+  }
+  82% {
+    --bx: 1.003;
+    --by: 0.997;
+    animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1);
+  }
+  100% {
+    --bx: 1;
+    --by: 1;
+  }
+}
+@keyframes sbubble-close {
+  0% {
+    --bx: 1;
+    --by: 1;
+    animation-timing-function: cubic-bezier(0.3, 0, 0.5, 1);
+  }
+  22% {
+    --bx: 0.94;
+    --by: 1.065;
+    animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1);
+  }
+  60% {
+    --bx: 1.06;
+    --by: 0.944;
+    animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1);
+  }
+  80% {
+    --bx: 0.988;
+    --by: 1.012;
+    animation-timing-function: cubic-bezier(0.37, 0, 0.63, 1);
+  }
+  100% {
+    --bx: 1;
+    --by: 1;
+  }
+}
+/* While it moves, the glass alone is the shape. */
+@keyframes srim-wait {
+  0%,
+  85% {
+    box-shadow: none;
+    background-color: transparent;
+  }
+}
+.scard.open,
+html[data-glass="native"] .scard.open {
+  animation:
+    sbubble-open 640ms linear,
+    srim-wait 640ms linear;
+}
+.scard.cdone:not(.compact),
+html[data-glass="native"] .scard.cdone:not(.compact) {
+  animation:
+    sbubble-close 500ms linear,
+    srim-wait 500ms linear;
+  transition: width 320ms cubic-bezier(0.32, 0.72, 0, 1) 100ms;
+}
+/* Close: the drop draws together first, then collapses. */
+.scard.cdone .stext {
+  transition:
+    opacity 120ms ease-out 100ms,
+    grid-template-rows 320ms cubic-bezier(0.32, 0.72, 0, 1) 100ms;
+}
+/* Dismissal: an even fade with a small sink, never a cut. */
+.scard.scard.leaving,
+.scard.scard.cdone.leaving,
+.scard.scard.open.leaving {
+  opacity: 0;
+  transform: translateY(4px) scale(0.96);
+  transition:
+    opacity 200ms cubic-bezier(0.25, 0.1, 0.25, 1),
+    transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+/* Lock lands after the water has made room. */
+.shands-free-icon {
+  transform: scale(0.85);
+}
+.swater-row.locked .shands-free-icon.on {
+  transition:
+    opacity 140ms ease-out 90ms,
+    transform 180ms cubic-bezier(0.23, 1, 0.32, 1) 90ms;
+}
+/* The pill's content waits two frames for its glass. */
+@keyframes schild-in {
+  from {
+    opacity: 0;
+  }
+}
+.scard.compact > *,
+.scard:not(.open):not(.cdone) > .swater-row {
+  animation: schild-in 120ms ease-out 33ms both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .scard.scard.leaving,
+  .scard.scard.cdone.leaving,
+  .scard.scard.open.leaving {
+    transform: none;
+    transition: opacity 150ms ease;
+  }
+  .scard.cdone:not(.compact),
+  html[data-glass="native"] .scard.cdone:not(.compact) {
+    animation: none;
+  }
+}
+/* The result arrives as soon as the card is pill-sized. */
+.sdone-row,
+.sdone-row .swork-label,
+.sdone-check path {
+  animation-delay: 180ms;
+}
+.sdone-row .sx {
+  animation: sbtn-in 160ms ease-out 220ms both;
 }

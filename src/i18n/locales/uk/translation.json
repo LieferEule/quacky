@@ -696,7 +696,10 @@
     "processing": "Постобробка...",
     "voiceTranscribing": "Транскрибую запит...",
     "voiceProcessing": "Думаю та пишу...",
-    "voiceDone": "Відповідь ШІ вставлено"
+    "voiceDone": "Відповідь ШІ вставлено",
+    "pasted": "Pasted",
+    "cancel": "Cancel",
+    "handsFreeHint": "Fn to stop"
   },
   "whatsNew": {
     "title": "Нове в Quacky v{{version}}"

@@ -671,6 +671,8 @@ pub fn run(cli_args: CliArgs) {
             commands::history::update_history_limit,
             commands::history::update_recording_retention_period,
             helpers::clamshell::is_laptop,
+            commands::set_overlay_glass,
+            commands::overlay_hover,
         ])
         .events(collect_events![
             managers::history::HistoryUpdatePayload,

@@ -69,6 +69,13 @@ and macOS drops the Accessibility grant along with it. After installing a fresh
 build, re-add the app under _System Settings → Privacy & Security →
 Accessibility_, otherwise the global shortcut silently does nothing.
 
+To keep the grants while iterating locally, sign with your own Apple
+Development certificate instead; its signature stays the same across builds:
+
+```bash
+bun run tauri build --bundles app --config '{"bundle":{"macOS":{"signingIdentity":"<certificate SHA-1 from security find-identity -v -p codesigning>"}}}'
+```
+
 ## Model catalog
 
 `src-tauri/src/catalog/catalog.json` is compiled into the binary and there is no

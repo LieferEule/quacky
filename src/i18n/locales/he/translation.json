@@ -696,7 +696,10 @@
     "processing": "מעבד...",
     "voiceTranscribing": "מתמלל את הבקשה...",
     "voiceProcessing": "חושב וכותב...",
-    "voiceDone": "תגובת ה-AI הודבקה"
+    "voiceDone": "תגובת ה-AI הודבקה",
+    "pasted": "Pasted",
+    "cancel": "Cancel",
+    "handsFreeHint": "Fn to stop"
   },
   "whatsNew": {
     "title": "חדש ב-Quacky v{{version}}"

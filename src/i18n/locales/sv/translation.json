@@ -696,7 +696,10 @@
     "processing": "Bearbetar...",
     "voiceTranscribing": "Transkriberar begäran...",
     "voiceProcessing": "Tänker och skriver...",
-    "voiceDone": "AI-svar inklistrat"
+    "voiceDone": "AI-svar inklistrat",
+    "pasted": "Pasted",
+    "cancel": "Cancel",
+    "handsFreeHint": "Fn to stop"
   },
   "whatsNew": {
     "title": "Nytt i Quacky v{{version}}"
