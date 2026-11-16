@@ -37,7 +37,7 @@ for f in package.json src-tauri/tauri.conf.json; do
   grep -q "\"version\": \"$VERSION\"" "$f" || die "$f is not at $VERSION"
 done
 grep -q "^version = \"$VERSION\"" src-tauri/Cargo.toml || die "Cargo.toml is not at $VERSION"
-git fetch -q origin
+git fetch -q origin "+refs/heads/*:refs/remotes/origin/*"
 git branch -r --contains "$SHA" | grep -q . || die "push $SHA first"
 gh release view "$TAG" -R "$CODE_REPO" >/dev/null 2>&1 && die "$TAG already exists in $CODE_REPO"
 gh release view "$TAG" -R "$FEED_REPO" >/dev/null 2>&1 && die "$TAG already exists in $FEED_REPO"
