@@ -37,6 +37,118 @@ const VOICE_GAIN = 2.6;
 const NATIVE_GLASS = platform() === "macos";
 if (NATIVE_GLASS) document.documentElement.dataset.glass = "native";
 
+// ---- The water-bubble edge ----
+// When the pill appears, opens, grows a line or closes, its edge shivers for
+// a moment like two soap bubbles bumping: five to seven lumps at random
+// places, some bulging, some denting, big and small, each on its own quick
+// rhythm, gone in about 0.6 s. Tuned with the owner in a live preview
+// (wobble 1.0, duration 0.6 s). The native glass is masked to this outline.
+interface Lobe {
+  at: number;
+  size: number;
+  width: number;
+  wob: number;
+  ph: number;
+}
+const WOBBLE_PX = 9;
+const WOBBLE_SECONDS = 0.6;
+const OUTLINE_POINTS = 96;
+const bubble = { wave: 0, lobes: [] as Lobe[] };
+const still =
+  typeof matchMedia !== "undefined" &&
+  matchMedia("(prefers-reduced-motion: reduce)").matches;
+function splash(strength: number) {
+  if (still) return;
+  bubble.wave = Math.min(1.2, Math.max(bubble.wave, strength));
+  const n = 5 + Math.floor(Math.random() * 3);
+  bubble.lobes = Array.from({ length: n }, (_, i) => ({
+    at: (i + Math.random() * 0.8) / n,
+    size:
+      (Math.random() < 0.35 ? 1 : 0.35) *
+      (0.6 + Math.random() * 0.6) *
+      (Math.random() < 0.5 ? -1 : 1),
+    width: 0.045 + Math.random() * 0.08,
+    wob: 7 + Math.random() * 6,
+    ph: Math.random() * Math.PI * 2,
+  }));
+}
+/** The card's rounded rect, its edge pushed out and in by the lumps. */
+function bubbleOutline(
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  r: number,
+  time: number,
+  voice: number,
+): number[] {
+  r = Math.min(r, h / 2, w / 2);
+  const sx = Math.max(0, w - 2 * r);
+  const sy = Math.max(0, h - 2 * r);
+  const q = (Math.PI * r) / 2;
+  const per = 2 * sx + 2 * sy + 4 * q;
+  const L = x;
+  const R = x + w;
+  const T = y;
+  const B = y + h;
+  const corners: [number, number, number][] = [
+    [R - r, T + r, -Math.PI / 2],
+    [R - r, B - r, 0],
+    [L + r, B - r, Math.PI / 2],
+    [L + r, T + r, Math.PI],
+  ];
+  const out: number[] = [];
+  for (let i = 0; i < OUTLINE_POINTS; i++) {
+    let d = (i / OUTLINE_POINTS) * per;
+    let px = 0;
+    let py = 0;
+    let nx = 0;
+    let ny = 0;
+    const segs: [number, number][] = [
+      [sx, 0],
+      [q, 1],
+      [sy, 2],
+      [q, 3],
+      [sx, 4],
+      [q, 5],
+      [sy, 6],
+      [q, 7],
+    ];
+    for (const [len, k] of segs) {
+      if (d <= len || k === 7) {
+        if (k % 2 === 1) {
+          const [cx, cy, a0] = corners[(k - 1) / 2];
+          const a = a0 + (r ? d / r : 0);
+          nx = Math.cos(a);
+          ny = Math.sin(a);
+          px = cx + nx * r;
+          py = cy + ny * r;
+        } else if (k === 0) [px, py, nx, ny] = [L + r + d, T, 0, -1];
+        else if (k === 2) [px, py, nx, ny] = [R, T + r + d, 1, 0];
+        else if (k === 4) [px, py, nx, ny] = [R - r - d, B, 0, 1];
+        else [px, py, nx, ny] = [L, B - r - d, -1, 0];
+        break;
+      }
+      d -= len;
+    }
+    const u = i / OUTLINE_POINTS;
+    let off = 0;
+    for (const l of bubble.lobes) {
+      const du = Math.abs(((((u - l.at) % 1) + 1.5) % 1) - 0.5);
+      const bump = Math.exp(-(du * du) / (2 * l.width * l.width));
+      off +=
+        bump * l.size * Math.cos(time * l.wob + l.ph) * bubble.wave * WOBBLE_PX;
+    }
+    off +=
+      voice *
+      0.9 *
+      Math.sin(u * Math.PI * 6 + time * 4.1) *
+      Math.sin(u * Math.PI * 2 - time * 1.3);
+    out.push(px + nx * off, py + ny * off);
+  }
+  return out;
+}
+
 const RecordingOverlay: React.FC = () => {
   const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
@@ -233,7 +345,21 @@ const RecordingOverlay: React.FC = () => {
     let raf = 0;
     let last = "";
     let prev: number[] | null = null;
-    const tick = () => {
+    let lastNow = performance.now();
+    let time = 0;
+    let breath = 0;
+    const tick = (now: number) => {
+      const dt = Math.min(0.05, (now - lastNow) / 1000);
+      lastNow = now;
+      time += dt;
+      bubble.wave *= Math.exp((-dt * 2) / WOBBLE_SECONDS);
+      if (bubble.wave < 0.02) bubble.wave = 0;
+      // The edge breathes a little with the voice while the pill listens.
+      const listening =
+        stateRef.current === "recording" ||
+        (stateRef.current === "streaming" && !openRef.current);
+      const target = listening && !still ? voiceRef.current : 0;
+      breath += (target - breath) * (1 - Math.exp(-dt / 0.12));
       const el = cardRef.current;
       let frame = [0, 0, 0, 0, 0, 0];
       if (el) {
@@ -275,11 +401,24 @@ const RecordingOverlay: React.FC = () => {
         ];
       }
       prev = frame;
-      const key = send.map((v) => v.toFixed(1)).join(",");
+      const shaped = bubble.wave > 0 || breath > 0.03;
+      const outline =
+        shaped && send[2] > 4 && send[3] > 4
+          ? bubbleOutline(
+              send[0],
+              send[1],
+              send[2],
+              send[3],
+              send[4],
+              time,
+              breath,
+            )
+          : [];
+      const key = shaped ? `w${time}` : send.map((v) => v.toFixed(1)).join(",");
       if (key !== last) {
         last = key;
         const [x, y, width, height, radius, opacity] = send;
-        commands.setOverlayGlass(x, y, width, height, radius, opacity);
+        commands.setOverlayGlass(x, y, width, height, radius, opacity, outline);
       }
       raf = requestAnimationFrame(tick);
     };
@@ -292,6 +431,21 @@ const RecordingOverlay: React.FC = () => {
     state === "streaming" &&
     (streamText.committed.length > 0 || streamText.tentative.length > 0);
   const liveWorking = state === "streaming" && phase === "working";
+
+  // The bubble shivers whenever its shape changes: on appearing, opening
+  // into the panel, and landing as the done pill.
+  const openRef = useRef(false);
+  openRef.current = liveOpen;
+  useEffect(() => {
+    if (isVisible && (state === "recording" || state === "streaming"))
+      splash(1);
+  }, [isVisible, state === "recording" || state === "streaming"]);
+  useEffect(() => {
+    if (liveOpen) splash(0.9);
+  }, [liveOpen]);
+  useEffect(() => {
+    if (state === "done" && isVisible) splash(0.8);
+  }, [state, isVisible]);
 
   // When the panel opens, the water swells and dissolves into it; once that
   // is over it unmounts, so a long dictation doesn't keep drawing it.
@@ -339,7 +493,10 @@ const RecordingOverlay: React.FC = () => {
     const text = textRef.current;
     if (text) {
       const max = parseFloat(getComputedStyle(el).maxHeight) || 72;
-      el.style.height = `${Math.min(text.offsetHeight, max)}px`;
+      const next = Math.min(text.offsetHeight, max);
+      const was = parseFloat(el.style.height) || 0;
+      if (was > 0 && next > was + 8) splash(0.35);
+      el.style.height = `${next}px`;
     }
     // Fade the top edge only once text actually overflows the cap. Until
     // then the first line rides the rising top edge and a new line is

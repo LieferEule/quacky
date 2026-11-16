@@ -208,9 +208,10 @@ pub fn set_overlay_glass(
     height: f64,
     radius: f64,
     opacity: f64,
+    outline: Vec<f64>,
 ) {
     #[cfg(target_os = "macos")]
-    crate::window_glass::overlay_card(&window, (x, y, width, height), radius, opacity);
+    crate::window_glass::overlay_card(&window, (x, y, width, height), radius, opacity, &outline);
 }
 
 /// The pointer entered or left the overlay card (holds the done pill).

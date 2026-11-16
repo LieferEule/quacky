@@ -683,8 +683,8 @@ async initializeShortcuts() : Promise<Result<null, string>> {
 async copyLastTranscript() : Promise<void> {
     await TAURI_INVOKE("copy_last_transcript");
 },
-async setOverlayGlass(x: number, y: number, width: number, height: number, radius: number, opacity: number) : Promise<void> {
-    await TAURI_INVOKE("set_overlay_glass", { x, y, width, height, radius, opacity });
+async setOverlayGlass(x: number, y: number, width: number, height: number, radius: number, opacity: number, outline: number[]) : Promise<void> {
+    await TAURI_INVOKE("set_overlay_glass", { x, y, width, height, radius, opacity, outline });
 },
 /**
  * The pointer entered or left the overlay card (holds the done pill).

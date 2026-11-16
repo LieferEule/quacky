@@ -2307,3 +2307,79 @@ html[data-glass="native"] .scard.cdone:not(.compact) {
 .sdone-row .sx {
   animation: sbtn-in 160ms ease-out 220ms both;
 }
+
+/* ---- Water bubble, as tuned in the live preview ---- */
+/* The edge shiver lives on the native glass (an outline mask from
+   RecordingOverlay.tsx), so the card itself no longer squashes. */
+.scard.open,
+.scard.cdone,
+.scard.compact.cdone,
+html[data-glass="native"] .scard.open,
+html[data-glass="native"] .scard.cdone:not(.compact) {
+  animation: none;
+  transform: none;
+}
+.scard.open > *,
+.scard.cdone > *,
+.scard.compact.cdone > * {
+  transform: none;
+}
+/* On native glass the glass is the whole body: no straight-edged tint or
+   rim on top of a wobbling outline. */
+html[data-glass="native"] .scard,
+html[data-glass="native"] .scard.voice-action,
+html[data-glass="native"] .scard.open {
+  background: transparent;
+  box-shadow: none;
+}
+@media (prefers-color-scheme: dark) {
+  html[data-glass="native"] .scard,
+  html[data-glass="native"] .scard.voice-action,
+  html[data-glass="native"] .scard.open {
+    background: transparent;
+  }
+}
+/* It pops out of a small drop and springs (stiffness 300, damping 19). */
+:root {
+  --ov-pop: linear(
+    0,
+    0.178 4.2%,
+    0.498 8.3%,
+    0.81 12.5%,
+    1.011 16.7%,
+    1.106 20.8%,
+    1.123 25%,
+    1.095 29.2%,
+    1.052 33.3%,
+    1.016 37.5%,
+    0.995 41.7%,
+    0.985 45.8%,
+    0.985 50%,
+    0.99 54.2%,
+    0.995 58.3%,
+    0.999 62.5%,
+    1.001 66.7%,
+    1.002 75%,
+    1 87.5%,
+    1
+  );
+}
+@keyframes sdrop-pop {
+  from {
+    transform: scale(0.09, 0.4);
+  }
+  to {
+    transform: none;
+  }
+}
+.ov-fade.show .scard.compact:not(.cdone),
+.scard:not(.compact):not(.open):not(.cdone):not(.leaving) {
+  animation: sdrop-pop 900ms var(--ov-pop) both;
+  transform-origin: center bottom;
+}
+@media (prefers-reduced-motion: reduce) {
+  .ov-fade.show .scard.compact:not(.cdone),
+  .scard:not(.compact):not(.open):not(.cdone) {
+    animation: none;
+  }
+}

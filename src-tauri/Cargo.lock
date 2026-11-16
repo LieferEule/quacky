@@ -3884,6 +3884,7 @@ dependencies = [
  "bitflags 2.11.0",
  "objc2",
  "objc2-core-foundation",
+ "objc2-core-graphics",
  "objc2-foundation",
 ]
 
@@ -4597,7 +4598,7 @@ dependencies = [
 
 [[package]]
 name = "quacky"
-version = "0.4.7"
+version = "0.4.8"
 dependencies = [
  "anyhow",
  "audiopus",
@@ -4618,7 +4619,9 @@ dependencies = [
  "natural",
  "objc2",
  "objc2-app-kit",
+ "objc2-core-graphics",
  "objc2-foundation",
+ "objc2-quartz-core",
  "ogg",
  "once_cell",
  "rdev",

@@ -16,7 +16,9 @@ use objc2_app_kit::{
     NSAppearance, NSAppearanceCustomization, NSAppearanceNameAqua, NSAppearanceNameDarkAqua,
     NSAutoresizingMaskOptions, NSGlassEffectView, NSWindow, NSWindowOrderingMode,
 };
+use objc2_core_graphics::CGMutablePath;
 use objc2_foundation::{NSPoint, NSRect, NSSize};
+use objc2_quartz_core::CAShapeLayer;
 use std::cell::RefCell;
 use tauri::window::{Effect, EffectState, EffectsBuilder};
 use tauri::WebviewWindow;
@@ -78,11 +80,16 @@ thread_local! {
 /// reports where the card is, in CSS pixels from the top left, and the glass
 /// follows it. `opacity` 0 hides it. Older macOS without NSGlassEffectView
 /// keeps the card's own CSS surface.
+///
+/// `outline` (x, y pairs in the same CSS pixels) is the card's shape while it
+/// wobbles like a water bubble: the glass then spans the outline's bounds and
+/// is masked to it. Empty means the plain rounded card.
 pub fn overlay_card(
     window: &WebviewWindow,
     frame: (f64, f64, f64, f64),
     radius: f64,
     opacity: f64,
+    outline: &[f64],
 ) {
     if AnyClass::get(c"NSGlassEffectView").is_none() {
         return;
@@ -94,20 +101,59 @@ pub fn overlay_card(
         return;
     };
     let height = content.bounds().size.height;
-    let (x, y, w, h) = frame;
+    let shaped = outline.len() >= 6;
+    let (x, y, w, h) = if shaped {
+        let (mut x0, mut y0, mut x1, mut y1) = (f64::MAX, f64::MAX, f64::MIN, f64::MIN);
+        for p in outline.chunks_exact(2) {
+            x0 = x0.min(p[0]);
+            x1 = x1.max(p[0]);
+            y0 = y0.min(p[1]);
+            y1 = y1.max(p[1]);
+        }
+        (x0, y0, x1 - x0, y1 - y0)
+    } else {
+        frame
+    };
     let rect = NSRect::new(NSPoint::new(x, height - y - h), NSSize::new(w, h));
     OVERLAY_GLASS.with(|cell| {
         let mut cell = cell.borrow_mut();
         let glass = cell.get_or_insert_with(|| {
             let glass = NSGlassEffectView::initWithFrame(NSGlassEffectView::alloc(mtm), rect);
+            glass.setWantsLayer(true);
             content.addSubview_positioned_relativeTo(&glass, NSWindowOrderingMode::Below, None);
             glass
         });
         glass.setFrame(rect);
-        glass.setCornerRadius(radius);
-        // A slightly eased alpha: the glass leads the fade-in a touch, but on
-        // the way out it reaches zero together with the card, never lingering
-        // as an empty pane.
+        if let Some(layer) = glass.layer() {
+            if shaped {
+                // The bubble's outline in the glass's own coordinates (y up).
+                let path = CGMutablePath::new();
+                for (i, p) in outline.chunks_exact(2).enumerate() {
+                    let (px, py) = (p[0] - x, h - (p[1] - y));
+                    // SAFETY: a fresh mutable path; null transform is allowed.
+                    unsafe {
+                        if i == 0 {
+                            CGMutablePath::move_to_point(Some(&path), std::ptr::null(), px, py);
+                        } else {
+                            CGMutablePath::add_line_to_point(Some(&path), std::ptr::null(), px, py);
+                        }
+                    }
+                }
+                CGMutablePath::close_subpath(Some(&path));
+                let mask = CAShapeLayer::layer();
+                mask.setFrame(NSRect::new(NSPoint::new(0.0, 0.0), NSSize::new(w, h)));
+                mask.setPath(Some(&path));
+                glass.setCornerRadius(0.0);
+                // SAFETY: the mask layer is retained by the glass's layer.
+                unsafe { layer.setMask(Some(&mask)) };
+            } else {
+                // SAFETY: clearing the mask.
+                unsafe { layer.setMask(None) };
+                glass.setCornerRadius(radius);
+            }
+        } else {
+            glass.setCornerRadius(radius);
+        }
         glass.setAlphaValue(opacity.clamp(0.0, 1.0));
         glass.setHidden(opacity <= 0.01 || w < 1.0 || h < 1.0);
     });

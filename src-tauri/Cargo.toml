@@ -1,6 +1,6 @@
 [package]
 name = "quacky"
-version = "0.4.7"
+version = "0.4.8"
 description = "Private, local-first speech transcription"
 authors = [
   "Jamie Andrew",
@@ -153,7 +153,9 @@ transcribe-cpp = { version = "0.1.3", default-features = false }
 
 [target.'cfg(target_os = "macos")'.dependencies]
 objc2 = "0.6"
-objc2-app-kit = { version = "0.3", default-features = false, features = ["std", "NSAppearance", "NSApplication", "NSGlassEffectView", "NSGraphics", "NSPasteboard", "NSResponder", "NSView", "NSWindow"] }
+objc2-app-kit = { version = "0.3", default-features = false, features = ["std", "NSAppearance", "NSApplication", "NSGlassEffectView", "NSGraphics", "NSPasteboard", "NSResponder", "NSView", "NSWindow", "objc2-quartz-core"] }
+objc2-core-graphics = { version = "0.3", default-features = false, features = ["std", "CGPath", "CGAffineTransform"] }
+objc2-quartz-core = { version = "0.3", default-features = false, features = ["std", "CALayer", "CAShapeLayer", "objc2-core-graphics", "objc2-core-foundation"] }
 objc2-foundation = { version = "0.3", default-features = false, features = ["std", "NSArray", "NSDictionary", "NSEnumerator", "NSObject", "NSString", "NSURL"] }
 tauri-nspanel = { git = "https://github.com/ahkohd/tauri-nspanel", branch = "v2.1" }
 transcribe-cpp = { version = "0.1.3", default-features = false, features = ["metal"] }

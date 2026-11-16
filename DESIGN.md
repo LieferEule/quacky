@@ -266,9 +266,10 @@ While a file runs, the drop target gives way to the brood: the pixel duck walks 
 The overlay at the bottom (or top) of the screen while dictating. On macOS it sits on real Liquid Glass: a native `NSGlassEffectView` follows the card's rect, radius and opacity every frame, and in dark mode the card adds only a breath of tint (`rgb(22 22 26 / 0.16)`) with a soft text shadow. One shape family: 44px rows, 22px radius in every form, 28px round buttons.
 
 - **Listening:** a side-view water strip fills the pill: flat when silent, a gentle sine wobble with the voice, a rare bubble. A hands-free latch shows a small lock; the water pulls back to make room.
-- **Live:** the pill opens like a water bubble: it swells up about 14%, spreads with a soft spring, wobbles once and settles (640ms, volume-preserving, the body squashes but the text and buttons do not). Inside: only the text (16px, tentative words lighter) and a timer bottom left; no water, no divider.
+- **Water bubble:** the pill pops out of a small drop on a spring (stiffness 300, damping 19, about 12% overshoot). Whenever its shape changes (appearing, opening into the panel, a new line, landing as done) the edge shivers for about 0.6s: five to seven lumps at random places, bulging and denting, big and small, up to 9px, each on its own rhythm. The native glass is masked to that outline, so the real glass wobbles. While listening the edge breathes slightly with the voice. Tuned with the owner in a live preview (wobble 1.0, duration 0.6s, bounce 0.5).
+- **Live:** the pill spreads into the panel with a soft spring. Inside: only the text (16px, tentative words lighter) and a timer bottom left; no water, no divider.
 - **Transcribing:** the timer passes upward and "Transkribiere…" rises in; in the small pill only the water calms.
-- **Done:** the panel draws together like a drop and lands as a 192px pill: check left, the outcome centred ("Eingefügt", "Kopiert", "Gespeichert"), copy right. Resting on it holds it; it fades out after 3.5s.
+- **Done:** the panel draws together and lands as a 192px pill, shivering once: check left, the outcome centred ("Eingefügt", "Kopiert", "Gespeichert"), copy right. Resting on it holds it; it fades out after 3.5s.
 
 ### Alert
 
