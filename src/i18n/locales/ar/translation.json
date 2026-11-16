@@ -641,7 +641,7 @@
     "dictationTools": {
       "voiceCommands": {
         "label": "Voice commands",
-        "description": "On “new line” and “new paragraph” I break the line. “Send it” at the end presses {{key}}; “delete that” on its own takes back your last dictation."
+        "description": "On “new line” and “new paragraph” I break the line. “Send it” at the end presses {{key}}. “Delete that” mid-sentence drops everything before it; on its own it takes back your last dictation."
       },
       "replacements": {
         "title": "Replacements",

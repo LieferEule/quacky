@@ -641,7 +641,7 @@
     "dictationTools": {
       "voiceCommands": {
         "label": "Sprachbefehle",
-        "description": "Bei „neue Zeile“ und „neuer Absatz“ breche ich um. „Abschicken“ am Schluss drückt {{key}}, „lösch das“ allein nimmt dein letztes Diktat zurück."
+        "description": "Bei „neue Zeile“ und „neuer Absatz“ breche ich um. „Abschicken“ am Schluss drückt {{key}}. „Lösch das“ mitten im Satz streicht alles davor, allein nimmt es dein letztes Diktat zurück."
       },
       "replacements": {
         "title": "Ersetzungen",

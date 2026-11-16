@@ -28,6 +28,17 @@ static DELETE_LAST: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"(?i)^[\s.,!]*(lösch(e)? das( wieder)?|delete that|scratch that)[\s.,!]*$").unwrap()
 });
 
+/// "lösch das" inside a dictation: it takes back everything said before it.
+/// Counts only when the model marked it as its own phrase, either with
+/// punctuation in front ("…, lösch das, …") or by starting a new sentence with
+/// it ("… Obwohl Lösch das …"). A plain "bitte lösch das Foto" stays text.
+static DELETE_BEFORE: LazyLock<Regex> = LazyLock::new(|| {
+    Regex::new(
+        r"(?:[.,;:!?]\s*(?i:lösch(?:e)? das|delete that|scratch that)|\s(?:Lösch(?:e)? das|Delete that|Scratch that))\b[\s.,;:!?]*",
+    )
+    .unwrap()
+});
+
 static NEW_PARAGRAPH: LazyLock<Regex> = LazyLock::new(|| {
     Regex::new(r"(?i)[ \t]*,?[ \t]*\b(neuer absatz|new paragraph)\b[.,:;]?[ \t]*").unwrap()
 });
@@ -53,6 +64,15 @@ pub fn parse_commands(text: &str) -> Spoken {
 
     let mut submit = false;
     let mut text = text.to_string();
+    // Keep only what came after the last in-dictation "lösch das".
+    if let Some(m) = DELETE_BEFORE.find_iter(&text).last() {
+        let rest = text[m.end()..].trim_start();
+        let mut chars = rest.chars();
+        text = match chars.next() {
+            Some(first) => first.to_uppercase().chain(chars).collect(),
+            None => String::new(),
+        };
+    }
     if let Some(caps) = SUBMIT.captures(&text) {
         let whole = caps.get(0).unwrap();
         // Keep a sentence end before the command, drop a comma.
@@ -205,6 +225,35 @@ mod tests {
         assert_eq!(
             text("first point new line second"),
             ("first point\nSecond".into(), false)
+        );
+    }
+
+    #[test]
+    fn delete_inside_a_dictation_keeps_what_follows() {
+        assert_eq!(
+            text("Freitag der dreizehnte Obwohl Lösch das Freitag der achtzehnte"),
+            ("Freitag der achtzehnte".into(), false)
+        );
+        assert_eq!(
+            text("Freitag der dreizehnte, obwohl, lösch das, Freitag der achtzehnte."),
+            ("Freitag der achtzehnte.".into(), false)
+        );
+        assert_eq!(
+            text("Wir treffen uns um drei. Lösch das. Um vier. Abschicken."),
+            ("Um vier.".into(), true)
+        );
+        assert_eq!(text("at three, scratch that, four"), ("Four".into(), false));
+    }
+
+    #[test]
+    fn an_ordinary_lösch_das_stays_text() {
+        assert_eq!(
+            text("Kannst du bitte lösch das Foto sagen"),
+            ("Kannst du bitte lösch das Foto sagen".into(), false)
+        );
+        assert_eq!(
+            text("Bitte lösch das Foto aus dem Ordner."),
+            ("Bitte lösch das Foto aus dem Ordner.".into(), false)
         );
     }
 
