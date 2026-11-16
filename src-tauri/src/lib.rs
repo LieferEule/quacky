@@ -222,7 +222,7 @@ fn initialize_core_logic(app_handle: &AppHandle) {
     #[cfg(target_os = "macos")]
     {
         let settings = settings::get_settings(app_handle);
-        if settings.start_hidden && settings.show_tray_icon {
+        if settings.start_hidden && settings.onboarding_completed && settings.show_tray_icon {
             let _ = app_handle.set_activation_policy(tauri::ActivationPolicy::Accessory);
         }
     }
@@ -667,6 +667,7 @@ pub fn run(cli_args: CliArgs) {
             commands::history::toggle_history_entry_saved,
             commands::history::get_audio_file_path,
             commands::history::delete_history_entry,
+            commands::history::clear_history,
             commands::history::retry_history_entry_transcription,
             commands::history::update_history_limit,
             commands::history::update_recording_retention_period,
@@ -924,7 +925,10 @@ pub fn run(cli_args: CliArgs) {
             // Show main window only if not starting hidden.
             // CLI --start-hidden flag overrides the setting.
             // But if permission onboarding is required, always show the window.
-            let should_hide = settings.start_hidden || cli_args.start_hidden;
+            // A first launch always shows the window: starting hidden is on by
+            // default, and nobody has picked a model yet.
+            let should_hide = (settings.start_hidden && settings.onboarding_completed)
+                || cli_args.start_hidden;
             let should_force_show = should_force_show_permissions_window(&app_handle);
 
             // If start_hidden but tray is disabled, we must show the window

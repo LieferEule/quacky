@@ -1,4 +1,5 @@
 use crate::managers::history::{HistoryManager, HistorySource};
+use crate::managers::model::ModelManager;
 use crate::managers::transcription::TranscriptionManager;
 use crate::settings::{get_settings, write_settings, ModelUnloadTimeout};
 use serde::Serialize;
@@ -55,13 +56,19 @@ pub fn cancel_file_transcription(app: AppHandle) {
 
 /// Which model a file import runs on.
 ///
-/// The override wins where it is set; otherwise files follow dictation. Loading
-/// a different model evicts the current one, so the next dictation reloads —
-/// that is the cost of choosing separately, not a bug.
-fn pick_file_model(override_id: Option<&str>, selected: &str) -> String {
+/// The override wins where it is set and on disk; otherwise files follow
+/// dictation. A fresh install has Parakeet Ultra as its file model before anyone
+/// downloaded it, so a missing model falls back rather than failing the import.
+/// Loading a different model evicts the current one, so the next dictation
+/// reloads — that is the cost of choosing separately, not a bug.
+fn pick_file_model(
+    override_id: Option<&str>,
+    selected: &str,
+    is_downloaded: impl Fn(&str) -> bool,
+) -> String {
     override_id
         .map(str::trim)
-        .filter(|id| !id.is_empty())
+        .filter(|id| !id.is_empty() && is_downloaded(id))
         .unwrap_or(selected)
         .to_string()
 }
@@ -124,9 +131,11 @@ pub async fn transcribe_file(
             // dictation model. Loading a different one evicts the current model,
             // so the next dictation reloads — the cost of the choice.
             let settings = get_settings(&app_for_work);
+            let mm = app_for_work.state::<Arc<ModelManager>>();
             let model_id = pick_file_model(
                 settings.file_transcription_model.as_deref(),
                 &settings.selected_model,
+                |id| mm.get_model_info(id).is_some_and(|m| m.is_downloaded),
             );
             if model_id.trim().is_empty() {
                 return Err("No transcription model selected. Pick one in the app first.".into());
@@ -267,15 +276,25 @@ mod tests {
 
     #[test]
     fn file_model_falls_back_to_the_dictation_model() {
-        assert_eq!(pick_file_model(None, "parakeet"), "parakeet");
-        assert_eq!(pick_file_model(Some(""), "parakeet"), "parakeet");
-        assert_eq!(pick_file_model(Some("   "), "parakeet"), "parakeet");
+        let all = |_: &str| true;
+        assert_eq!(pick_file_model(None, "parakeet", all), "parakeet");
+        assert_eq!(pick_file_model(Some(""), "parakeet", all), "parakeet");
+        assert_eq!(pick_file_model(Some("   "), "parakeet", all), "parakeet");
+    }
+
+    #[test]
+    fn file_model_not_on_disk_falls_back_to_the_dictation_model() {
+        let only_nemotron = |id: &str| id == "nemotron";
+        assert_eq!(
+            pick_file_model(Some("parakeet-ultra"), "nemotron", only_nemotron),
+            "nemotron"
+        );
     }
 
     #[test]
     fn file_model_override_wins() {
         assert_eq!(
-            pick_file_model(Some("whisper-large"), "parakeet"),
+            pick_file_model(Some("whisper-large"), "parakeet", |_| true),
             "whisper-large"
         );
     }

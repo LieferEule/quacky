@@ -71,6 +71,18 @@ pub async fn delete_history_entry(
         .map_err(|e| e.to_string())
 }
 
+/// Deletes every entry that is not saved, with its recording.
+#[tauri::command]
+#[specta::specta]
+pub async fn clear_history(
+    history_manager: State<'_, Arc<HistoryManager>>,
+) -> Result<u32, String> {
+    history_manager
+        .clear_unsaved()
+        .map(|n| n as u32)
+        .map_err(|e| e.to_string())
+}
+
 #[tauri::command]
 #[specta::specta]
 pub async fn retry_history_entry_transcription(

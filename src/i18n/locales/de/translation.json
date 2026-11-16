@@ -475,6 +475,14 @@
       "unsave": "Aus Gespeicherten entfernen",
       "delete": "Eintrag löschen",
       "deleteError": "Eintrag konnte nicht gelöscht werden. Bitte versuche es erneut.",
+      "clear": {
+        "title": "Verlauf leeren",
+        "description": "Löscht alle Einträge und Aufnahmen. Gespeicherte bleiben.",
+        "button": "Leeren",
+        "confirm": "Wirklich leeren?",
+        "done": "Verlauf geleert",
+        "error": "Verlauf konnte nicht geleert werden."
+      },
       "retranscribe": "Erneut transkribieren",
       "retranscribeError": "Erneute Transkription fehlgeschlagen. Bitte versuche es erneut.",
       "transcribing": "Transkribiere...",

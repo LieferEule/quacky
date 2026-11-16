@@ -689,6 +689,22 @@ impl HistoryManager {
         Ok(entry)
     }
 
+    /// Empties the history in one go: every entry and its recording, except the
+    /// ones the user saved. Returns how many entries went.
+    pub fn clear_unsaved(&self) -> Result<usize> {
+        let conn = self.get_connection()?;
+        let mut stmt =
+            conn.prepare("SELECT id, file_name FROM transcription_history WHERE saved = 0")?;
+        let entries = stmt
+            .query_map([], |row| {
+                Ok((row.get::<_, i64>("id")?, row.get::<_, String>("file_name")?))
+            })?
+            .collect::<std::result::Result<Vec<(i64, String)>, _>>()?;
+        self.delete_entries_and_files(&entries)?;
+        debug!("Cleared {} unsaved history entries", entries.len());
+        Ok(entries.len())
+    }
+
     pub async fn delete_entry(&self, id: i64) -> Result<()> {
         let conn = self.get_connection()?;
 

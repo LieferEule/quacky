@@ -475,6 +475,14 @@
       "unsave": "Remove from saved",
       "delete": "Delete entry",
       "deleteError": "Failed to delete entry. Please try again.",
+      "clear": {
+        "title": "Clear history",
+        "description": "Deletes all entries and recordings. Saved ones stay.",
+        "button": "Clear",
+        "confirm": "Really clear?",
+        "done": "History cleared",
+        "error": "Couldn't clear the history."
+      },
       "retranscribe": "Re-transcribe",
       "retranscribeError": "Failed to re-transcribe. Please try again.",
       "transcribing": "Transcribing...",

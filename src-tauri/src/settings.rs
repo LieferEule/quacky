@@ -616,11 +616,11 @@ fn default_translate_to_english() -> bool {
 }
 
 fn default_start_hidden() -> bool {
-    false
+    true
 }
 
 fn default_autostart_enabled() -> bool {
-    false
+    true
 }
 
 fn default_update_checks_enabled() -> bool {
@@ -683,19 +683,19 @@ fn default_auto_submit() -> bool {
 }
 
 fn default_history_limit() -> usize {
-    5
+    50
 }
 
 fn default_recording_retention_period() -> RecordingRetentionPeriod {
-    RecordingRetentionPeriod::PreserveLimit
+    RecordingRetentionPeriod::Days3
 }
 
 fn default_audio_feedback_volume() -> f32 {
-    1.0
+    0.16
 }
 
 fn default_sound_theme() -> SoundTheme {
-    SoundTheme::Marimba
+    SoundTheme::Quack
 }
 
 fn default_theme() -> Theme {
@@ -713,7 +713,7 @@ fn default_voice_action_include_clipboard() -> bool {
 fn default_app_language() -> String {
     // Crowbar is an English-first product: default the UI to English regardless
     // of the OS locale. Users can still switch language in Settings → General.
-    "en".to_string()
+    "de".to_string()
 }
 
 fn default_show_tray_icon() -> bool {
@@ -915,6 +915,11 @@ fn ensure_post_process_defaults(settings: &mut AppSettings) -> bool {
 
 pub const SETTINGS_STORE_PATH: &str = "settings_store.json";
 
+/// Parakeet Ultra: on German it makes fewer mistakes than Parakeet v3 at about
+/// the same speed, which is what a dropped file wants.
+pub const DEFAULT_FILE_TRANSCRIPTION_MODEL: &str =
+    "handy-computer/parakeet-ultra-gguf/parakeet-ultra-Q8_0.gguf";
+
 pub fn get_default_settings() -> AppSettings {
     #[cfg(target_os = "windows")]
     let default_shortcut = "ctrl+space";
@@ -1023,7 +1028,7 @@ pub fn get_default_settings() -> AppSettings {
         push_to_talk: default_push_to_talk(),
         double_tap_latch: default_double_tap_latch(),
         double_tap_window_ms: default_double_tap_window_ms(),
-        audio_feedback: false,
+        audio_feedback: true,
         audio_feedback_volume: default_audio_feedback_volume(),
         sound_theme: default_sound_theme(),
         start_hidden: default_start_hidden(),
@@ -1038,12 +1043,12 @@ pub fn get_default_settings() -> AppSettings {
         clamshell_microphone: None,
         selected_output_device: None,
         translate_to_english: false,
-        selected_language: "auto".to_string(),
+        selected_language: "de".to_string(),
         overlay_position: default_overlay_position(),
         debug_mode: false,
         log_level: default_log_level(),
         custom_words: Vec::new(),
-        model_unload_timeout: ModelUnloadTimeout::default(),
+        model_unload_timeout: ModelUnloadTimeout::Never,
         word_correction_threshold: default_word_correction_threshold(),
         history_limit: default_history_limit(),
         recording_retention_period: default_recording_retention_period(),
@@ -1063,10 +1068,12 @@ pub fn get_default_settings() -> AppSettings {
         voice_action_context: RedactedString::default(),
         mute_while_recording: false,
         audio_ducking_speed: DuckingSpeed::default(),
-        append_trailing_space: false,
+        append_trailing_space: true,
         app_language: default_app_language(),
-        theme: default_theme(),
-        file_transcription_model: None,
+        theme: Theme::Light,
+        // Files are not watched word by word, so accuracy beats live words here.
+        // Falls back to the dictation model until this one is downloaded.
+        file_transcription_model: Some(DEFAULT_FILE_TRANSCRIPTION_MODEL.to_string()),
         accent_color: None,
         experimental_enabled: false,
         lazy_stream_close: false,
@@ -1083,7 +1090,7 @@ pub fn get_default_settings() -> AppSettings {
         extra_recording_buffer_ms: 0,
         vad_enabled: default_vad_enabled(),
         overlay_style: default_overlay_style(),
-        drag_drop_enabled: false,
+        drag_drop_enabled: true,
     }
 }
 

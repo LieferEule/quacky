@@ -26,6 +26,7 @@ import { useOsType } from "@/hooks/useOsType";
 import { formatDateTime } from "@/utils/dateFormat";
 import { AudioPlayer, AudioPlayerGroup } from "../../ui/AudioPlayer";
 import { Button } from "../../ui/Button";
+import { SettingContainer } from "../../ui/SettingContainer";
 import { SettingsGroup } from "../../ui/SettingsGroup";
 import { HistoryLimit } from "../HistoryLimit";
 import { RecordingRetentionPeriodSelector } from "../RecordingRetentionPeriod";
@@ -429,8 +430,68 @@ export const HistorySettings: React.FC = () => {
       <SettingsGroup title={t("shell.questions.retention")}>
         <HistoryLimit grouped={true} />
         <RecordingRetentionPeriodSelector grouped={true} />
+        <ClearHistory
+          onCleared={() => {
+            loadPage();
+            void loadSourceCounts();
+          }}
+        />
       </SettingsGroup>
     </div>
+  );
+};
+
+/** Empties the history after a second click; saved entries are kept. */
+const ClearHistory: React.FC<{ onCleared: () => void }> = ({ onCleared }) => {
+  const { t } = useTranslation();
+  const [confirming, setConfirming] = useState(false);
+  const [busy, setBusy] = useState(false);
+
+  // The second click has to follow soon, or the button forgets it was asked.
+  useEffect(() => {
+    if (!confirming) return;
+    const timer = setTimeout(() => setConfirming(false), 4000);
+    return () => clearTimeout(timer);
+  }, [confirming]);
+
+  const handleClick = async () => {
+    if (!confirming) {
+      setConfirming(true);
+      return;
+    }
+    setConfirming(false);
+    setBusy(true);
+    try {
+      const result = await commands.clearHistory();
+      if (result.status !== "ok") throw new Error(String(result.error));
+      toast.success(t("settings.history.clear.done"));
+      onCleared();
+    } catch (error) {
+      console.error("Failed to clear history:", error);
+      toast.error(t("settings.history.clear.error"));
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <SettingContainer
+      title={t("settings.history.clear.title")}
+      description={t("settings.history.clear.description")}
+      grouped={true}
+      layout="horizontal"
+    >
+      <Button
+        variant={confirming ? "danger" : "danger-ghost"}
+        size="sm"
+        onClick={handleClick}
+        disabled={busy}
+      >
+        {confirming
+          ? t("settings.history.clear.confirm")
+          : t("settings.history.clear.button")}
+      </Button>
+    </SettingContainer>
   );
 };
 

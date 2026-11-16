@@ -979,6 +979,17 @@ async deleteHistoryEntry(id: number) : Promise<Result<null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
+/**
+ * Deletes every entry that is not saved, with its recording.
+ */
+async clearHistory() : Promise<Result<number, string>> {
+    try {
+    return { status: "ok", data: await TAURI_INVOKE("clear_history") };
+} catch (e) {
+    if(e instanceof Error) throw e;
+    else return { status: "error", error: e  as any };
+}
+},
 async retryHistoryEntryTranscription(id: number) : Promise<Result<null, string>> {
     try {
     return { status: "ok", data: await TAURI_INVOKE("retry_history_entry_transcription", { id }) };
