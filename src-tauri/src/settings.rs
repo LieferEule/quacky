@@ -599,7 +599,7 @@ fn default_model() -> String {
     "".to_string()
 }
 
-const CURRENT_SETTINGS_SCHEMA_VERSION: u32 = 1;
+const CURRENT_SETTINGS_SCHEMA_VERSION: u32 = 2;
 
 fn default_settings_schema_version() -> u32 {
     CURRENT_SETTINGS_SCHEMA_VERSION
@@ -645,7 +645,7 @@ fn default_autostart_enabled() -> bool {
 }
 
 fn default_update_checks_enabled() -> bool {
-    false
+    true
 }
 
 fn default_show_whats_new_on_update() -> bool {
@@ -1282,6 +1282,13 @@ fn apply_settings_migrations(
         settings.settings_schema_version = CURRENT_SETTINGS_SCHEMA_VERSION;
         updated = true;
     }
+    if stored_schema_version < 2 {
+        // Until 0.4.9 there was no updater and the switch was off and hidden.
+        // Now that it does something, everyone starts with updates on.
+        settings.update_checks_enabled = true;
+        settings.settings_schema_version = CURRENT_SETTINGS_SCHEMA_VERSION;
+        updated = true;
+    }
 
     // One-time overlay migration (only while the new key is absent): the retired
     // overlay_position `none` meant "hide the overlay" → OverlayStyle::None; any
@@ -1448,7 +1455,7 @@ mod tests {
         // Note "log_level": 2 — the legacy numeric format, kept deliberately.
         let stored: serde_json::Value = serde_json::from_str(
             r##"{
-            "settings_schema_version": 1,
+            "settings_schema_version": 2,
             "bindings": {
                 "transcribe": {
                     "id": "transcribe",
