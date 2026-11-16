@@ -102,7 +102,8 @@
       },
       "accessibility": {
         "title": "Quyền truy cập Trợ năng",
-        "description": "Cần thiết để nhập văn bản đã chuyển đổi vào các ứng dụng của bạn."
+        "description": "Cần thiết để nhập văn bản đã chuyển đổi vào các ứng dụng của bạn.",
+        "afterUpdate": "Quacky is already in the list and switched on, but I still ask? That happens after every update. Select Quacky, click “–”, then add it again with “+” from the Applications folder."
       },
       "grant": "Cấp quyền",
       "granted": "Đã cấp",

@@ -102,7 +102,8 @@
       },
       "accessibility": {
         "title": "Доступ до доступності",
-        "description": "Потрібен для введення транскрибованого тексту у ваші додатки."
+        "description": "Потрібен для введення транскрибованого тексту у ваші додатки.",
+        "afterUpdate": "Quacky is already in the list and switched on, but I still ask? That happens after every update. Select Quacky, click “–”, then add it again with “+” from the Applications folder."
       },
       "grant": "Надати дозвіл",
       "granted": "Надано",

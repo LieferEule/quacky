@@ -102,7 +102,8 @@
       },
       "accessibility": {
         "title": "アクセシビリティへのアクセス",
-        "description": "アプリに文字起こししたテキストを入力するために必要です。"
+        "description": "アプリに文字起こししたテキストを入力するために必要です。",
+        "afterUpdate": "Quacky is already in the list and switched on, but I still ask? That happens after every update. Select Quacky, click “–”, then add it again with “+” from the Applications folder."
       },
       "grant": "権限を許可",
       "granted": "許可済み",

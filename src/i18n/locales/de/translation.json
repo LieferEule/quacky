@@ -102,7 +102,8 @@
       },
       "accessibility": {
         "title": "Bedienungshilfen-Zugriff",
-        "description": "Erforderlich, um transkribierten Text in deine Anwendungen einzugeben."
+        "description": "Erforderlich, um transkribierten Text in deine Anwendungen einzugeben.",
+        "afterUpdate": "Steht Quacky dort schon und ist eingeschaltet, aber ich frage trotzdem? Das passiert nach jedem Update. Dann wähl Quacky in der Liste aus, klick auf „–“ und füg es mit „+“ aus dem Programme-Ordner wieder hinzu."
       },
       "grant": "Berechtigung erteilen",
       "granted": "Erteilt",

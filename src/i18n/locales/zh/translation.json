@@ -102,7 +102,8 @@
       },
       "accessibility": {
         "title": "辅助功能访问",
-        "description": "需要将转录文本输入到您的应用程序中。"
+        "description": "需要将转录文本输入到您的应用程序中。",
+        "afterUpdate": "Quacky is already in the list and switched on, but I still ask? That happens after every update. Select Quacky, click “–”, then add it again with “+” from the Applications folder."
       },
       "grant": "授予权限",
       "granted": "已授予",

@@ -102,7 +102,8 @@
       },
       "accessibility": {
         "title": "Accès à l'accessibilité",
-        "description": "Nécessaire pour taper le texte transcrit dans vos applications."
+        "description": "Nécessaire pour taper le texte transcrit dans vos applications.",
+        "afterUpdate": "Quacky is already in the list and switched on, but I still ask? That happens after every update. Select Quacky, click “–”, then add it again with “+” from the Applications folder."
       },
       "grant": "Accorder l'autorisation",
       "granted": "Accordé",

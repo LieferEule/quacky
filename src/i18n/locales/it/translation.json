@@ -102,7 +102,8 @@
       },
       "accessibility": {
         "title": "Accesso all'Accessibilità",
-        "description": "Necessario per digitare il testo trascritto nelle tue applicazioni."
+        "description": "Necessario per digitare il testo trascritto nelle tue applicazioni.",
+        "afterUpdate": "Quacky is already in the list and switched on, but I still ask? That happens after every update. Select Quacky, click “–”, then add it again with “+” from the Applications folder."
       },
       "grant": "Concedi Permesso",
       "granted": "Concesso",

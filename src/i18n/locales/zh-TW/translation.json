@@ -102,7 +102,8 @@
       },
       "accessibility": {
         "title": "輔助使用存取",
-        "description": "需要將轉錄文字輸入到您的應用程式中"
+        "description": "需要將轉錄文字輸入到您的應用程式中",
+        "afterUpdate": "Quacky is already in the list and switched on, but I still ask? That happens after every update. Select Quacky, click “–”, then add it again with “+” from the Applications folder."
       },
       "grant": "授予權限",
       "granted": "已授予",

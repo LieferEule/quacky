@@ -374,6 +374,11 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
                 <p className="text-sm text-text/60 mb-3">
                   {t("onboarding.permissions.accessibility.description")}
                 </p>
+                {permissions.accessibility !== "granted" && (
+                  <p className="text-[12px] leading-4 text-text/70 mb-3 rounded-md bg-logo-primary/10 px-2.5 py-2">
+                    {t("onboarding.permissions.accessibility.afterUpdate")}
+                  </p>
+                )}
                 {permissions.accessibility === "granted" ? (
                   <div className="flex items-center gap-2 text-emerald-400 text-sm">
                     <Check className="w-4 h-4" />

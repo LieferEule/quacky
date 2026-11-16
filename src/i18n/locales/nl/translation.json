@@ -102,7 +102,8 @@
       },
       "accessibility": {
         "title": "Toegankelijkheid",
-        "description": "Vereist om getranscribeerde tekst in je applicaties te kunnen typen."
+        "description": "Vereist om getranscribeerde tekst in je applicaties te kunnen typen.",
+        "afterUpdate": "Quacky is already in the list and switched on, but I still ask? That happens after every update. Select Quacky, click “–”, then add it again with “+” from the Applications folder."
       },
       "grant": "Machtiging verlenen",
       "granted": "Verleend",

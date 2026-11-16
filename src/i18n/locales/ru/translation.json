@@ -102,7 +102,8 @@
       },
       "accessibility": {
         "title": "Доступ к универсальному доступу",
-        "description": "Необходим для ввода расшифрованного текста в ваши приложения."
+        "description": "Необходим для ввода расшифрованного текста в ваши приложения.",
+        "afterUpdate": "Quacky is already in the list and switched on, but I still ask? That happens after every update. Select Quacky, click “–”, then add it again with “+” from the Applications folder."
       },
       "grant": "Предоставить разрешение",
       "granted": "Предоставлено",

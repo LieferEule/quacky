@@ -102,7 +102,8 @@
       },
       "accessibility": {
         "title": "גישת נגישות",
-        "description": "נדרש כדי להקליד את הטקסט המתומלל לתוך האפליקציות שלך."
+        "description": "נדרש כדי להקליד את הטקסט המתומלל לתוך האפליקציות שלך.",
+        "afterUpdate": "Quacky is already in the list and switched on, but I still ask? That happens after every update. Select Quacky, click “–”, then add it again with “+” from the Applications folder."
       },
       "grant": "תן הרשאה",
       "granted": "ניתנה",

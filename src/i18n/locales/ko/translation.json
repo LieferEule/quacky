@@ -102,7 +102,8 @@
       },
       "accessibility": {
         "title": "접근성 권한",
-        "description": "녹음된 텍스트를 애플리케이션에 입력하기 위해 필요합니다."
+        "description": "녹음된 텍스트를 애플리케이션에 입력하기 위해 필요합니다.",
+        "afterUpdate": "Quacky is already in the list and switched on, but I still ask? That happens after every update. Select Quacky, click “–”, then add it again with “+” from the Applications folder."
       },
       "grant": "권한 부여",
       "granted": "승인됨",
