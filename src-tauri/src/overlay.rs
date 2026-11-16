@@ -379,11 +379,8 @@ pub fn create_recording_overlay(app_handle: &AppHandle) {
             .style_mask(StyleMask::empty().borderless().nonactivating_panel())
             .with_window(|w| w.decorations(false).transparent(true).focusable(false))
             .collection_behavior(
-                // Stationary: the pill stays put while switching Spaces
-                // instead of vanishing and popping back.
                 CollectionBehavior::new()
                     .can_join_all_spaces()
-                    .stationary()
                     .full_screen_auxiliary(),
             )
             .build()
