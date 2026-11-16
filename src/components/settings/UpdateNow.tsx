@@ -5,6 +5,7 @@ import { listen } from "@tauri-apps/api/event";
 import { Loader2 } from "lucide-react";
 import { commands } from "../../bindings";
 import { Button } from "../ui/Button";
+import { useSettings } from "../../hooks/useSettings";
 import { SettingContainer } from "../ui/SettingContainer";
 
 type Status =
@@ -13,6 +14,7 @@ type Status =
   | { kind: "current" }
   | { kind: "available"; version: string }
   | { kind: "installing"; version: string }
+  | { kind: "waiting"; version: string }
   | { kind: "checkFailed" }
   | { kind: "installFailed"; version: string };
 
@@ -28,6 +30,8 @@ export const UpdateNow: React.FC<Props> = ({ grouped = false }) => {
   const { t } = useTranslation();
   const [version, setVersion] = useState("");
   const [status, setStatus] = useState<Status>({ kind: "idle" });
+  const { getSetting } = useSettings();
+  const autoChecks = getSetting("update_checks_enabled") ?? true;
 
   useEffect(() => {
     getVersion()
@@ -45,11 +49,15 @@ export const UpdateNow: React.FC<Props> = ({ grouped = false }) => {
         );
       })
       .catch(() => {});
-    const unlisten = listen<string>("update-failed", (e) =>
+    const offFailed = listen<string>("update-failed", (e) =>
       setStatus({ kind: "installFailed", version: e.payload }),
     );
+    const offWaiting = listen<string>("update-waiting", (e) =>
+      setStatus({ kind: "waiting", version: e.payload }),
+    );
     return () => {
-      unlisten.then((off) => off());
+      offFailed.then((off) => off());
+      offWaiting.then((off) => off());
     };
   }, []);
 
@@ -77,7 +85,11 @@ export const UpdateNow: React.FC<Props> = ({ grouped = false }) => {
   const description = (() => {
     switch (status.kind) {
       case "idle":
-        return t(`${k}.idle`, { version });
+        // Nothing until the version is known: no "Quacky ." flash.
+        if (!version) return "";
+        return autoChecks
+          ? t(`${k}.idle`, { version })
+          : t(`${k}.idleManual`, { version });
       case "checking":
         return t(`${k}.checking`);
       case "current":
@@ -86,6 +98,8 @@ export const UpdateNow: React.FC<Props> = ({ grouped = false }) => {
         return t(`${k}.available`, { version: status.version });
       case "installing":
         return t(`${k}.installing`, { version: status.version });
+      case "waiting":
+        return t(`${k}.waiting`);
       case "checkFailed":
         return t(`${k}.failed`);
       case "installFailed":
@@ -93,7 +107,10 @@ export const UpdateNow: React.FC<Props> = ({ grouped = false }) => {
     }
   })();
 
-  const busy = status.kind === "checking" || status.kind === "installing";
+  const busy =
+    status.kind === "checking" ||
+    status.kind === "installing" ||
+    status.kind === "waiting";
   const offersInstall =
     status.kind === "available" || status.kind === "installFailed";
 
@@ -120,7 +137,7 @@ export const UpdateNow: React.FC<Props> = ({ grouped = false }) => {
         )}
         {status.kind === "checking"
           ? t(`${k}.checkingButton`)
-          : status.kind === "installing"
+          : status.kind === "installing" || status.kind === "waiting"
             ? t(`${k}.installingButton`)
             : offersInstall
               ? t(`${k}.install`)

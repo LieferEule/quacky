@@ -677,7 +677,9 @@
       "install": "Install",
       "installFailed": "The update didn't work. Click Install again.",
       "checkingButton": "Checking …",
-      "installingButton": "Installing …"
+      "installingButton": "Installing …",
+      "waiting": "Downloaded. I restart as soon as you finish dictating.",
+      "idleManual": "You have Quacky {{version}}. I only look when you click."
     }
   },
   "footer": {

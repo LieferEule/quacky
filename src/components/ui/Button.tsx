@@ -17,7 +17,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     ref,
   ) {
     const baseClasses =
-      "font-medium rounded-full border focus:outline-none transition-[background-color,border-color,color,opacity,transform] duration-150 ease-[var(--ease-out)] active:not-disabled:scale-[0.97] disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer";
+      "font-medium rounded-full border focus:outline-none transition-[background-color,border-color,color,opacity,transform] duration-150 ease-[var(--ease-out)] active:not-disabled:not-aria-disabled:scale-[0.97] aria-disabled:pointer-events-none aria-disabled:cursor-default disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer";
 
     const variantClasses = {
       primary:

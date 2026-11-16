@@ -193,6 +193,9 @@ pub fn install(app: &AppHandle) {
     tauri::async_runtime::spawn(async move {
         match update.download_and_install(|_, _| {}, || {}).await {
             Ok(()) => {
+                if recording(&app) {
+                    let _ = app.emit("update-waiting", version.clone());
+                }
                 while recording(&app) {
                     tokio_sleep(Duration::from_millis(500)).await;
                 }
