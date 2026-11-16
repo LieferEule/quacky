@@ -50,6 +50,18 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
   const isWindows = permissionPlatform === "windows";
   const showMicrophonePermission = isMacOS || isWindows;
   const showAccessibilityPermission = isMacOS;
+  // Set up before: Quacky is probably still in the list from last time, which
+  // after an update no longer counts. A first-time user doesn't need the hint.
+  const [wasSetUp, setWasSetUp] = useState(false);
+  useEffect(() => {
+    commands
+      .getAppSettings()
+      .then((r) => {
+        if (r.status === "ok")
+          setWasSetUp(r.data.onboarding_completed === true);
+      })
+      .catch(() => {});
+  }, []);
 
   const allGranted = isMacOS
     ? permissions.accessibility === "granted" &&
@@ -374,8 +386,8 @@ const AccessibilityOnboarding: React.FC<AccessibilityOnboardingProps> = ({
                 <p className="text-sm text-text/60 mb-3">
                   {t("onboarding.permissions.accessibility.description")}
                 </p>
-                {permissions.accessibility !== "granted" && (
-                  <p className="text-[12px] leading-4 text-text/70 mb-3 rounded-md bg-logo-primary/10 px-2.5 py-2">
+                {wasSetUp && permissions.accessibility !== "granted" && (
+                  <p className="text-[12px] leading-4 text-text/70 mb-3 rounded-lg bg-logo-primary/10 px-2.5 py-2">
                     {t("onboarding.permissions.accessibility.afterUpdate")}
                   </p>
                 )}

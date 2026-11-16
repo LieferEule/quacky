@@ -463,11 +463,8 @@ async checkUpdateNow() : Promise<Result<string | null, string>> {
     else return { status: "error", error: e  as any };
 }
 },
-/**
- * An update found earlier (by the background check), if any.
- */
-async pendingUpdateVersion() : Promise<string | null> {
-    return await TAURI_INVOKE("pending_update_version");
+async updateStatus() : Promise<UpdateStatus> {
+    return await TAURI_INVOKE("update_status");
 },
 /**
  * Settings → "Installieren": same as the tray entry.
@@ -1353,6 +1350,14 @@ export type TranscriptionProgress = {
  */
 chunk: number; total_chunks: number; seconds_done: number; seconds_total: number }
 export type TypingTool = "auto" | "wtype" | "kwtype" | "dotool" | "ydotool" | "xdotool"
+/**
+ * What the settings row shows when it opens.
+ */
+export type UpdateStatus = { 
+/**
+ * A found update (also while it installs).
+ */
+version: string | null; installing: boolean }
 export type VoiceActionBackend = "api" | "codex_cli" | "claude_cli"
 export type WindowsMicrophonePermissionStatus = { supported: boolean; overall_access: PermissionAccess; device_access: PermissionAccess; app_access: PermissionAccess; desktop_app_access: PermissionAccess }
 

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getVersion } from "@tauri-apps/api/app";
+import { listen } from "@tauri-apps/api/event";
+import { Loader2 } from "lucide-react";
 import { commands } from "../../bindings";
 import { Button } from "../ui/Button";
 import { SettingContainer } from "../ui/SettingContainer";
@@ -11,11 +13,15 @@ type Status =
   | { kind: "current" }
   | { kind: "available"; version: string }
   | { kind: "installing"; version: string }
-  | { kind: "failed" };
+  | { kind: "checkFailed" }
+  | { kind: "installFailed"; version: string };
 
 interface Props {
   grouped?: boolean;
 }
+
+/** Checking that answers instantly reads as a flicker; hold it a moment. */
+const MIN_CHECK_MS = 500;
 
 /** "Bin ich aktuell?": the installed version and a button to look right now. */
 export const UpdateNow: React.FC<Props> = ({ grouped = false }) => {
@@ -27,66 +33,99 @@ export const UpdateNow: React.FC<Props> = ({ grouped = false }) => {
     getVersion()
       .then(setVersion)
       .catch(() => {});
-    // The background check may already have found one.
+    // The background check (or the duck menu) may already be ahead of us.
     commands
-      .pendingUpdateVersion()
-      .then((v) => v && setStatus({ kind: "available", version: v }))
+      .updateStatus()
+      .then((s) => {
+        if (!s.version) return;
+        setStatus(
+          s.installing
+            ? { kind: "installing", version: s.version }
+            : { kind: "available", version: s.version },
+        );
+      })
       .catch(() => {});
+    const unlisten = listen<string>("update-failed", (e) =>
+      setStatus({ kind: "installFailed", version: e.payload }),
+    );
+    return () => {
+      unlisten.then((off) => off());
+    };
   }, []);
 
   const check = async () => {
     setStatus({ kind: "checking" });
-    const result = await commands.checkUpdateNow();
-    if (result.status === "error") setStatus({ kind: "failed" });
+    const [result] = await Promise.all([
+      commands.checkUpdateNow(),
+      new Promise((r) => setTimeout(r, MIN_CHECK_MS)),
+    ]);
+    if (result.status === "error") setStatus({ kind: "checkFailed" });
     else if (result.data)
       setStatus({ kind: "available", version: result.data });
     else setStatus({ kind: "current" });
   };
 
-  const install = async () => {
-    if (status.kind !== "available") return;
-    setStatus({ kind: "installing", version: status.version });
+  const install = async (target: string) => {
+    setStatus({ kind: "installing", version: target });
     const result = await commands.installUpdateNow();
-    if (result.status === "error") setStatus({ kind: "failed" });
+    if (result.status === "error")
+      setStatus({ kind: "installFailed", version: target });
     // On success Quacky restarts by itself.
   };
 
   const k = "settings.updates";
-  const description = {
-    idle: t(`${k}.idle`, { version }),
-    checking: t(`${k}.checking`),
-    current: t(`${k}.current`, { version }),
-    available:
-      status.kind === "available"
-        ? t(`${k}.available`, { version: status.version })
-        : "",
-    installing:
-      status.kind === "installing"
-        ? t(`${k}.installing`, { version: status.version })
-        : "",
-    failed: t(`${k}.failed`),
-  }[status.kind];
+  const description = (() => {
+    switch (status.kind) {
+      case "idle":
+        return t(`${k}.idle`, { version });
+      case "checking":
+        return t(`${k}.checking`);
+      case "current":
+        return t(`${k}.current`, { version });
+      case "available":
+        return t(`${k}.available`, { version: status.version });
+      case "installing":
+        return t(`${k}.installing`, { version: status.version });
+      case "checkFailed":
+        return t(`${k}.failed`);
+      case "installFailed":
+        return t(`${k}.installFailed`);
+    }
+  })();
+
+  const busy = status.kind === "checking" || status.kind === "installing";
+  const offersInstall =
+    status.kind === "available" || status.kind === "installFailed";
 
   return (
     <SettingContainer
       title={t(`${k}.title`)}
       description={description}
+      liveDescription
       grouped={grouped}
     >
-      {status.kind === "available" ? (
-        <Button variant="primary" size="md" onClick={install}>
-          {t(`${k}.install`)}
-        </Button>
-      ) : (
-        <Button
-          variant="secondary"
-          size="md"
-          onClick={check}
-          disabled={status.kind === "checking" || status.kind === "installing"}
-        >
-          {t(`${k}.check`)}
-        </Button>
-      )}
+      <Button
+        variant={offersInstall ? "primary" : "secondary"}
+        size="md"
+        className="min-w-[116px] inline-flex items-center justify-center gap-1.5"
+        aria-disabled={busy || undefined}
+        onClick={() => {
+          if (busy) return;
+          if (offersInstall) install(status.version);
+          else check();
+        }}
+      >
+        {busy && (
+          <Loader2 className="w-3.5 h-3.5 animate-spin" aria-hidden="true" />
+        )}
+        {status.kind === "checking"
+          ? t(`${k}.checkingButton`)
+          : status.kind === "installing"
+            ? t(`${k}.installingButton`)
+            : offersInstall
+              ? t(`${k}.install`)
+              : t(`${k}.check`)}
+      </Button>
     </SettingContainer>
   );
 };

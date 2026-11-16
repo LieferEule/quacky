@@ -14,6 +14,8 @@ interface SettingContainerProps {
   footer?: React.ReactNode;
   /** Show the whole description instead of clamping it to two lines. */
   wrapDescription?: boolean;
+  /** The description reports a changing state: announce it and fade it in. */
+  liveDescription?: boolean;
 }
 
 /**
@@ -30,6 +32,7 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
   hintWhenDisabled = false,
   footer,
   wrapDescription = false,
+  liveDescription = false,
 }) => {
   const frame = grouped ? "" : "glass-card";
   const label = (
@@ -39,7 +42,10 @@ export const SettingContainer: React.FC<SettingContainerProps> = ({
       <h3 className="text-[13px] font-medium leading-5">{title}</h3>
       {description && (
         <p
-          className={`text-[11.5px] leading-4 text-text/65 ${wrapDescription || (disabled && hintWhenDisabled) ? "" : "line-clamp-2"}`}
+          key={liveDescription ? description : undefined}
+          role={liveDescription ? "status" : undefined}
+          aria-live={liveDescription ? "polite" : undefined}
+          className={`${liveDescription ? "desc-fade " : ""}text-[11.5px] leading-4 text-text/65 ${wrapDescription || (disabled && hintWhenDisabled) ? "" : "line-clamp-2"}`}
           title={description}
         >
           {description}

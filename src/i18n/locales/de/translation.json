@@ -670,11 +670,14 @@
       "idle": "Du hast Quacky {{version}}.",
       "checking": "Ich schaue nach …",
       "current": "Quacky {{version}} ist die neueste Version.",
-      "available": "Version {{version}} ist da. Nach dem Installieren starte ich neu.",
+      "available": "Version {{version}} ist da. Danach starte ich neu, und du erlaubst mir einmal neu die Bedienungshilfen.",
       "installing": "Ich lade und installiere {{version}} …",
       "failed": "Ich komme gerade nicht an die Updates. Versuch es später nochmal.",
       "check": "Jetzt suchen",
-      "install": "Installieren"
+      "install": "Installieren",
+      "installFailed": "Das Update hat nicht geklappt. Klick nochmal auf Installieren.",
+      "checkingButton": "Suche …",
+      "installingButton": "Installiere …"
     }
   },
   "footer": {

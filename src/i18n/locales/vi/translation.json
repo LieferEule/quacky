@@ -670,11 +670,14 @@
       "idle": "You have Quacky {{version}}.",
       "checking": "Looking …",
       "current": "Quacky {{version}} is the latest version.",
-      "available": "Version {{version}} is out. I restart after installing.",
+      "available": "Version {{version}} is out. I restart afterwards, and you allow me Accessibility once more.",
       "installing": "Downloading and installing {{version}} …",
       "failed": "I can't reach the updates right now. Try again later.",
       "check": "Check now",
-      "install": "Install"
+      "install": "Install",
+      "installFailed": "The update didn't work. Click Install again.",
+      "checkingButton": "Checking …",
+      "installingButton": "Installing …"
     }
   },
   "footer": {

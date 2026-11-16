@@ -10,7 +10,9 @@ use std::sync::Mutex;
 use std::time::Duration;
 
 use log::{error, info, warn};
-use tauri::AppHandle;
+use std::sync::Arc;
+
+use tauri::{AppHandle, Emitter, Manager};
 use tauri_plugin_updater::{Update, UpdaterExt};
 
 use crate::settings;
@@ -95,13 +97,30 @@ pub async fn check_update_now(app: AppHandle) -> Result<Option<String>, String> 
     }
 }
 
-/// An update found earlier (by the background check), if any.
+/// What the settings row shows when it opens.
+#[derive(serde::Serialize, specta::Type)]
+pub struct UpdateStatus {
+    /// A found update (also while it installs).
+    pub version: Option<String>,
+    pub installing: bool,
+}
+
 #[tauri::command]
 #[specta::specta]
-pub fn pending_update_version() -> Option<String> {
+pub fn update_status() -> UpdateStatus {
     match state() {
-        UpdateState::Available(v) | UpdateState::Installing(v) => Some(v),
-        UpdateState::None => None,
+        UpdateState::Available(v) => UpdateStatus {
+            version: Some(v),
+            installing: false,
+        },
+        UpdateState::Installing(v) => UpdateStatus {
+            version: Some(v),
+            installing: true,
+        },
+        UpdateState::None => UpdateStatus {
+            version: None,
+            installing: false,
+        },
     }
 }
 
@@ -109,6 +128,10 @@ pub fn pending_update_version() -> Option<String> {
 #[tauri::command]
 #[specta::specta]
 pub fn install_update_now(app: AppHandle) -> Result<(), String> {
+    // Already started from the duck menu: nothing to do, the UI just waits.
+    if matches!(state(), UpdateState::Installing(_)) {
+        return Ok(());
+    }
     if PENDING.lock().map(|p| p.is_none()).unwrap_or(true) {
         return Err("no update pending".into());
     }
@@ -149,24 +172,38 @@ async fn check(app: &AppHandle) {
     }
 }
 
-/// The tray entry was clicked: download, install, restart.
+fn recording(app: &AppHandle) -> bool {
+    app.try_state::<Arc<crate::managers::audio::AudioRecordingManager>>()
+        .map(|rm| rm.is_recording())
+        .unwrap_or(false)
+}
+
+/// The tray entry or "Installieren" was clicked: download, install, restart.
+/// The restart waits until a running dictation is finished.
 pub fn install(app: &AppHandle) {
-    let Some(update) = PENDING.lock().ok().and_then(|mut p| p.take()) else {
+    let Some(update) = PENDING.lock().ok().and_then(|p| p.clone()) else {
         return;
     };
+    if matches!(state(), UpdateState::Installing(_)) {
+        return;
+    }
     let version = update.version.clone();
     set_state(app, UpdateState::Installing(version.clone()));
     let app = app.clone();
     tauri::async_runtime::spawn(async move {
         match update.download_and_install(|_, _| {}, || {}).await {
             Ok(()) => {
+                while recording(&app) {
+                    tokio_sleep(Duration::from_millis(500)).await;
+                }
                 info!("Installed {version}, restarting");
                 app.restart();
             }
             Err(e) => {
                 error!("Update to {version} failed: {e}");
-                // Offer it again on the next check.
-                set_state(&app, UpdateState::None);
+                // Keep it on offer: the menu entry and the button come back.
+                set_state(&app, UpdateState::Available(version.clone()));
+                let _ = app.emit("update-failed", version);
             }
         }
     });

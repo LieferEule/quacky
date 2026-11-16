@@ -615,7 +615,7 @@ pub fn run(cli_args: CliArgs) {
             shortcut::change_voice_commands_setting,
             shortcut::change_self_correction_setting,
             updates::check_update_now,
-            updates::pending_update_version,
+            updates::update_status,
             updates::install_update_now,
             shortcut::change_lazy_stream_close_setting,
             shortcut::change_vad_enabled_setting,

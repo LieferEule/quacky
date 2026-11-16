@@ -367,6 +367,17 @@
   );
 }
 
+/* A status line that changes (update check) fades instead of snapping. */
+.desc-fade {
+  animation: desc-fade 150ms var(--ease-out);
+}
+
+@keyframes desc-fade {
+  from {
+    opacity: 0;
+  }
+}
+
 /* Quick saves never flash a spinner; slow ones still show one. */
 .toggle-spinner {
   opacity: 0;
@@ -391,7 +402,8 @@
   .egg,
   .egg *,
   .hatched-text,
-  .replacement-row {
+  .replacement-row,
+  .desc-fade {
     animation: none !important;
   }
 }
