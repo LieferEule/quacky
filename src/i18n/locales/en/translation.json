@@ -761,7 +761,7 @@
   "transcribe": {
     "heading": "Transcribe audio files",
     "body": "The file is listened to right here in the app; nothing gets typed anywhere else. Made for meetings and long voice notes.",
-    "formats": "WAV, MP3, M4A, AAC, FLAC, OGG and OPUS — WhatsApp voice notes and Apple Voice Memos included.",
+    "formats": "WAV, MP3, M4A, AAC, FLAC, OGG and OPUS, plus the sound of MP4 and MOV videos. WhatsApp voice notes and videos and Apple Voice Memos included.",
     "filter": "Audio",
     "pick": "Choose audio files…",
     "pickAnother": "Choose more files…",

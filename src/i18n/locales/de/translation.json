@@ -761,7 +761,7 @@
   "transcribe": {
     "heading": "Audiodateien transkribieren",
     "body": "Die Datei wird hier in der App abgehört, nichts wird anderswo getippt. Ideal für Meetings und lange Sprachnachrichten.",
-    "formats": "WAV, MP3, M4A, AAC, FLAC, OGG und OPUS — auch WhatsApp-Sprachnachrichten und Apple-Sprachmemos.",
+    "formats": "WAV, MP3, M4A, AAC, FLAC, OGG und OPUS, dazu der Ton von MP4- und MOV-Videos. Auch WhatsApp-Sprachnachrichten und -Videos und Apple-Sprachmemos.",
     "filter": "Audio",
     "pick": "Audiodateien wählen…",
     "pickAnother": "Weitere Dateien wählen…",

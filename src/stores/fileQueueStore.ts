@@ -12,6 +12,9 @@ export const AUDIO_EXTENSIONS = [
   "ogg",
   "oga",
   "opus",
+  // Videos: only their sound is transcribed (CoreAudio, macOS).
+  "mov",
+  "m4v",
 ];
 
 export type QueueItem = {

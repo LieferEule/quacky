@@ -22,6 +22,7 @@
       <array>
         <string>public.audio</string>
         <string>com.jamieandrew.quacky.ogg-audio</string>
+        <string>public.movie</string>
       </array>
     </dict>
   </array>

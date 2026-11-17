@@ -82,26 +82,27 @@ src/
 
 ## Fork-specific features
 
-| Feature                                                     | Where                                                                                                                   |
-| ----------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| Drop an audio file on the overlay or the main window        | `file_import.rs`, `commands/transcription.rs::transcribe_file`, `src/overlay/RecordingOverlay.tsx`, `src/App.tsx`       |
-| Pick an audio file from _General_                           | `TranscribeFileButton.tsx`                                                                                              |
-| Opus (WhatsApp voice notes) decoding                        | `file_import.rs` — `audiopus` + `ogg`; rodio/Symphonia has no Opus codec                                                |
-| ALAC (Apple Lossless) decoding                              | `symphonia` dependency in `src-tauri/Cargo.toml` — see _Decoding_                                                       |
-| Long audio transcribed in chunks                            | `managers/transcription.rs::split_for_transcription`                                                                    |
-| Overlay "copied" confirmation with re-copy                  | overlay `done` state, `commands::copy_last_transcript`                                                                  |
-| Shortcuts to copy / insert the last transcript              | `last_transcript.rs`, `actions.rs` (`copy_last_transcript`, `insert_last_transcript`)                                   |
-| Shortcuts can be switched off                               | empty `current_binding`, `shortcut::is_disabled`                                                                        |
-| File transcription that stays in the app                    | `TranscribeSettings.tsx`, `transcribe_file(.., deliver: false)`                                                         |
-| Several files at once, in a queue                           | `src/stores/fileQueueStore.ts`, `TranscribeSettings.tsx`                                                                |
-| Finder right-click "Transcribe with Quacky"                 | `opened_files.rs`, `Info.plist` (`NSServices`), `macos/de.lproj/ServicesMenu.strings`                                   |
-| Duck broods on the text, the result is an egg to hatch      | `settings/transcribe/DuckBrood.tsx`, `TranscribeSettings.tsx`, `fileQueueStore.hatch`, `brood-*` / `egg-*` in `App.css` |
-| Quack sound theme (CC0, Freesound 515408)                   | `scripts/gen_quack_sounds.py`, `resources/quack_*.wav`                                                                  |
-| Waddling menu-bar duck while recording                      | `tray.rs::start_waddle`, `scripts/gen_tray_icons.py`                                                                    |
-| History distinguishes microphone vs file                    | `managers/history.rs::source_from_file_name`                                                                            |
-| Voice actions (API / Codex CLI / Claude CLI)                | `actions.rs` — backend only; the AI tab was removed, so it is off unless a store already had it on                      |
-| Audio ducking instead of hard mute, at a configurable speed | `managers/audio.rs`, `settings.rs::DuckingSpeed`                                                                        |
-| Double tap latches hands-free recording                     | `transcription_coordinator.rs::classify_ptt_event`, `settings.double_tap_latch` / `double_tap_window_ms`                |
+| Feature                                                      | Where                                                                                                                   |
+| ------------------------------------------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| Drop an audio file on the overlay or the main window         | `file_import.rs`, `commands/transcription.rs::transcribe_file`, `src/overlay/RecordingOverlay.tsx`, `src/App.tsx`       |
+| Pick an audio file from _General_                            | `TranscribeFileButton.tsx`                                                                                              |
+| Sound of videos (WhatsApp, iPhone), CoreAudio first on macOS | `file_import.rs::decode_via_core_audio`                                                                                 |
+| Opus (WhatsApp voice notes) decoding                         | `file_import.rs` — `audiopus` + `ogg`; rodio/Symphonia has no Opus codec                                                |
+| ALAC (Apple Lossless) decoding                               | `symphonia` dependency in `src-tauri/Cargo.toml` — see _Decoding_                                                       |
+| Long audio transcribed in chunks                             | `managers/transcription.rs::split_for_transcription`                                                                    |
+| Overlay "copied" confirmation with re-copy                   | overlay `done` state, `commands::copy_last_transcript`                                                                  |
+| Shortcuts to copy / insert the last transcript               | `last_transcript.rs`, `actions.rs` (`copy_last_transcript`, `insert_last_transcript`)                                   |
+| Shortcuts can be switched off                                | empty `current_binding`, `shortcut::is_disabled`                                                                        |
+| File transcription that stays in the app                     | `TranscribeSettings.tsx`, `transcribe_file(.., deliver: false)`                                                         |
+| Several files at once, in a queue                            | `src/stores/fileQueueStore.ts`, `TranscribeSettings.tsx`                                                                |
+| Finder right-click "Transcribe with Quacky"                  | `opened_files.rs`, `Info.plist` (`NSServices`), `macos/de.lproj/ServicesMenu.strings`                                   |
+| Duck broods on the text, the result is an egg to hatch       | `settings/transcribe/DuckBrood.tsx`, `TranscribeSettings.tsx`, `fileQueueStore.hatch`, `brood-*` / `egg-*` in `App.css` |
+| Quack sound theme (CC0, Freesound 515408)                    | `scripts/gen_quack_sounds.py`, `resources/quack_*.wav`                                                                  |
+| Waddling menu-bar duck while recording                       | `tray.rs::start_waddle`, `scripts/gen_tray_icons.py`                                                                    |
+| History distinguishes microphone vs file                     | `managers/history.rs::source_from_file_name`                                                                            |
+| Voice actions (API / Codex CLI / Claude CLI)                 | `actions.rs` — backend only; the AI tab was removed, so it is off unless a store already had it on                      |
+| Audio ducking instead of hard mute, at a configurable speed  | `managers/audio.rs`, `settings.rs::DuckingSpeed`                                                                        |
+| Double tap latches hands-free recording                      | `transcription_coordinator.rs::classify_ptt_event`, `settings.double_tap_latch` / `double_tap_window_ms`                |
 
 `transcribe_file` is deliberately **not** gated on `drag_drop_enabled`: the drop
 sites check the setting themselves, and clicking the picker is consent enough.
@@ -312,7 +313,15 @@ removing it brings the crash back.
 
 ### Decoding
 
-`file_import.rs` has two paths and both exist for a reason.
+`file_import.rs` has three paths and each exists for a reason.
+
+- **On macOS CoreAudio goes first**, via `/usr/bin/afconvert` to a temporary
+  16 kHz mono WAV. Symphonia rejects WhatsApp videos as "Unrecognized format"
+  (remuxing the same file with ffmpeg makes it readable, so it is the way WhatsApp
+  interleaves the tracks). On the same AAC data its output also cost the transcript
+  its first words where CoreAudio's did not. CoreAudio takes the sound out of videos,
+  which is why `.mov` and `.m4v` are accepted and the Finder service lists
+  `public.movie`. Formats CoreAudio cannot read, such as Ogg Vorbis, fall through.
 
 - **Everything except `.opus` goes through rodio/Symphonia**, built via
   `Decoder::builder().with_data(..).with_byte_len(len).with_hint(ext)`. The
@@ -343,7 +352,7 @@ skips the build. It does **not** touch Rust — run those checks yourself from
 `src-tauri/`:
 
 ```bash
-cargo test         # 171 tests at 0.4.3
+cargo test         # see the count below the run; a run with 0 tests is red
 cargo check
 cargo fmt -- --check
 ```
@@ -366,10 +375,24 @@ cd src-tauri && cargo run -- --transcribe-file /path/to/recording.m4a
 
 ## Distribution notes
 
-Local bundles are ad-hoc signed and not notarized. Release bundles go to
-`src-tauri/target/release/bundle/macos/Quacky.app`. Automatic updates are
-intentionally disabled until the project has its own signed release channel;
-build with `createUpdaterArtifacts: false` unless a signing key is configured.
+Bundles are signed with **"Quacky Code Signing"**, a self-signed identity in the
+login keychain (`tauri.conf.json` → `bundle.macOS.signingIdentity`), and are not
+notarized. The point is a stable designated requirement: ad-hoc signing pins
+macOS permissions (Accessibility, microphone) to one build's cdhash, so every
+update made everyone grant Accessibility again; now the requirement is the bundle
+id plus this certificate. The key and certificate are backed up in
+`~/.tauri/quacky-codesign.{key,crt}`; to use them on another Mac,
+`security import` both into its login keychain. **Never replace the certificate**:
+a new one costs every user one more Accessibility grant. A build without the
+identity in the keychain fails, and `scripts/release.sh` checks for it first.
+Gatekeeper still rejects the app (untrusted certificate, no notarization), so the
+first launch still goes through "Open anyway".
+
+Releases go out with `scripts/release.sh <version> <notes.md>` from a pushed
+commit: it builds in a clean worktree, publishes the DMG here and the DMG, update
+archive, signature and `latest.json` to the public `LieferEule/quacky-releases`
+feed that installed copies poll. Local bundles land in
+`src-tauri/target/release/bundle/macos/Quacky.app`.
 
 ---
 

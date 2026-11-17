@@ -8,6 +8,12 @@
 //! mode and which the `symphonia` dependency in Cargo.toml enables. Ogg **Opus**
 //! (WhatsApp voice notes) has no Symphonia codec, so it is demuxed with `ogg`
 //! and decoded with libopus via `audiopus`.
+//!
+//! On macOS CoreAudio decodes first, through `afconvert`. Symphonia rejects
+//! WhatsApp videos ("Unrecognized format"), and on the same AAC data its output
+//! cost the transcript its first words where CoreAudio's did not. CoreAudio also
+//! takes the sound out of video files. rodio stays the fallback, and the only
+//! path elsewhere.
 
 use std::path::Path;
 use std::time::Duration;
@@ -31,12 +37,19 @@ pub fn is_probably_opus(path: &Path) -> bool {
 
 /// Decode `path` to a 16 kHz mono `f32` buffer.
 ///
-/// `.opus` goes straight to the Opus path. Everything else is decoded by rodio;
-/// if that fails on an `.ogg` (which may actually carry Opus rather than Vorbis)
-/// the Opus path is tried as a fallback.
+/// `.opus` goes straight to the Opus path. On macOS everything else tries
+/// CoreAudio first. Then rodio; if that fails on an `.ogg` (which may actually
+/// carry Opus rather than Vorbis) the Opus path is tried as a fallback.
 pub fn decode_to_16k_mono(path: &Path) -> Result<Vec<f32>, String> {
     if is_probably_opus(path) {
         return decode_opus_ogg_to_16k_mono(path);
+    }
+
+    #[cfg(target_os = "macos")]
+    match decode_via_core_audio(path) {
+        Ok(samples) => return Ok(samples),
+        // Ogg Vorbis, for one, is not a CoreAudio format.
+        Err(e) => log::debug!("CoreAudio could not decode {}: {e}", path.display()),
     }
 
     match decode_via_rodio(path) {
@@ -49,6 +62,35 @@ pub fn decode_to_16k_mono(path: &Path) -> Result<Vec<f32>, String> {
                 Err(rodio_err)
             }
         }
+    }
+}
+
+/// Let `afconvert` write 16 kHz mono PCM to a temporary WAV and read it back.
+#[cfg(target_os = "macos")]
+fn decode_via_core_audio(path: &Path) -> Result<Vec<f32>, String> {
+    let nanos = std::time::SystemTime::now()
+        .duration_since(std::time::UNIX_EPOCH)
+        .map(|d| d.as_nanos())
+        .unwrap_or_default();
+    let wav =
+        std::env::temp_dir().join(format!("quacky-decode-{}-{nanos}.wav", std::process::id()));
+    let output = std::process::Command::new("/usr/bin/afconvert")
+        .args(["-f", "WAVE", "-d", "LEI16@16000", "-c", "1"])
+        .arg(path)
+        .arg(&wav)
+        .output()
+        .map_err(|e| format!("cannot run afconvert: {e}"));
+    let samples = output.and_then(|output| {
+        if output.status.success() {
+            crate::audio_toolkit::read_wav_samples(&wav).map_err(|e| e.to_string())
+        } else {
+            Err(String::from_utf8_lossy(&output.stderr).trim().to_string())
+        }
+    });
+    let _ = std::fs::remove_file(&wav);
+    match samples {
+        Ok(samples) if samples.is_empty() => Err("file contained no audio samples".into()),
+        other => other,
     }
 }
 
@@ -175,6 +217,22 @@ mod tests {
             "a non-streamable mp4 keeps its index at the end; decoding it \
              requires a source with a known length"
         );
+    }
+
+    /// A video: H.264 first, the AAC sound second.
+    #[cfg(target_os = "macos")]
+    #[test]
+    fn core_audio_takes_the_sound_out_of_a_video() {
+        let path =
+            Path::new(env!("CARGO_MANIFEST_DIR")).join("src/test_fixtures/video_with_audio.mp4");
+        let samples = decode_via_core_audio(&path).expect("decodes");
+        // One second at 16 kHz, give or take the encoder's padding.
+        assert!(
+            (15_000..17_500).contains(&samples.len()),
+            "{}",
+            samples.len()
+        );
+        assert!(samples.iter().any(|s| s.abs() > 0.1), "the tone is there");
     }
 
     #[test]

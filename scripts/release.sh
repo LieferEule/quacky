@@ -7,8 +7,10 @@
 # src-tauri/Cargo.toml (+ Cargo.lock), commit, and push the branch.
 #
 # What it does:
-#   1. builds HEAD in a clean worktree (ad-hoc signed, like every public build),
-#      with updater artifacts signed by ~/.tauri/quacky-updater.key
+#   1. builds HEAD in a clean worktree, code-signed with the self-signed
+#      "Quacky Code Signing" identity from the login keychain (backup in
+#      ~/.tauri/quacky-codesign.{key,crt}), with updater artifacts signed by
+#      ~/.tauri/quacky-updater.key
 #   2. creates the release in the private code repo (DMG)
 #   3. creates the same release in the public feed repo with the DMG, the
 #      update archive, its signature and latest.json, which installed copies
@@ -26,6 +28,8 @@ TAG="v$VERSION"
 die() { echo "release: $*" >&2; exit 1; }
 
 [[ -f "$KEY" ]] || die "signing key not found at $KEY"
+security find-identity -p codesigning | grep -q '"Quacky Code Signing"' ||
+  die "code signing identity 'Quacky Code Signing' not in the keychain (see AGENTS.md)"
 [[ -f "$NOTES" ]] || die "notes file not found: $NOTES"
 NOTES="$(cd "$(dirname "$NOTES")" && pwd)/$(basename "$NOTES")"
 
